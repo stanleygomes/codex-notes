@@ -24,7 +24,7 @@ class NoteContextMenuFactory {
 
         val menu = JPopupMenu()
 
-        val openItem = JMenuItem(MyBundle.message("note.context.menu.open"), AllIcons.Actions.MenuOpen)
+        val openItem = JMenuItem("${MyBundle.message("note.context.menu.open")} (Double-click)", AllIcons.Actions.MenuOpen)
         openItem.border = itemInset
         openItem.addActionListener {
             openNoteService.open(project, note)
@@ -33,7 +33,7 @@ class NoteContextMenuFactory {
 
         menu.addSeparator()
 
-        val renameItem = JMenuItem(MyBundle.message("note.context.menu.rename"), AllIcons.Actions.Edit)
+        val renameItem = JMenuItem("${MyBundle.message("note.context.menu.rename")} (F2)", AllIcons.Actions.Edit)
         renameItem.border = itemInset
         renameItem.addActionListener {
             renameNoteService.rename(project, note)
@@ -41,9 +41,9 @@ class NoteContextMenuFactory {
         menu.add(renameItem)
 
         val favoriteText = if (note.isFavorite) {
-            MyBundle.message("note.context.menu.unfavorite")
+            "${MyBundle.message("note.context.menu.unfavorite")} (F)"
         } else {
-            MyBundle.message("note.context.menu.favorite")
+            "${MyBundle.message("note.context.menu.favorite")} (F)"
         }
         val favoriteIcon = AllIcons.Nodes.BookmarkGroup
         val favoriteItem = JMenuItem(favoriteText, favoriteIcon)
@@ -55,7 +55,7 @@ class NoteContextMenuFactory {
 
         menu.addSeparator()
 
-        val deleteItem = JMenuItem(MyBundle.message("note.context.menu.delete"), AllIcons.Actions.Cancel)
+        val deleteItem = JMenuItem("${MyBundle.message("note.context.menu.delete")} (Delete)", AllIcons.Actions.Cancel)
         deleteItem.border = itemInset
         deleteItem.addActionListener {
             deleteNoteService.confirmAndDelete(project, note)
