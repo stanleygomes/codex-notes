@@ -6,7 +6,7 @@ import com.intellij.openapi.components.State
 import com.intellij.openapi.components.Storage
 import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
-import org.jetbrains.plugins.template.entity.Note
+import org.jetbrains.plugins.template.dto.Note
 import org.jetbrains.plugins.template.state.NoteState
 import java.util.UUID
 

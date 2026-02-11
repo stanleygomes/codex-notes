@@ -1,7 +1,7 @@
 package org.jetbrains.plugins.template.listener
 
 import com.intellij.openapi.project.Project
-import org.jetbrains.plugins.template.entity.Note
+import org.jetbrains.plugins.template.dto.Note
 import org.jetbrains.plugins.template.service.NoteFileService
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent

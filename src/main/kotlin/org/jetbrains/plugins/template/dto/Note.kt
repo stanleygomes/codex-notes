@@ -1,4 +1,4 @@
-package org.jetbrains.plugins.template.entity
+package org.jetbrains.plugins.template.dto
 
 data class Note(
     var id: String = "",

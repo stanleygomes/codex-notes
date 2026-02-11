@@ -1,11 +1,12 @@
 package org.jetbrains.plugins.template.ui.noteslist
 
 import com.intellij.openapi.project.Project
-import org.jetbrains.plugins.template.entity.Note
+import org.jetbrains.plugins.template.dto.Note
 import org.jetbrains.plugins.template.listener.NoteListener
+import org.jetbrains.plugins.template.listener.NoteListKeyListener
+import org.jetbrains.plugins.template.listener.NoteListMouseListener
 import org.jetbrains.plugins.template.service.NoteEventService
 import org.jetbrains.plugins.template.service.NoteStorageService
-import org.jetbrains.plugins.template.listener.NoteListMouseListener
 import javax.swing.DefaultListModel
 import javax.swing.JList
 import javax.swing.JScrollPane
@@ -32,7 +33,15 @@ class NotesListComponent : NoteListener {
             notesMap = notesMap,
             getSelectedValue = { list.selectedValue }
         )
+
         list.addMouseListener(mouseListener)
+
+        val keyListener = NoteListKeyListener(
+            project = project,
+            notesMap = notesMap,
+            getSelectedValue = { list.selectedValue }
+        )
+        list.addKeyListener(keyListener)
 
         return JScrollPane(list)
     }
