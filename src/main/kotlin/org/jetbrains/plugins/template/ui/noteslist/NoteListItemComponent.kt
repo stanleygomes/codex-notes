@@ -3,7 +3,9 @@ package org.jetbrains.plugins.template.ui.noteslist
 import com.intellij.icons.AllIcons
 import com.intellij.util.ui.JBUI
 import org.jetbrains.plugins.template.dto.Note
+import org.jetbrains.plugins.template.helper.TimeHelper
 import java.awt.BorderLayout
+import java.awt.Color
 import java.awt.FlowLayout
 import javax.swing.JLabel
 import javax.swing.JPanel
@@ -37,7 +39,17 @@ class NoteListItemComponent {
         titleLabel.foreground = foregroundColor
         leftPanel.add(titleLabel)
 
-        panel.add(leftPanel, BorderLayout.CENTER)
+        panel.add(leftPanel, BorderLayout.WEST)
+
+        val rightPanel = JPanel(FlowLayout(FlowLayout.RIGHT, 5, 0))
+        rightPanel.isOpaque = false
+
+        val dateLabel = JLabel(TimeHelper.formatTimeAgo(note.updatedAt))
+        dateLabel.foreground = Color.GRAY
+        dateLabel.font = dateLabel.font.deriveFont(dateLabel.font.size - 3f)
+        rightPanel.add(dateLabel)
+
+        panel.add(rightPanel, BorderLayout.EAST)
 
         return panel
     }
