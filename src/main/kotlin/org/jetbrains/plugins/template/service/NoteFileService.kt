@@ -4,9 +4,10 @@ import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.vfs.VirtualFile
+import org.jetbrains.plugins.template.entity.Note
 import java.io.File
 
-class FileManagerService {
+class NoteFileService {
 
     fun create(project: Project): VirtualFile? {
         val timestamp = System.currentTimeMillis()
@@ -24,4 +25,13 @@ class FileManagerService {
 
         return virtualFile
     }
+
+    fun openNote(project: Project, note: Note) {
+        val virtualFile = LocalFileSystem.getInstance().findFileByPath(note.filePath)
+
+        if (virtualFile != null) {
+            FileEditorManager.getInstance(project).openFile(virtualFile, true)
+        }
+    }
 }
+

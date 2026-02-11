@@ -3,7 +3,7 @@ package org.jetbrains.plugins.template.ui.toolbar.button
 import com.intellij.icons.AllIcons.Actions.AddFile
 import com.intellij.openapi.project.Project
 import org.jetbrains.plugins.template.helper.MessageHelper.getMessage
-import org.jetbrains.plugins.template.service.FileManagerService
+import org.jetbrains.plugins.template.service.NoteFileService
 import org.jetbrains.plugins.template.ui.component.ButtonComponent
 import javax.swing.JButton
 
@@ -14,7 +14,7 @@ class ToolbarButtonCreateNoteComponent {
             .build(AddFile, getMessage("toolbar.note.create"))
 
         createNote.addActionListener {
-            FileManagerService().create(project)
+            NoteFileService().create(project)
         }
 
         return createNote
