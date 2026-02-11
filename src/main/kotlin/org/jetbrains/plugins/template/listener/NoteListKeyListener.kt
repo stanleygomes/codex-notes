@@ -2,7 +2,8 @@ package org.jetbrains.plugins.template.listener
 
 import com.intellij.openapi.project.Project
 import org.jetbrains.plugins.template.dto.Note
-import org.jetbrains.plugins.template.service.NoteService
+import org.jetbrains.plugins.template.service.DeleteNoteService
+import org.jetbrains.plugins.template.service.RenameNoteService
 import java.awt.event.KeyAdapter
 import java.awt.event.KeyEvent
 import java.awt.event.KeyEvent.VK_DELETE
@@ -16,14 +17,14 @@ class NoteListKeyListener(
     override fun keyPressed(e: KeyEvent) {
         if (e.keyCode == VK_DELETE) {
             val selectedNote = getSelectedValue() ?: return
-            NoteService()
-                .confirmAndDeleteNote(project, selectedNote)
+            DeleteNoteService()
+                .confirmAndDelete(project, selectedNote)
         }
 
         if (e.keyCode == VK_F2) {
             val selectedNote = getSelectedValue() ?: return
-            NoteService()
-                .renameNote(project, selectedNote)
+            RenameNoteService()
+                .rename(project, selectedNote)
         }
     }
 }
