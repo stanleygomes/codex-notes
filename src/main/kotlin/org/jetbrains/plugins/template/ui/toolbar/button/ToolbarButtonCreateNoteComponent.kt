@@ -14,7 +14,8 @@ class ToolbarButtonCreateNoteComponent {
             .build(AddFile, getMessage("toolbar.note.create"))
 
         createNote.addActionListener {
-            NoteFileService().create(project)
+            NoteFileService()
+                .create(project)
         }
 
         return createNote
