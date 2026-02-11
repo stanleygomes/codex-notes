@@ -5,6 +5,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.ui.components.JBPanel
 import org.jetbrains.plugins.template.helper.MessageHelper.getMessage
 import org.jetbrains.plugins.template.service.FileManagerService
+import org.jetbrains.plugins.template.ui.toolbar.button.ToolbarButtonCreateNoteComponent
 import java.awt.FlowLayout
 import java.awt.FlowLayout.LEFT
 
@@ -14,12 +15,7 @@ class ToolbarComponent {
         return JBPanel<JBPanel<*>>().apply {
             layout = FlowLayout(LEFT)
 
-            val createNote = ToolbarButtonComponent().build(AddFile, getMessage("toolbar.note.create"))
-
-            createNote.addActionListener {
-                FileManagerService().create(project)
-            }
-
+            val createNote = ToolbarButtonCreateNoteComponent().build(project)
             add(createNote)
         }
     }

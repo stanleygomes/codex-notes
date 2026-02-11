@@ -1,9 +1,9 @@
-package org.jetbrains.plugins.template.ui.toolbar
+package org.jetbrains.plugins.template.ui.component
 
 import javax.swing.Icon
 import javax.swing.JButton
 
-class ToolbarButtonComponent {
+class ButtonComponent {
 
     fun build(icon: Icon, tooltip: String? = null): JButton {
         return JButton(icon).apply {

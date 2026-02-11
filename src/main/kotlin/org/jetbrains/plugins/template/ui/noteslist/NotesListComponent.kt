@@ -1,4 +1,4 @@
-package org.jetbrains.plugins.template.ui
+package org.jetbrains.plugins.template.ui.noteslist
 
 import javax.swing.JList
 import javax.swing.JScrollPane

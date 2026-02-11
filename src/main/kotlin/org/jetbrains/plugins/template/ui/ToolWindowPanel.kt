@@ -2,6 +2,7 @@ package org.jetbrains.plugins.template.ui
 
 import com.intellij.openapi.project.Project
 import com.intellij.ui.components.JBPanel
+import org.jetbrains.plugins.template.ui.noteslist.NotesListComponent
 import org.jetbrains.plugins.template.ui.toolbar.ToolbarComponent
 import java.awt.BorderLayout
 
