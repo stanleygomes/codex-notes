@@ -14,15 +14,15 @@ class MyToolWindowFactory : ToolWindowFactory {
     }
 
     override fun createToolWindowContent(project: Project, toolWindow: ToolWindow) {
-        val myToolWindow = MyToolWindow()
+        val myToolWindow = MyToolWindow(project)
         val content = ContentFactory.getInstance().createContent(myToolWindow.getContent(), null, false)
         toolWindow.contentManager.addContent(content)
     }
 
     override fun shouldBeAvailable(project: Project) = true
 
-    class MyToolWindow {
+    class MyToolWindow(private val project: Project) {
 
-        fun getContent() = ToolWindowPanel().create()
+        fun getContent() = ToolWindowPanel().create(project)
     }
 }

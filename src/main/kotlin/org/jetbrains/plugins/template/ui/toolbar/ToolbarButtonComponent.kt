@@ -1,4 +1,4 @@
-package org.jetbrains.plugins.template.ui
+package org.jetbrains.plugins.template.ui.toolbar
 
 import javax.swing.Icon
 import javax.swing.JButton
