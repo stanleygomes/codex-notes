@@ -1,4 +1,4 @@
-package org.jetbrains.plugins.template.services
+package org.jetbrains.plugins.template.service
 
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.diagnostic.thisLogger
@@ -10,7 +10,6 @@ class MyProjectService(project: Project) {
 
     init {
         thisLogger().info(MyBundle.message("projectService", project.name))
-        thisLogger().warn("Don't forget to remove all non-needed sample code files with their corresponding registration entries in `plugin.xml`.")
     }
 
     fun getRandomNumber() = (1..100).random()
