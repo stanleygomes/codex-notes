@@ -5,4 +5,3 @@ interface NoteListener {
     fun onNoteUpdated()
     fun onNoteDeleted()
 }
-

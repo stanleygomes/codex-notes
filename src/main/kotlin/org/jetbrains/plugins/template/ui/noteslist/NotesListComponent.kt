@@ -2,9 +2,9 @@ package org.jetbrains.plugins.template.ui.noteslist
 
 import com.intellij.openapi.project.Project
 import org.jetbrains.plugins.template.dto.Note
-import org.jetbrains.plugins.template.listener.NoteListener
 import org.jetbrains.plugins.template.listener.NoteListKeyListener
 import org.jetbrains.plugins.template.listener.NoteListMouseListener
+import org.jetbrains.plugins.template.listener.NoteListener
 import org.jetbrains.plugins.template.service.NoteEventService
 import org.jetbrains.plugins.template.service.NoteStorageService
 import javax.swing.DefaultListModel
@@ -28,18 +28,9 @@ class NotesListComponent : NoteListener {
         refreshList()
 
         val list = JList(listModel)
-        list.cellRenderer = object : ListCellRenderer<Note> {
-            override fun getListCellRendererComponent(
-                list: JList<out Note>?,
-                value: Note?,
-                index: Int,
-                isSelected: Boolean,
-                cellHasFocus: Boolean
-            ): java.awt.Component {
-                val backgroundColor = if (isSelected) list!!.selectionBackground else list!!.background
-                val foregroundColor = if (isSelected) list.selectionForeground else list.foreground
-                return NoteListItemComponent(value ?: return javax.swing.JPanel(), backgroundColor, foregroundColor)
-            }
+        list.cellRenderer = ListCellRenderer { list, value, _, isSelected, _ ->
+            NoteListItemComponent()
+                .build(theList = list, note = value, isSelected = isSelected)
         }
 
         val mouseListener = NoteListMouseListener(
@@ -53,6 +44,7 @@ class NotesListComponent : NoteListener {
             project = project,
             getSelectedValue = { list.selectedValue }
         )
+
         list.addKeyListener(keyListener)
 
         return JScrollPane(list)

@@ -1,4 +1,4 @@
-package org.jetbrains.plugins.template.toolWindow
+package org.jetbrains.plugins.template
 
 import com.intellij.openapi.diagnostic.thisLogger
 import com.intellij.openapi.project.Project
@@ -7,7 +7,7 @@ import com.intellij.openapi.wm.ToolWindowFactory
 import com.intellij.ui.content.ContentFactory
 import org.jetbrains.plugins.template.ui.ToolWindowPanel
 
-class MyToolWindowFactory : ToolWindowFactory {
+class AppWindowFactory : ToolWindowFactory {
 
     init {
         thisLogger().info("MyToolWindowFactory initialized")
@@ -15,14 +15,17 @@ class MyToolWindowFactory : ToolWindowFactory {
 
     override fun createToolWindowContent(project: Project, toolWindow: ToolWindow) {
         val myToolWindow = MyToolWindow(project)
-        val content = ContentFactory.getInstance().createContent(myToolWindow.getContent(), null, false)
+        val content = ContentFactory
+            .getInstance()
+            .createContent(myToolWindow.getContent(), null, false)
+
         toolWindow.contentManager.addContent(content)
     }
 
     override fun shouldBeAvailable(project: Project) = true
 
     class MyToolWindow(private val project: Project) {
-
-        fun getContent() = ToolWindowPanel().create(project)
+        fun getContent() = ToolWindowPanel()
+            .create(project)
     }
 }
