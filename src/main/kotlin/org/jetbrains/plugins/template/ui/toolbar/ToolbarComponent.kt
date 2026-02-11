@@ -6,6 +6,7 @@ import com.intellij.util.ui.JBUI
 import org.jetbrains.plugins.template.ui.noteslist.NotesListComponent
 import org.jetbrains.plugins.template.ui.toolbar.button.ToolbarButtonCreateNoteComponent
 import org.jetbrains.plugins.template.ui.toolbar.button.ToolbarButtonSearchComponent
+import org.jetbrains.plugins.template.ui.toolbar.button.ToolbarButtonSettingsComponent
 import org.jetbrains.plugins.template.ui.toolbar.button.ToolbarButtonSortComponent
 import java.awt.BorderLayout
 import java.awt.BorderLayout.EAST
@@ -37,6 +38,12 @@ class ToolbarComponent {
                 val searchButton = ToolbarButtonSearchComponent()
                     .build(notesListComponent)
                 add(searchButton)
+
+                add(Box.createHorizontalStrut(2))
+
+                val settingsButton = ToolbarButtonSettingsComponent()
+                    .build(project)
+                add(settingsButton)
             }
 
             add(rightPanel, EAST)

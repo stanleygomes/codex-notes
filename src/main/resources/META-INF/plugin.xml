@@ -13,5 +13,9 @@
         <postStartupActivity implementation="org.jetbrains.plugins.template.AppStartupActivity" />
         <projectService serviceImplementation="org.jetbrains.plugins.template.repository.NoteStorageRepository"/>
         <projectService serviceImplementation="org.jetbrains.plugins.template.listener.NoteEventListener"/>
+        <projectService serviceImplementation="org.jetbrains.plugins.template.repository.NotesSettingsRepository"/>
+        <projectConfigurable parentId="tools" instance="org.jetbrains.plugins.template.ui.settings.NotesConfigurable"
+                             id="notes.settings"
+                             displayName="Notes Plugin"/>
     </extensions>
 </idea-plugin>
