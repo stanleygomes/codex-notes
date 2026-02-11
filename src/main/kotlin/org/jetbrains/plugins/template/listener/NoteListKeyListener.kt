@@ -11,20 +11,17 @@ import java.io.File
 
 class NoteListKeyListener(
     private val project: Project,
-    private val notesMap: Map<String, Note>,
-    private val getSelectedValue: () -> String?
+    private val getSelectedValue: () -> Note?
 ) : KeyAdapter() {
 
     override fun keyPressed(e: KeyEvent) {
         if (e.keyCode == KeyEvent.VK_DELETE) {
-            val selectedTitle = getSelectedValue() ?: return
-            confirmAndDeleteNote(selectedTitle)
+            val selectedNote = getSelectedValue() ?: return
+            confirmAndDeleteNote(selectedNote)
         }
     }
 
-    private fun confirmAndDeleteNote(title: String) {
-        val note = notesMap[title] ?: return
-
+    private fun confirmAndDeleteNote(note: Note) {
         val result = Messages.showYesNoDialog(
             project,
             MessageHelper.getMessage("dialog.delete.note.message", note.title),
@@ -45,4 +42,3 @@ class NoteListKeyListener(
         NoteStorageService.getInstance(project).removeNote(project, note.id)
     }
 }
-

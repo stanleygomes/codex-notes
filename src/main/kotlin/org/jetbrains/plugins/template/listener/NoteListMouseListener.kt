@@ -8,21 +8,19 @@ import java.awt.event.MouseEvent
 
 class NoteListMouseListener(
     private val project: Project,
-    private val notesMap: Map<String, Note>,
-    private val getSelectedValue: () -> String?
+    private val getSelectedValue: () -> Note?
 ) : MouseAdapter() {
 
     private val noteFileService = NoteFileService()
 
     override fun mouseClicked(e: MouseEvent) {
         if (e.clickCount == 2) {
-            val selectedTitle = getSelectedValue() ?: return
-            openNote(selectedTitle)
+            val selectedNote = getSelectedValue() ?: return
+            openNote(selectedNote)
         }
     }
 
-    private fun openNote(title: String) {
-        val note = notesMap[title] ?: return
+    private fun openNote(note: Note) {
         noteFileService.openNote(project, note)
     }
 }
