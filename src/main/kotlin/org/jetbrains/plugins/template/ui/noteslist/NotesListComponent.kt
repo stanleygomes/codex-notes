@@ -2,6 +2,7 @@ package org.jetbrains.plugins.template.ui.noteslist
 
 import com.intellij.openapi.project.Project
 import org.jetbrains.plugins.template.dto.Note
+import org.jetbrains.plugins.template.enum.SortTypeEnum
 import org.jetbrains.plugins.template.listener.NoteEventListener
 import org.jetbrains.plugins.template.listener.NoteListener
 import org.jetbrains.plugins.template.listener.NoteListKeyListener
@@ -20,6 +21,7 @@ class NotesListComponent : NoteListener {
     private lateinit var noteStorage: NoteStorageRepository
     private lateinit var project: Project
     private lateinit var searchPanel: JPanel
+    private var currentSortTypeEnum: SortTypeEnum = SortTypeEnum.DATE
 
     fun build(project: Project): JPanel {
         this.project = project
@@ -68,9 +70,21 @@ class NotesListComponent : NoteListener {
         }
     }
 
+    fun sortBy(sortTypeEnum: SortTypeEnum) {
+        currentSortTypeEnum = sortTypeEnum
+        refreshList()
+    }
+
     private fun refreshList() {
         listModel.clear()
-        noteStorage.getAllNotes().forEach { note ->
+
+        val notes = when (currentSortTypeEnum) {
+            SortTypeEnum.TITLE -> noteStorage.getAllNotes().sortedBy { it.title.lowercase() }
+            SortTypeEnum.DATE -> noteStorage.getAllNotes().sortedByDescending { it.updatedAt }
+            SortTypeEnum.FAVORITE -> noteStorage.getAllNotes().sortedWith(compareByDescending<Note> { it.isFavorite }.thenByDescending { it.updatedAt })
+        }
+
+        notes.forEach { note ->
             listModel.addElement(note)
         }
     }

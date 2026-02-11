@@ -6,8 +6,12 @@ import javax.swing.JButton
 class ButtonComponent {
 
     fun build(icon: Icon, tooltip: String? = null): JButton {
-        return JButton(icon).apply {
+        val button = JButton(icon)
+
+        button.apply {
             if (tooltip != null) toolTipText = tooltip
         }
+
+        return button
     }
 }
