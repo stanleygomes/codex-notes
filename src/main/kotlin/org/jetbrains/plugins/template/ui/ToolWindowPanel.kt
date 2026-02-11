@@ -11,16 +11,17 @@ import java.awt.BorderLayout.NORTH
 class ToolWindowPanel {
 
     fun create(project: Project): JBPanel<JBPanel<*>> {
+        val notesListComponent = NotesListComponent()
+
         return JBPanel<JBPanel<*>>().apply {
             layout = BorderLayout()
 
             val toolbar = ToolbarComponent()
-                .build(project)
+                .build(project, notesListComponent)
 
             add(toolbar, NORTH)
 
-            val notesList = NotesListComponent()
-                .build(project)
+            val notesList = notesListComponent.build(project)
 
             add(notesList, CENTER)
         }

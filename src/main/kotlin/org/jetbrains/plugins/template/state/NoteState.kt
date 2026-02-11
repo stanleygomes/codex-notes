@@ -6,4 +6,3 @@ import org.jetbrains.plugins.template.dto.Note
 class NoteState : BaseState() {
     var notes by list<Note>()
 }
-

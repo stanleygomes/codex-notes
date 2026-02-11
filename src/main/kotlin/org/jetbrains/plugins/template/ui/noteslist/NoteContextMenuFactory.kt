@@ -23,6 +23,7 @@ class NoteContextMenuFactory {
         val deleteNoteService = DeleteNoteService()
 
         val menu = JPopupMenu()
+        menu.border = JBUI.Borders.empty(5)
 
         val openItem = JMenuItem("${MyBundle.message("note.context.menu.open")} (Double-click)", AllIcons.Actions.MenuOpen)
         openItem.border = itemInset
