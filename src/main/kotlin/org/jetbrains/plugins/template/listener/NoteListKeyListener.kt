@@ -3,10 +3,12 @@ package org.jetbrains.plugins.template.listener
 import com.intellij.openapi.project.Project
 import org.jetbrains.plugins.template.dto.Note
 import org.jetbrains.plugins.template.service.DeleteNoteService
+import org.jetbrains.plugins.template.service.FavoriteNoteService
 import org.jetbrains.plugins.template.service.RenameNoteService
 import java.awt.event.KeyAdapter
 import java.awt.event.KeyEvent
 import java.awt.event.KeyEvent.VK_DELETE
+import java.awt.event.KeyEvent.VK_F
 import java.awt.event.KeyEvent.VK_F2
 
 class NoteListKeyListener(
@@ -25,6 +27,12 @@ class NoteListKeyListener(
             val selectedNote = getSelectedValue() ?: return
             RenameNoteService()
                 .rename(project, selectedNote)
+        }
+
+        if (e.keyCode == VK_F) {
+            val selectedNote = getSelectedValue() ?: return
+            FavoriteNoteService()
+                .toggleFavorite(project, selectedNote)
         }
     }
 }

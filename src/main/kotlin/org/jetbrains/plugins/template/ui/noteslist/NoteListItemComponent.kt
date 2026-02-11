@@ -1,8 +1,10 @@
 package org.jetbrains.plugins.template.ui.noteslist
 
+import com.intellij.icons.AllIcons
 import com.intellij.util.ui.JBUI
 import org.jetbrains.plugins.template.dto.Note
 import java.awt.BorderLayout
+import java.awt.FlowLayout
 import javax.swing.JLabel
 import javax.swing.JPanel
 import javax.swing.JList
@@ -14,7 +16,6 @@ class NoteListItemComponent {
             return JPanel()
         }
 
-        val titleLabel = JLabel(note.title)
         val backgroundColor = if (isSelected) theList!!.selectionBackground else theList!!.background
         val foregroundColor = if (isSelected) theList.selectionForeground else theList.foreground
         val panel = JPanel(BorderLayout())
@@ -23,9 +24,20 @@ class NoteListItemComponent {
         panel.isOpaque = true
         panel.background = backgroundColor
         panel.foreground = foregroundColor
-        titleLabel.foreground = foregroundColor
 
-        panel.add(titleLabel, BorderLayout.CENTER)
+        val leftPanel = JPanel(FlowLayout(FlowLayout.LEFT, 5, 0))
+        leftPanel.isOpaque = false
+
+        if (note.isFavorite) {
+            val starIcon = JLabel(AllIcons.Nodes.Bookmark)
+            leftPanel.add(starIcon)
+        }
+
+        val titleLabel = JLabel(note.title)
+        titleLabel.foreground = foregroundColor
+        leftPanel.add(titleLabel)
+
+        panel.add(leftPanel, BorderLayout.CENTER)
 
         return panel
     }

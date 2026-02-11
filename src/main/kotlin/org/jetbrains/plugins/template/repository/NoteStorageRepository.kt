@@ -54,6 +54,17 @@ class NoteStorageRepository : PersistentStateComponent<NoteState> {
             .notifyNoteUpdated()
     }
 
+    fun toggleFavorite(project: Project, id: String) {
+        state.notes.find { it.id == id }?.apply {
+            isFavorite = !isFavorite
+            updatedAt = System.currentTimeMillis()
+        }
+
+        NoteEventListener
+            .getInstance(project)
+            .notifyNoteUpdated()
+    }
+
     fun removeNote(project: Project, id: String) {
         state.notes.removeIf { it.id == id }
 
