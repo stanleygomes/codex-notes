@@ -10,7 +10,6 @@ import javax.swing.JButton
 class ToolbarButtonCreateNoteComponent {
 
     fun build(project: Project): JButton {
-
         val createNote = ButtonComponent()
             .build(AddFile, getMessage("toolbar.note.create"))
 

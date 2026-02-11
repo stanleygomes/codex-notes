@@ -11,5 +11,7 @@
     <extensions defaultExtensionNs="com.intellij">
         <toolWindow factoryClass="org.jetbrains.plugins.template.toolWindow.MyToolWindowFactory" id="MyToolWindow"/>
         <postStartupActivity implementation="org.jetbrains.plugins.template.startup.MyProjectActivity" />
+        <projectService serviceImplementation="org.jetbrains.plugins.template.service.NoteStorageService"/>
+        <projectService serviceImplementation="org.jetbrains.plugins.template.service.NoteEventService"/>
     </extensions>
 </idea-plugin>

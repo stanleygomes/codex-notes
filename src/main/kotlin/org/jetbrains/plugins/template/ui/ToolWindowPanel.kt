@@ -5,6 +5,8 @@ import com.intellij.ui.components.JBPanel
 import org.jetbrains.plugins.template.ui.noteslist.NotesListComponent
 import org.jetbrains.plugins.template.ui.toolbar.ToolbarComponent
 import java.awt.BorderLayout
+import java.awt.BorderLayout.CENTER
+import java.awt.BorderLayout.NORTH
 
 class ToolWindowPanel {
 
@@ -12,11 +14,15 @@ class ToolWindowPanel {
         return JBPanel<JBPanel<*>>().apply {
             layout = BorderLayout()
 
-            val toolbar = ToolbarComponent().build(project)
-            add(toolbar, BorderLayout.NORTH)
+            val toolbar = ToolbarComponent()
+                .build(project)
 
-            val itemList = NotesListComponent().build()
-            add(itemList, BorderLayout.CENTER)
+            add(toolbar, NORTH)
+
+            val notesList = NotesListComponent()
+                .build(project)
+
+            add(notesList, CENTER)
         }
     }
 }
