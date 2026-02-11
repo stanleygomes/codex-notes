@@ -7,6 +7,7 @@ import com.intellij.openapi.vfs.VirtualFile
 import org.jetbrains.plugins.template.helper.FileHelper
 import org.jetbrains.plugins.template.helper.NoteNameHelper
 import org.jetbrains.plugins.template.repository.NoteStorageRepository
+import org.jetbrains.plugins.template.repository.NotesSettingsRepository
 
 class CreateNoteService {
 
@@ -18,7 +19,11 @@ class CreateNoteService {
         val title = NoteNameHelper
             .generateUntitledName(notes)
 
-        val fileName = "$title.md"
+        val extension = NotesSettingsRepository
+            .getInstance(project)
+            .getDefaultFileExtension()
+
+        val fileName = "$title$extension"
         val tempDir = FileHelper.getTempDir()
         val file = FileHelper.createFile(tempDir, fileName)
 
