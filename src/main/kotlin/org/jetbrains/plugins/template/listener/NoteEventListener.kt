@@ -1,12 +1,11 @@
-package org.jetbrains.plugins.template.service
+package org.jetbrains.plugins.template.listener
 
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
-import org.jetbrains.plugins.template.listener.NoteListener
 
 @Service(Service.Level.PROJECT)
-class NoteEventService {
+class NoteEventListener {
     private val listeners = mutableListOf<NoteListener>()
 
     fun addListener(listener: NoteListener) {
@@ -30,8 +29,7 @@ class NoteEventService {
     }
 
     companion object {
-        fun getInstance(project: Project): NoteEventService =
+        fun getInstance(project: Project): NoteEventListener =
             project.service()
     }
 }
-

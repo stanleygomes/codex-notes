@@ -1,4 +1,4 @@
-package org.jetbrains.plugins.template.service
+package org.jetbrains.plugins.template.repository
 
 import com.intellij.openapi.components.PersistentStateComponent
 import com.intellij.openapi.components.Service
@@ -7,6 +7,7 @@ import com.intellij.openapi.components.Storage
 import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
 import org.jetbrains.plugins.template.dto.Note
+import org.jetbrains.plugins.template.listener.NoteEventListener
 import org.jetbrains.plugins.template.state.NoteState
 import java.util.UUID
 
@@ -15,7 +16,7 @@ import java.util.UUID
     name = "NoteStorage",
     storages = [Storage("notes.xml")]
 )
-class NoteStorageService : PersistentStateComponent<NoteState> {
+class NoteStorageRepository : PersistentStateComponent<NoteState> {
     private var state = NoteState()
 
     override fun getState(): NoteState = state
@@ -32,8 +33,13 @@ class NoteStorageService : PersistentStateComponent<NoteState> {
             createdAt = System.currentTimeMillis(),
             updatedAt = System.currentTimeMillis()
         )
+
         state.notes.add(note)
-        NoteEventService.getInstance(project).notifyNoteCreated()
+
+        NoteEventListener
+            .getInstance(project)
+            .notifyNoteCreated()
+
         return note
     }
 
@@ -42,12 +48,18 @@ class NoteStorageService : PersistentStateComponent<NoteState> {
             title?.let { this.title = it }
             updatedAt = System.currentTimeMillis()
         }
-        NoteEventService.getInstance(project).notifyNoteUpdated()
+
+        NoteEventListener
+            .getInstance(project)
+            .notifyNoteUpdated()
     }
 
     fun removeNote(project: Project, id: String) {
         state.notes.removeIf { it.id == id }
-        NoteEventService.getInstance(project).notifyNoteDeleted()
+
+        NoteEventListener
+            .getInstance(project)
+            .notifyNoteDeleted()
     }
 
     fun getAllNotes(): List<Note> = state.notes.toList()
@@ -62,7 +74,7 @@ class NoteStorageService : PersistentStateComponent<NoteState> {
         state.notes.sortedByDescending { it.updatedAt }
 
     companion object {
-        fun getInstance(project: Project): NoteStorageService =
+        fun getInstance(project: Project): NoteStorageRepository =
             project.service()
     }
 }
