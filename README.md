@@ -192,7 +192,7 @@ It provides general information about the plugin, its dependencies, extensions, 
 
 ```xml
 <idea-plugin>
-  <id>org.jetbrains.plugins.template</id>
+  <id>com.nazarethlabs.notes</id>
   <name>Template</name>
   <vendor>JetBrains</vendor>
 

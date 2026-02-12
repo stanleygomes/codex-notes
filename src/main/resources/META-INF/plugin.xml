@@ -1,6 +1,6 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
-    <id>org.jetbrains.plugins.template</id>
+    <id>com.nazarethlabs.notes</id>
     <name>IntelliJ Platform Plugin Template</name>
     <vendor>JetBrains</vendor>
 
@@ -9,12 +9,12 @@
     <resource-bundle>messages.MyBundle</resource-bundle>
 
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow factoryClass="org.jetbrains.plugins.template.AppWindowFactory" id="MyToolWindow" icon="/icons/tab-icon.svg"/>
-        <postStartupActivity implementation="org.jetbrains.plugins.template.AppStartupActivity" />
-        <projectService serviceImplementation="org.jetbrains.plugins.template.repository.NoteStorageRepository"/>
-        <projectService serviceImplementation="org.jetbrains.plugins.template.listener.NoteEventListener"/>
-        <projectService serviceImplementation="org.jetbrains.plugins.template.repository.NotesSettingsRepository"/>
-        <projectConfigurable parentId="tools" instance="org.jetbrains.plugins.template.ui.settings.NotesConfigurable"
+        <toolWindow factoryClass="com.nazarethlabs.notes.AppWindowFactory" id="MyToolWindow" icon="/icons/tab-icon.svg"/>
+        <postStartupActivity implementation="com.nazarethlabs.notes.AppStartupActivity" />
+        <projectService serviceImplementation="com.nazarethlabs.notes.repository.NoteStorageRepository"/>
+        <projectService serviceImplementation="com.nazarethlabs.notes.listener.NoteEventListener"/>
+        <projectService serviceImplementation="com.nazarethlabs.notes.repository.NotesSettingsRepository"/>
+        <projectConfigurable parentId="tools" instance="com.nazarethlabs.notes.ui.settings.NotesConfigurable"
                              id="notes.settings"
                              displayName="Notes Plugin"/>
     </extensions>
