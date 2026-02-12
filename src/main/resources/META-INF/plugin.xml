@@ -9,7 +9,7 @@
     <resource-bundle>messages.MyBundle</resource-bundle>
 
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow factoryClass="org.jetbrains.plugins.template.AppWindowFactory" id="MyToolWindow"/>
+        <toolWindow factoryClass="org.jetbrains.plugins.template.AppWindowFactory" id="MyToolWindow" icon="/icons/tab-icon.svg"/>
         <postStartupActivity implementation="org.jetbrains.plugins.template.AppStartupActivity" />
         <projectService serviceImplementation="org.jetbrains.plugins.template.repository.NoteStorageRepository"/>
         <projectService serviceImplementation="org.jetbrains.plugins.template.listener.NoteEventListener"/>

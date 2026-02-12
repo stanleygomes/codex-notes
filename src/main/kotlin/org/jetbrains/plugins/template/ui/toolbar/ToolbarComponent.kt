@@ -29,15 +29,15 @@ class ToolbarComponent {
             val rightPanel = JBPanel<JBPanel<*>>().apply {
                 layout = BoxLayout(this, BoxLayout.X_AXIS)
 
-                val sortButton = ToolbarButtonSortComponent()
-                    .build(project, notesListComponent)
-                add(sortButton)
-
-                add(Box.createHorizontalStrut(2))
-
                 val searchButton = ToolbarButtonSearchComponent()
                     .build(notesListComponent)
                 add(searchButton)
+
+                add(Box.createHorizontalStrut(2))
+
+                val sortButton = ToolbarButtonSortComponent()
+                    .build(project, notesListComponent)
+                add(sortButton)
 
                 add(Box.createHorizontalStrut(2))
 
