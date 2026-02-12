@@ -1,19 +1,19 @@
 package com.nazarethlabs.notes.ui.settings
 
 import com.intellij.openapi.options.Configurable
-import com.intellij.openapi.project.ProjectManager
 import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.JBTextField
 import com.intellij.util.ui.FormBuilder
 import com.intellij.util.ui.JBUI
 import com.nazarethlabs.notes.helper.FileExtensionHelper
 import com.nazarethlabs.notes.helper.MessageHelper
-import com.nazarethlabs.notes.repository.NotesSettingsRepository
+import com.nazarethlabs.notes.service.NotesSettingsService
+import java.awt.BorderLayout
+import java.awt.BorderLayout.NORTH
 import javax.swing.JComponent
 import javax.swing.JPanel
-import java.awt.BorderLayout
 
-class NotesConfigurable : Configurable {
+class NotesConfigComponent : Configurable {
 
     private var mainPanel: JPanel? = null
     private var fileExtensionField: JBTextField? = null
@@ -40,28 +40,25 @@ class NotesConfigurable : Configurable {
 
         mainPanel = JPanel(BorderLayout()).apply {
             border = JBUI.Borders.empty(10)
-            add(formPanel, BorderLayout.NORTH)
+            add(formPanel, NORTH)
         }
 
         return mainPanel!!
     }
 
     override fun isModified(): Boolean {
-        val project = ProjectManager.getInstance().openProjects.firstOrNull() ?: return false
-        val settings = NotesSettingsRepository.getInstance(project)
+        val settings = NotesSettingsService()
         val currentExtension = FileExtensionHelper.normalizeExtension(fileExtensionField?.text ?: "")
         return currentExtension != settings.getDefaultFileExtension()
     }
 
     override fun apply() {
-        val project = ProjectManager.getInstance().openProjects.firstOrNull() ?: return
-        val settings = NotesSettingsRepository.getInstance(project)
+        val settings = NotesSettingsService()
         settings.setDefaultFileExtension(FileExtensionHelper.normalizeExtension(fileExtensionField?.text ?: ""))
     }
 
     override fun reset() {
-        val project = ProjectManager.getInstance().openProjects.firstOrNull() ?: return
-        val settings = NotesSettingsRepository.getInstance(project)
+        val settings = NotesSettingsService()
         fileExtensionField?.text = settings.getDefaultFileExtension()
     }
 

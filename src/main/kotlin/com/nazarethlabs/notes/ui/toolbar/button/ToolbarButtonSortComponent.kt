@@ -5,7 +5,7 @@ import com.intellij.icons.AllIcons
 import com.intellij.util.ui.JBUI
 import com.nazarethlabs.notes.enum.SortTypeEnum
 import com.nazarethlabs.notes.helper.MessageHelper
-import com.nazarethlabs.notes.repository.NotesSettingsRepository
+import com.nazarethlabs.notes.service.NotesSettingsService
 import com.nazarethlabs.notes.ui.component.ButtonComponent
 import com.nazarethlabs.notes.ui.noteslist.NotesListComponent
 import javax.swing.JButton
@@ -46,10 +46,12 @@ class ToolbarButtonSortComponent {
         val itemInset = JBUI.Borders.empty(5, 10, 5, 10)
         val item = JMenuItem(MessageHelper.getMessage(messageKey))
         item.border = itemInset
+
         item.addActionListener {
             notesListComponent.sortBy(sortType)
-            NotesSettingsRepository.getInstance(project).setDefaultSortType(sortType)
+            NotesSettingsService().setDefaultSortType(sortType)
         }
+
         return item
     }
 }

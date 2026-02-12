@@ -11,10 +11,10 @@
     <extensions defaultExtensionNs="com.intellij">
         <toolWindow factoryClass="com.nazarethlabs.notes.AppWindowFactory" id="Codex Notes" icon="/icons/tab-icon.svg"/>
         <postStartupActivity implementation="com.nazarethlabs.notes.AppStartupActivity" />
-        <projectService serviceImplementation="com.nazarethlabs.notes.repository.NoteStorageRepository"/>
+        <applicationService serviceImplementation="com.nazarethlabs.notes.repository.NoteStorageRepository"/>
         <projectService serviceImplementation="com.nazarethlabs.notes.listener.NoteEventListener"/>
-        <projectService serviceImplementation="com.nazarethlabs.notes.repository.NotesSettingsRepository"/>
-        <projectConfigurable parentId="tools" instance="com.nazarethlabs.notes.ui.settings.NotesConfigurable"
+        <applicationService serviceImplementation="com.nazarethlabs.notes.repository.NotesSettingsRepository"/>
+        <projectConfigurable parentId="tools" instance="com.nazarethlabs.notes.ui.settings.NotesConfigComponent"
                              id="notes.settings"
                              displayName="Notes Plugin"/>
     </extensions>

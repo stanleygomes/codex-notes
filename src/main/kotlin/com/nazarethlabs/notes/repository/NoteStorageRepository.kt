@@ -1,17 +1,17 @@
 package com.nazarethlabs.notes.repository
 
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.PersistentStateComponent
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.State
 import com.intellij.openapi.components.Storage
-import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
 import com.nazarethlabs.notes.dto.Note
 import com.nazarethlabs.notes.listener.NoteEventListener
 import com.nazarethlabs.notes.state.NoteState
 import java.util.UUID
 
-@Service(Service.Level.PROJECT)
+@Service(Service.Level.APP)
 @State(
     name = "NoteStorage",
     storages = [Storage("notes.xml")]
@@ -85,7 +85,7 @@ class NoteStorageRepository : PersistentStateComponent<NoteState> {
         state.notes.sortedByDescending { it.updatedAt }
 
     companion object {
-        fun getInstance(project: Project): NoteStorageRepository =
-            project.service()
+        fun getInstance(): NoteStorageRepository =
+            ApplicationManager.getApplication().getService(NoteStorageRepository::class.java)
     }
 }

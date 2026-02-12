@@ -35,7 +35,7 @@ class RenameNoteService {
                         note.title = newTitle
                         note.filePath = FileHelper.getNewFilePath(note.filePath, newTitle)
                         NoteStorageRepository
-                            .getInstance(project)
+                            .getInstance()
                             .updateNote(project, note.id, newTitle)
                     } else {
                         throw RuntimeException(

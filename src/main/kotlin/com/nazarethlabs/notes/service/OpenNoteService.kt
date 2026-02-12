@@ -19,7 +19,7 @@ class OpenNoteService {
                 .openFile(virtualFile, true)
 
             NoteStorageRepository
-                .getInstance(project)
+                .getInstance()
                 .updateNote(project, note.id)
         }
     }

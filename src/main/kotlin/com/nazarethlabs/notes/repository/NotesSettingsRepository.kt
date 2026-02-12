@@ -1,14 +1,14 @@
 package com.nazarethlabs.notes.repository
 
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.PersistentStateComponent
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.State
 import com.intellij.openapi.components.Storage
-import com.intellij.openapi.project.Project
 import com.nazarethlabs.notes.enum.SortTypeEnum
 import com.nazarethlabs.notes.state.ConfigurationState
 
-@Service(Service.Level.PROJECT)
+@Service(Service.Level.APP)
 @State(
     name = "NotesSettingsState",
     storages = [Storage("notesSettings.xml")]
@@ -24,8 +24,8 @@ class NotesSettingsRepository : PersistentStateComponent<ConfigurationState> {
     }
 
     companion object {
-        fun getInstance(project: Project): NotesSettingsRepository {
-            return project.getService(NotesSettingsRepository::class.java)
+        fun getInstance(): NotesSettingsRepository {
+            return ApplicationManager.getApplication().getService(NotesSettingsRepository::class.java)
         }
     }
 

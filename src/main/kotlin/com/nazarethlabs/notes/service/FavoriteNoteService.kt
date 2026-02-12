@@ -8,7 +8,7 @@ class FavoriteNoteService {
 
     fun toggleFavorite(project: Project, note: Note) {
         NoteStorageRepository
-            .getInstance(project)
+            .getInstance()
             .toggleFavorite(project, note.id)
     }
 }

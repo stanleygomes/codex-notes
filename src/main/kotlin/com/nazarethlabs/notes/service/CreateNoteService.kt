@@ -7,20 +7,18 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.nazarethlabs.notes.helper.FileHelper
 import com.nazarethlabs.notes.helper.NoteNameHelper
 import com.nazarethlabs.notes.repository.NoteStorageRepository
-import com.nazarethlabs.notes.repository.NotesSettingsRepository
 
 class CreateNoteService {
 
     fun create(project: Project): VirtualFile? {
         val notes = NoteStorageRepository
-            .getInstance(project)
+            .getInstance()
             .getAllNotes()
 
         val title = NoteNameHelper
             .generateUntitledName(notes)
 
-        val extension = NotesSettingsRepository
-            .getInstance(project)
+        val extension = NotesSettingsService()
             .getDefaultFileExtension()
 
         val fileName = "$title$extension"
@@ -33,7 +31,7 @@ class CreateNoteService {
 
         if (virtualFile != null) {
             NoteStorageRepository
-                .getInstance(project)
+                .getInstance()
                 .addNote(project, title, virtualFile.path)
 
             FileEditorManager

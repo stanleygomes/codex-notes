@@ -21,7 +21,7 @@ class DeleteNoteService {
             FileHelper.deleteFile(note.filePath)
 
             NoteStorageRepository
-                .getInstance(project)
+                .getInstance()
                 .removeNote(project, note.id)
         }
     }

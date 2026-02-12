@@ -3,13 +3,18 @@ package com.nazarethlabs.notes.ui.noteslist
 import com.intellij.openapi.project.Project
 import com.nazarethlabs.notes.dto.Note
 import com.nazarethlabs.notes.enum.SortTypeEnum
+import com.nazarethlabs.notes.enum.SortTypeEnum.DATE
+import com.nazarethlabs.notes.enum.SortTypeEnum.FAVORITE
+import com.nazarethlabs.notes.enum.SortTypeEnum.TITLE
 import com.nazarethlabs.notes.listener.NoteEventListener
-import com.nazarethlabs.notes.listener.NoteListener
 import com.nazarethlabs.notes.listener.NoteListKeyListener
 import com.nazarethlabs.notes.listener.NoteListMouseListener
+import com.nazarethlabs.notes.listener.NoteListener
 import com.nazarethlabs.notes.repository.NoteStorageRepository
-import com.nazarethlabs.notes.repository.NotesSettingsRepository
+import com.nazarethlabs.notes.service.NotesSettingsService
 import java.awt.BorderLayout
+import java.awt.BorderLayout.CENTER
+import java.awt.BorderLayout.NORTH
 import javax.swing.DefaultListModel
 import javax.swing.JList
 import javax.swing.JPanel
@@ -22,14 +27,14 @@ class NotesListComponent : NoteListener {
     private lateinit var noteStorage: NoteStorageRepository
     private lateinit var project: Project
     private lateinit var searchPanel: JPanel
-    private var currentSortTypeEnum: SortTypeEnum = SortTypeEnum.DATE
+    private var currentSortTypeEnum: SortTypeEnum = DATE
 
     fun build(project: Project): JPanel {
         this.project = project
 
         listModel = DefaultListModel()
-        noteStorage = NoteStorageRepository.getInstance(project)
-        currentSortTypeEnum = NotesSettingsRepository.getInstance(project).getDefaultSortType()
+        noteStorage = NoteStorageRepository.getInstance()
+        currentSortTypeEnum = NotesSettingsService().getDefaultSortType()
         NoteEventListener.getInstance(project).addListener(this)
 
         refreshList()
@@ -60,8 +65,8 @@ class NotesListComponent : NoteListener {
         val scrollPane = JScrollPane(list)
 
         return JPanel(BorderLayout()).apply {
-            add(searchPanel, BorderLayout.NORTH)
-            add(scrollPane, BorderLayout.CENTER)
+            add(searchPanel, NORTH)
+            add(scrollPane, CENTER)
         }
     }
 
@@ -81,9 +86,9 @@ class NotesListComponent : NoteListener {
         listModel.clear()
 
         val notes = when (currentSortTypeEnum) {
-            SortTypeEnum.TITLE -> noteStorage.getAllNotes().sortedBy { it.title.lowercase() }
-            SortTypeEnum.DATE -> noteStorage.getAllNotes().sortedByDescending { it.updatedAt }
-            SortTypeEnum.FAVORITE -> noteStorage.getAllNotes().sortedWith(compareByDescending<Note> { it.isFavorite }.thenByDescending { it.updatedAt })
+            TITLE -> noteStorage.getAllNotes().sortedBy { it.title.lowercase() }
+            DATE -> noteStorage.getAllNotes().sortedByDescending { it.updatedAt }
+            FAVORITE -> noteStorage.getAllNotes().sortedWith(compareByDescending<Note> { it.isFavorite }.thenByDescending { it.updatedAt })
         }
 
         notes.forEach { note ->
