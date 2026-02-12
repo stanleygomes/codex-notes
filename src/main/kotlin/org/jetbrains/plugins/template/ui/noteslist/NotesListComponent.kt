@@ -8,6 +8,7 @@ import org.jetbrains.plugins.template.listener.NoteListener
 import org.jetbrains.plugins.template.listener.NoteListKeyListener
 import org.jetbrains.plugins.template.listener.NoteListMouseListener
 import org.jetbrains.plugins.template.repository.NoteStorageRepository
+import org.jetbrains.plugins.template.repository.NotesSettingsRepository
 import java.awt.BorderLayout
 import javax.swing.DefaultListModel
 import javax.swing.JList
@@ -28,6 +29,7 @@ class NotesListComponent : NoteListener {
 
         listModel = DefaultListModel()
         noteStorage = NoteStorageRepository.getInstance(project)
+        currentSortTypeEnum = NotesSettingsRepository.getInstance(project).getDefaultSortType()
         NoteEventListener.getInstance(project).addListener(this)
 
         refreshList()

@@ -5,7 +5,7 @@ import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.State
 import com.intellij.openapi.components.Storage
 import com.intellij.openapi.project.Project
-import org.jetbrains.plugins.template.dto.Configuration
+import org.jetbrains.plugins.template.enum.SortTypeEnum
 import org.jetbrains.plugins.template.state.ConfigurationState
 
 @Service(Service.Level.PROJECT)
@@ -30,14 +30,18 @@ class NotesSettingsRepository : PersistentStateComponent<ConfigurationState> {
     }
 
     fun getDefaultFileExtension(): String {
-        return state.configurations.firstOrNull()?.defaultFileExtension ?: ".md"
+        return state.configuration.defaultFileExtension!!
     }
 
     fun setDefaultFileExtension(extension: String) {
-        val config = state.configurations.firstOrNull() ?: Configuration()
-        config.defaultFileExtension = extension
-        if (state.configurations.isEmpty()) {
-            state.configurations.add(config)
-        }
+        state.configuration.defaultFileExtension = extension
+    }
+
+    fun getDefaultSortType(): SortTypeEnum {
+        return state.configuration.defaultSortType
+    }
+
+    fun setDefaultSortType(sortType: SortTypeEnum) {
+        state.configuration.defaultSortType = sortType
     }
 }

@@ -30,7 +30,7 @@ class ToolbarComponent {
                 layout = BoxLayout(this, BoxLayout.X_AXIS)
 
                 val sortButton = ToolbarButtonSortComponent()
-                    .build(notesListComponent)
+                    .build(project, notesListComponent)
                 add(sortButton)
 
                 add(Box.createHorizontalStrut(2))
