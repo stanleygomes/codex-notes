@@ -27,6 +27,9 @@ class NotesListComponent : NoteListener {
     private lateinit var noteStorage: NoteStorageRepository
     private lateinit var project: Project
     private lateinit var searchPanel: JPanel
+    private lateinit var mainPanel: JPanel
+    private lateinit var scrollPane: JScrollPane
+    private lateinit var emptyStatePanel: JPanel
     private var currentSortTypeEnum: SortTypeEnum = DATE
 
     fun build(project: Project): JPanel {
@@ -62,12 +65,15 @@ class NotesListComponent : NoteListener {
 
         list.addKeyListener(keyListener)
 
-        val scrollPane = JScrollPane(list)
+        scrollPane = JScrollPane(list)
+        emptyStatePanel = EmptyStateComponent().build()
 
-        return JPanel(BorderLayout()).apply {
+        mainPanel = JPanel(BorderLayout()).apply {
             add(searchPanel, NORTH)
-            add(scrollPane, CENTER)
+            add(if (listModel.isEmpty) emptyStatePanel else scrollPane, CENTER)
         }
+
+        return mainPanel
     }
 
     fun toggleSearch() {
@@ -93,6 +99,18 @@ class NotesListComponent : NoteListener {
 
         notes.forEach { note ->
             listModel.addElement(note)
+        }
+
+        updateView()
+    }
+
+    private fun updateView() {
+        if (::mainPanel.isInitialized) {
+            mainPanel.removeAll()
+            mainPanel.add(searchPanel, NORTH)
+            mainPanel.add(if (listModel.isEmpty) emptyStatePanel else scrollPane, CENTER)
+            mainPanel.revalidate()
+            mainPanel.repaint()
         }
     }
 

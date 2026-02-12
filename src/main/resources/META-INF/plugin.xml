@@ -1,8 +1,8 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
-    <id>com.nazarethlabs.notes</id>
+    <id>com.nazarethlabs.codex</id>
     <name>Codex Notes</name>
-    <vendor>StanleyGomes</vendor>
+    <vendor>stanleygomes</vendor>
 
     <depends>com.intellij.modules.platform</depends>
 
