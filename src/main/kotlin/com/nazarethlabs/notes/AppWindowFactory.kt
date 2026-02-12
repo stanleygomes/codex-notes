@@ -25,7 +25,7 @@ class AppWindowFactory : ToolWindowFactory {
     override fun shouldBeAvailable(project: Project) = true
 
     class MyToolWindow(private val project: Project) {
-        fun getContent() = _root_ide_package_.com.nazarethlabs.notes.ui.ToolWindowPanel()
+        fun getContent() = ToolWindowPanel()
             .create(project)
     }
 }

@@ -1,15 +1,15 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
     <id>com.nazarethlabs.notes</id>
-    <name>IntelliJ Platform Plugin Template</name>
-    <vendor>JetBrains</vendor>
+    <name>Codex Notes</name>
+    <vendor>StanleyGomes</vendor>
 
     <depends>com.intellij.modules.platform</depends>
 
     <resource-bundle>messages.MyBundle</resource-bundle>
 
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow factoryClass="com.nazarethlabs.notes.AppWindowFactory" id="MyToolWindow" icon="/icons/tab-icon.svg"/>
+        <toolWindow factoryClass="com.nazarethlabs.notes.AppWindowFactory" id="Codex Notes" icon="/icons/tab-icon.svg"/>
         <postStartupActivity implementation="com.nazarethlabs.notes.AppStartupActivity" />
         <projectService serviceImplementation="com.nazarethlabs.notes.repository.NoteStorageRepository"/>
         <projectService serviceImplementation="com.nazarethlabs.notes.listener.NoteEventListener"/>
