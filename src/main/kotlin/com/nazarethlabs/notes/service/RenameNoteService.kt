@@ -10,6 +10,7 @@ import com.nazarethlabs.notes.repository.NoteStorageRepository
 class RenameNoteService {
 
     fun rename(project: Project, note: Note) {
+        val fileExtension = note.filePath.substringAfterLast('.', "")
         var newTitle: String?
         do {
             newTitle = DialogHelper.showInputDialog(
@@ -23,7 +24,9 @@ class RenameNoteService {
                 return
             }
 
-            if (FileHelper.fileExists(FileHelper.getParentPath(note.filePath), newTitle)) {
+            val newFileName = if (fileExtension.isNotEmpty()) "$newTitle.$fileExtension" else newTitle
+
+            if (FileHelper.fileExists(FileHelper.getParentPath(note.filePath), newFileName)) {
                 DialogHelper.showWarningDialog(
                     project,
                     MessageHelper.getMessage("dialog.rename.error.exists", newTitle),
@@ -31,9 +34,9 @@ class RenameNoteService {
                 )
             } else {
                 try {
-                    if (FileHelper.renameFile(note.filePath, newTitle)) {
+                    if (FileHelper.renameFile(note.filePath, newFileName)) {
                         note.title = newTitle
-                        note.filePath = FileHelper.getNewFilePath(note.filePath, newTitle)
+                        note.filePath = FileHelper.getNewFilePath(note.filePath, newFileName)
                         NoteStorageRepository
                             .getInstance()
                             .updateNote(project, note.id, newTitle)
