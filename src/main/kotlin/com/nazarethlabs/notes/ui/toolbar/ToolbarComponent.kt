@@ -19,7 +19,7 @@ class ToolbarComponent {
     fun build(project: Project, notesListComponent: NotesListComponent): JBPanel<JBPanel<*>> {
         return JBPanel<JBPanel<*>>().apply {
             layout = BorderLayout()
-            border = JBUI.Borders.empty(5)
+            border = JBUI.Borders.empty(8, 10)
 
             val createNote = ToolbarButtonCreateNoteComponent()
                 .build(project)
@@ -33,13 +33,13 @@ class ToolbarComponent {
                     .build(notesListComponent)
                 add(searchButton)
 
-                add(Box.createHorizontalStrut(2))
+                add(Box.createHorizontalStrut(4))
 
                 val sortButton = ToolbarButtonSortComponent()
                     .build(project, notesListComponent)
                 add(sortButton)
 
-                add(Box.createHorizontalStrut(2))
+                add(Box.createHorizontalStrut(4))
 
                 val settingsButton = ToolbarButtonSettingsComponent()
                     .build(project)
