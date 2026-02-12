@@ -1,6 +1,7 @@
 package com.nazarethlabs.notes.ui.noteslist
 
 import com.intellij.ui.components.JBTextField
+import com.intellij.util.ui.JBUI
 import com.nazarethlabs.notes.MyBundle
 import com.nazarethlabs.notes.dto.Note
 import com.nazarethlabs.notes.helper.SearchHelper
@@ -30,6 +31,7 @@ class SearchComponent {
         }
 
         return JPanel(BorderLayout()).apply {
+            border = JBUI.Borders.empty(5)
             add(searchField, CENTER)
         }
     }

@@ -52,6 +52,7 @@ class RenameNoteService {
                         MessageHelper.getMessage("dialog.rename.error.title")
                     )
                 }
+
                 break
             }
         } while (true)
