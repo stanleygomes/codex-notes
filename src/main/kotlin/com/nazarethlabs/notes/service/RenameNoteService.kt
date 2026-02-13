@@ -8,17 +8,20 @@ import com.nazarethlabs.notes.helper.MessageHelper
 import com.nazarethlabs.notes.repository.NoteStorageRepository
 
 class RenameNoteService {
-
-    fun rename(project: Project, note: Note) {
+    fun rename(
+        project: Project,
+        note: Note,
+    ) {
         val fileExtension = note.filePath.substringAfterLast('.', "")
         var newTitle: String?
         do {
-            newTitle = DialogHelper.showInputDialog(
-                project,
-                MessageHelper.getMessage("dialog.rename.note.message"),
-                MessageHelper.getMessage("dialog.rename.note.title"),
-                note.title
-            )
+            newTitle =
+                DialogHelper.showInputDialog(
+                    project,
+                    MessageHelper.getMessage("dialog.rename.note.message"),
+                    MessageHelper.getMessage("dialog.rename.note.title"),
+                    note.title,
+                )
 
             if (newTitle.isNullOrBlank() || newTitle == note.title) {
                 return
@@ -30,7 +33,7 @@ class RenameNoteService {
                 DialogHelper.showWarningDialog(
                     project,
                     MessageHelper.getMessage("dialog.rename.error.exists", newTitle),
-                    MessageHelper.getMessage("dialog.rename.error.title")
+                    MessageHelper.getMessage("dialog.rename.error.title"),
                 )
             } else {
                 try {
@@ -42,14 +45,14 @@ class RenameNoteService {
                             .updateNote(note.id, newTitle)
                     } else {
                         throw RuntimeException(
-                            MessageHelper.getMessage("dialog.rename.error.failed")
+                            MessageHelper.getMessage("dialog.rename.error.failed"),
                         )
                     }
                 } catch (_: Exception) {
                     DialogHelper.showErrorDialog(
                         project,
                         MessageHelper.getMessage("dialog.rename.error.failed"),
-                        MessageHelper.getMessage("dialog.rename.error.title")
+                        MessageHelper.getMessage("dialog.rename.error.title"),
                     )
                 }
 

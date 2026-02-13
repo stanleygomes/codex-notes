@@ -1,7 +1,6 @@
 package com.nazarethlabs.notes.helper
 
 object TimeHelper {
-
     fun formatTimeAgo(updatedAt: Long): String {
         val now = System.currentTimeMillis()
         val diff = now - updatedAt

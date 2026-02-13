@@ -3,8 +3,10 @@ package com.nazarethlabs.notes.helper
 import java.io.File
 
 object FileHelper {
-
-    fun createFile(dir: String, fileName: String): File {
+    fun createFile(
+        dir: String,
+        fileName: String,
+    ): File {
         val file = File(dir, fileName)
         file.writeText("")
         return file
@@ -17,17 +19,24 @@ object FileHelper {
         }
     }
 
-    fun renameFile(oldPath: String, newName: String): Boolean {
+    fun renameFile(
+        oldPath: String,
+        newName: String,
+    ): Boolean {
         val oldFile = File(oldPath)
         val newFile = File(oldFile.parent, newName)
         return oldFile.exists() && oldFile.renameTo(newFile)
     }
 
-    fun fileExists(parent: String, name: String): Boolean {
-        return File(parent, name).exists()
-    }
+    fun fileExists(
+        parent: String,
+        name: String,
+    ): Boolean = File(parent, name).exists()
 
-    fun getNewFilePath(oldPath: String, newName: String): String {
+    fun getNewFilePath(
+        oldPath: String,
+        newName: String,
+    ): String {
         val oldFile = File(oldPath)
         return File(oldFile.parent, newName).absolutePath
     }

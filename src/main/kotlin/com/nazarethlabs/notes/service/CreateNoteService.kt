@@ -9,25 +9,28 @@ import com.nazarethlabs.notes.helper.NoteNameHelper
 import com.nazarethlabs.notes.repository.NoteStorageRepository
 
 class CreateNoteService {
-
     fun create(project: Project): VirtualFile? {
-        val notes = NoteStorageRepository
-            .getInstance()
-            .getAllNotes()
+        val notes =
+            NoteStorageRepository
+                .getInstance()
+                .getAllNotes()
 
-        val title = NoteNameHelper
-            .generateUntitledName(notes)
+        val title =
+            NoteNameHelper
+                .generateUntitledName(notes)
 
-        val extension = NotesSettingsService()
-            .getDefaultFileExtension()
+        val extension =
+            NotesSettingsService()
+                .getDefaultFileExtension()
 
         val fileName = "$title$extension"
         val tempDir = FileHelper.getTempDir()
         val file = FileHelper.createFile(tempDir, fileName)
 
-        val virtualFile = LocalFileSystem
-            .getInstance()
-            .findFileByIoFile(file)
+        val virtualFile =
+            LocalFileSystem
+                .getInstance()
+                .findFileByIoFile(file)
 
         if (virtualFile != null) {
             NoteStorageRepository

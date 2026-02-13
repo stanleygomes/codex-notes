@@ -14,34 +14,33 @@ import javax.swing.JComponent
 import javax.swing.JPanel
 
 class NotesConfigComponent : Configurable {
-
     private var mainPanel: JPanel? = null
     private var fileExtensionField: JBTextField? = null
 
-    override fun getDisplayName(): String {
-        return MessageHelper.getMessage("settings.display.name")
-    }
+    override fun getDisplayName(): String = MessageHelper.getMessage("settings.display.name")
 
     override fun createComponent(): JComponent {
         fileExtensionField = JBTextField()
 
         val descriptionLabel = JBLabel(MessageHelper.getMessage("settings.file.extension.description"))
 
-        val formPanel = FormBuilder.createFormBuilder()
-            .addLabeledComponent(
-                MessageHelper.getMessage("settings.file.extension.label"),
-                fileExtensionField!!,
-                1,
-                false
-            )
-            .addComponentToRightColumn(descriptionLabel, 1)
-            .addComponentFillVertically(JPanel(), 0)
-            .panel
+        val formPanel =
+            FormBuilder
+                .createFormBuilder()
+                .addLabeledComponent(
+                    MessageHelper.getMessage("settings.file.extension.label"),
+                    fileExtensionField!!,
+                    1,
+                    false,
+                ).addComponentToRightColumn(descriptionLabel, 1)
+                .addComponentFillVertically(JPanel(), 0)
+                .panel
 
-        mainPanel = JPanel(BorderLayout()).apply {
-            border = JBUI.Borders.empty(10)
-            add(formPanel, NORTH)
-        }
+        mainPanel =
+            JPanel(BorderLayout()).apply {
+                border = JBUI.Borders.empty(10)
+                add(formPanel, NORTH)
+            }
 
         return mainPanel!!
     }

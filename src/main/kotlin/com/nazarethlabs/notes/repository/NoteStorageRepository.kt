@@ -14,7 +14,7 @@ import java.util.UUID
 @Service(Service.Level.APP)
 @State(
     name = "NoteStorage",
-    storages = [Storage("notes.xml")]
+    storages = [Storage("notes.xml")],
 )
 class NoteStorageRepository : PersistentStateComponent<NoteState> {
     private var state = NoteState()
@@ -25,14 +25,18 @@ class NoteStorageRepository : PersistentStateComponent<NoteState> {
         this.state = state
     }
 
-    fun addNote(title: String, filePath: String): Note {
-        val note = Note(
-            id = UUID.randomUUID().toString(),
-            title = title,
-            filePath = filePath,
-            createdAt = System.currentTimeMillis(),
-            updatedAt = System.currentTimeMillis()
-        )
+    fun addNote(
+        title: String,
+        filePath: String,
+    ): Note {
+        val note =
+            Note(
+                id = UUID.randomUUID().toString(),
+                title = title,
+                filePath = filePath,
+                createdAt = System.currentTimeMillis(),
+                updatedAt = System.currentTimeMillis(),
+            )
 
         state.notes.add(note)
 
@@ -41,7 +45,10 @@ class NoteStorageRepository : PersistentStateComponent<NoteState> {
         return note
     }
 
-    fun updateNote(id: String, title: String? = null) {
+    fun updateNote(
+        id: String,
+        title: String? = null,
+    ) {
         state.notes.find { it.id == id }?.apply {
             title?.let { this.title = it }
             updatedAt = System.currentTimeMillis()
@@ -74,7 +81,6 @@ class NoteStorageRepository : PersistentStateComponent<NoteState> {
     }
 
     companion object {
-        fun getInstance(): NoteStorageRepository =
-            ApplicationManager.getApplication().getService(NoteStorageRepository::class.java)
+        fun getInstance(): NoteStorageRepository = ApplicationManager.getApplication().getService(NoteStorageRepository::class.java)
     }
 }

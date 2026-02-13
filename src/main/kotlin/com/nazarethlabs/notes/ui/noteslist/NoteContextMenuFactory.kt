@@ -13,14 +13,16 @@ import javax.swing.JMenuItem
 import javax.swing.JPopupMenu
 
 class NoteContextMenuFactory {
-
     private val itemInset = JBUI.Borders.empty(5, 10, 5, 10)
     private val openNoteService = OpenNoteService()
     private val renameNoteService = RenameNoteService()
     private val favoriteNoteService = FavoriteNoteService()
     private val deleteNoteService = DeleteNoteService()
 
-    fun create(project: Project, note: Note): JPopupMenu {
+    fun create(
+        project: Project,
+        note: Note,
+    ): JPopupMenu {
         val menu = JPopupMenu()
         menu.border = JBUI.Borders.empty(5)
 
@@ -43,7 +45,10 @@ class NoteContextMenuFactory {
         return menu
     }
 
-    private fun buildMenuItemOpen(project: Project, note: Note): JMenuItem {
+    private fun buildMenuItemOpen(
+        project: Project,
+        note: Note,
+    ): JMenuItem {
         val openItem = JMenuItem("${MyBundle.message("note.context.menu.open")} (Double-click)", AllIcons.Actions.MenuOpen)
 
         openItem.border = itemInset
@@ -54,7 +59,10 @@ class NoteContextMenuFactory {
         return openItem
     }
 
-    private fun buildMenuItemRename(project: Project, note: Note): JMenuItem {
+    private fun buildMenuItemRename(
+        project: Project,
+        note: Note,
+    ): JMenuItem {
         val renameItem = JMenuItem("${MyBundle.message("note.context.menu.rename")} (F2)", AllIcons.Actions.Edit)
         renameItem.border = itemInset
 
@@ -66,11 +74,12 @@ class NoteContextMenuFactory {
     }
 
     private fun buildMenuItemFavorite(note: Note): JMenuItem {
-        val favoriteText = if (note.isFavorite) {
-            "${MyBundle.message("note.context.menu.unfavorite")} (F)"
-        } else {
-            "${MyBundle.message("note.context.menu.favorite")} (F)"
-        }
+        val favoriteText =
+            if (note.isFavorite) {
+                "${MyBundle.message("note.context.menu.unfavorite")} (F)"
+            } else {
+                "${MyBundle.message("note.context.menu.favorite")} (F)"
+            }
 
         val favoriteIcon = AllIcons.Nodes.BookmarkGroup
         val favoriteItem = JMenuItem(favoriteText, favoriteIcon)
@@ -83,7 +92,10 @@ class NoteContextMenuFactory {
         return favoriteItem
     }
 
-    private fun buildMenuItemDelete(project: Project, note: Note): JMenuItem {
+    private fun buildMenuItemDelete(
+        project: Project,
+        note: Note,
+    ): JMenuItem {
         val deleteItem = JMenuItem("${MyBundle.message("note.context.menu.delete")} (Delete)", AllIcons.Actions.Cancel)
         deleteItem.border = itemInset
 

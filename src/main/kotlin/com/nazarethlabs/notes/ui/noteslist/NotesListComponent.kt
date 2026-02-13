@@ -22,7 +22,6 @@ import javax.swing.JScrollPane
 import javax.swing.ListCellRenderer
 
 class NotesListComponent : NoteListener {
-
     private lateinit var listModel: DefaultListModel<Note>
     private lateinit var noteStorage: NoteStorageRepository
     private lateinit var project: Project
@@ -46,32 +45,36 @@ class NotesListComponent : NoteListener {
         searchPanel.isVisible = false
 
         val list = JList(listModel)
-        list.cellRenderer = ListCellRenderer { list, value, _, isSelected, _ ->
-            NoteListItemComponent()
-                .build(theList = list, note = value, isSelected = isSelected)
-        }
+        list.cellRenderer =
+            ListCellRenderer { list, value, _, isSelected, _ ->
+                NoteListItemComponent()
+                    .build(theList = list, note = value, isSelected = isSelected)
+            }
 
-        val mouseListener = NoteListMouseListener(
-            project = project,
-            getSelectedValue = { list.selectedValue }
-        )
+        val mouseListener =
+            NoteListMouseListener(
+                project = project,
+                getSelectedValue = { list.selectedValue },
+            )
 
         list.addMouseListener(mouseListener)
 
-        val keyListener = NoteListKeyListener(
-            project = project,
-            getSelectedValue = { list.selectedValue }
-        )
+        val keyListener =
+            NoteListKeyListener(
+                project = project,
+                getSelectedValue = { list.selectedValue },
+            )
 
         list.addKeyListener(keyListener)
 
         scrollPane = JScrollPane(list)
         emptyStatePanel = EmptyStateComponent().build()
 
-        mainPanel = JPanel(BorderLayout()).apply {
-            add(searchPanel, NORTH)
-            add(if (listModel.isEmpty) emptyStatePanel else scrollPane, CENTER)
-        }
+        mainPanel =
+            JPanel(BorderLayout()).apply {
+                add(searchPanel, NORTH)
+                add(if (listModel.isEmpty) emptyStatePanel else scrollPane, CENTER)
+            }
 
         return mainPanel
     }
@@ -91,11 +94,15 @@ class NotesListComponent : NoteListener {
     private fun refreshList() {
         listModel.clear()
 
-        val notes = when (currentSortTypeEnum) {
-            TITLE -> noteStorage.getAllNotes().sortedBy { it.title.lowercase() }
-            DATE -> noteStorage.getAllNotes().sortedByDescending { it.updatedAt }
-            FAVORITE -> noteStorage.getAllNotes().sortedWith(compareByDescending<Note> { it.isFavorite }.thenByDescending { it.updatedAt })
-        }
+        val notes =
+            when (currentSortTypeEnum) {
+                TITLE -> noteStorage.getAllNotes().sortedBy { it.title.lowercase() }
+                DATE -> noteStorage.getAllNotes().sortedByDescending { it.updatedAt }
+                FAVORITE ->
+                    noteStorage.getAllNotes().sortedWith(
+                        compareByDescending<Note> { it.isFavorite }.thenByDescending { it.updatedAt },
+                    )
+            }
 
         notes.forEach { note ->
             listModel.addElement(note)

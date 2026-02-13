@@ -15,38 +15,44 @@ import javax.swing.Box
 import javax.swing.BoxLayout
 
 class ToolbarComponent {
-
-    fun build(project: Project, notesListComponent: NotesListComponent): JBPanel<JBPanel<*>> {
-        return JBPanel<JBPanel<*>>().apply {
+    fun build(
+        project: Project,
+        notesListComponent: NotesListComponent,
+    ): JBPanel<JBPanel<*>> =
+        JBPanel<JBPanel<*>>().apply {
             layout = BorderLayout()
             border = JBUI.Borders.empty(8, 10)
 
-            val createNote = ToolbarButtonCreateNoteComponent()
-                .build(project)
+            val createNote =
+                ToolbarButtonCreateNoteComponent()
+                    .build(project)
 
             add(createNote, WEST)
 
-            val rightPanel = JBPanel<JBPanel<*>>().apply {
-                layout = BoxLayout(this, BoxLayout.X_AXIS)
+            val rightPanel =
+                JBPanel<JBPanel<*>>().apply {
+                    layout = BoxLayout(this, BoxLayout.X_AXIS)
 
-                val searchButton = ToolbarButtonSearchComponent()
-                    .build(notesListComponent)
-                add(searchButton)
+                    val searchButton =
+                        ToolbarButtonSearchComponent()
+                            .build(notesListComponent)
+                    add(searchButton)
 
-                add(Box.createHorizontalStrut(4))
+                    add(Box.createHorizontalStrut(4))
 
-                val sortButton = ToolbarButtonSortComponent()
-                    .build(project, notesListComponent)
-                add(sortButton)
+                    val sortButton =
+                        ToolbarButtonSortComponent()
+                            .build(project, notesListComponent)
+                    add(sortButton)
 
-                add(Box.createHorizontalStrut(4))
+                    add(Box.createHorizontalStrut(4))
 
-                val settingsButton = ToolbarButtonSettingsComponent()
-                    .build(project)
-                add(settingsButton)
-            }
+                    val settingsButton =
+                        ToolbarButtonSettingsComponent()
+                            .build(project)
+                    add(settingsButton)
+                }
 
             add(rightPanel, EAST)
         }
-    }
 }

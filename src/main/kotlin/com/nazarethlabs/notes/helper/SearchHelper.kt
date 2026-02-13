@@ -3,8 +3,10 @@ package com.nazarethlabs.notes.helper
 import com.nazarethlabs.notes.dto.Note
 
 object SearchHelper {
-
-    fun search(notes: List<Note>, query: String): List<Note> {
+    fun search(
+        notes: List<Note>,
+        query: String,
+    ): List<Note> {
         if (query.isBlank()) {
             return notes
         }
@@ -12,16 +14,20 @@ object SearchHelper {
         val searchQuery = query.trim().lowercase()
         val searchTerms = searchQuery.split(" ").filter { it.isNotEmpty() }
 
-        return notes.map { note ->
-            val score = calculateScore(note, searchQuery, searchTerms)
-            note to score
-        }
-        .filter { it.second > 0 }
-        .sortedByDescending { it.second }
-        .map { it.first }
+        return notes
+            .map { note ->
+                val score = calculateScore(note, searchQuery, searchTerms)
+                note to score
+            }.filter { it.second > 0 }
+            .sortedByDescending { it.second }
+            .map { it.first }
     }
 
-    private fun calculateScore(note: Note, fullQuery: String, terms: List<String>): Int {
+    private fun calculateScore(
+        note: Note,
+        fullQuery: String,
+        terms: List<String>,
+    ): Int {
         val title = note.title.lowercase()
         var score = 0
 
@@ -58,4 +64,3 @@ object SearchHelper {
         return score
     }
 }
-

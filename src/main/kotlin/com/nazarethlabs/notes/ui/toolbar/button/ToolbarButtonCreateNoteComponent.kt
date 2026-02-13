@@ -8,10 +8,10 @@ import com.nazarethlabs.notes.ui.component.ButtonComponent
 import javax.swing.JButton
 
 class ToolbarButtonCreateNoteComponent {
-
     fun build(project: Project): JButton {
-        val createNote = ButtonComponent()
-            .build(Add, getMessage("toolbar.note.create"))
+        val createNote =
+            ButtonComponent()
+                .build(Add, getMessage("toolbar.note.create"))
 
         createNote.addActionListener {
             CreateNoteService()

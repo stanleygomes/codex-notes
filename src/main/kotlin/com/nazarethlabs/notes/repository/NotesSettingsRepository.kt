@@ -11,10 +11,9 @@ import com.nazarethlabs.notes.state.ConfigurationState
 @Service(Service.Level.APP)
 @State(
     name = "NotesSettingsState",
-    storages = [Storage("notesSettings.xml")]
+    storages = [Storage("notesSettings.xml")],
 )
 class NotesSettingsRepository : PersistentStateComponent<ConfigurationState> {
-
     private var state = ConfigurationState()
 
     override fun getState(): ConfigurationState = state
@@ -24,22 +23,16 @@ class NotesSettingsRepository : PersistentStateComponent<ConfigurationState> {
     }
 
     companion object {
-        fun getInstance(): NotesSettingsRepository {
-            return ApplicationManager.getApplication().getService(NotesSettingsRepository::class.java)
-        }
+        fun getInstance(): NotesSettingsRepository = ApplicationManager.getApplication().getService(NotesSettingsRepository::class.java)
     }
 
-    fun getDefaultFileExtension(): String {
-        return state.configuration.defaultFileExtension!!
-    }
+    fun getDefaultFileExtension(): String = state.configuration.defaultFileExtension!!
 
     fun setDefaultFileExtension(extension: String) {
         state.configuration.defaultFileExtension = extension
     }
 
-    fun getDefaultSortType(): SortTypeEnum {
-        return state.configuration.defaultSortType
-    }
+    fun getDefaultSortType(): SortTypeEnum = state.configuration.defaultSortType
 
     fun setDefaultSortType(sortType: SortTypeEnum) {
         state.configuration.defaultSortType = sortType

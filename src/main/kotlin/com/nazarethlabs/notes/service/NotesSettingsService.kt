@@ -4,12 +4,10 @@ import com.nazarethlabs.notes.enum.SortTypeEnum
 import com.nazarethlabs.notes.repository.NotesSettingsRepository
 
 class NotesSettingsService {
-
-    fun getDefaultFileExtension(): String {
-        return NotesSettingsRepository
+    fun getDefaultFileExtension(): String =
+        NotesSettingsRepository
             .getInstance()
             .getDefaultFileExtension()
-    }
 
     fun setDefaultFileExtension(extension: String) {
         NotesSettingsRepository
@@ -17,11 +15,10 @@ class NotesSettingsService {
             .setDefaultFileExtension(extension)
     }
 
-    fun getDefaultSortType(): SortTypeEnum {
-        return NotesSettingsRepository
+    fun getDefaultSortType(): SortTypeEnum =
+        NotesSettingsRepository
             .getInstance()
             .getDefaultSortType()
-    }
 
     fun setDefaultSortType(sortType: SortTypeEnum) {
         NotesSettingsRepository

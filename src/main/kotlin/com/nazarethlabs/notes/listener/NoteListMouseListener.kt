@@ -10,9 +10,8 @@ import javax.swing.SwingUtilities
 
 class NoteListMouseListener(
     private val project: Project,
-    private val getSelectedValue: () -> Note?
+    private val getSelectedValue: () -> Note?,
 ) : MouseAdapter() {
-
     override fun mouseClicked(e: MouseEvent) {
         if (e.clickCount == 2 && SwingUtilities.isLeftMouseButton(e)) {
             val selectedNote = getSelectedValue() ?: return
@@ -31,8 +30,9 @@ class NoteListMouseListener(
     private fun handleContextMenu(e: MouseEvent) {
         if (e.isPopupTrigger) {
             val selectedNote = getSelectedValue() ?: return
-            val menu = NoteContextMenuFactory()
-                .create(project, selectedNote)
+            val menu =
+                NoteContextMenuFactory()
+                    .create(project, selectedNote)
 
             menu.show(e.component, e.x, e.y)
         }

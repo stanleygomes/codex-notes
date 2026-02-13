@@ -15,9 +15,8 @@ import java.awt.event.KeyEvent.VK_F2
 
 class NoteListKeyListener(
     private val project: Project,
-    private val getSelectedValue: () -> Note?
+    private val getSelectedValue: () -> Note?,
 ) : KeyAdapter() {
-
     override fun keyPressed(e: KeyEvent) {
         if (e.keyCode == VK_ENTER) {
             val selectedNote = getSelectedValue() ?: return

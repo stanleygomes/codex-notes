@@ -7,10 +7,10 @@ import com.nazarethlabs.notes.ui.noteslist.NotesListComponent
 import javax.swing.JButton
 
 class ToolbarButtonSearchComponent {
-
     fun build(notesListComponent: NotesListComponent): JButton {
-        val searchButton = ButtonComponent()
-            .build(AllIcons.Actions.Find, MessageHelper.getMessage("toolbar.note.search"))
+        val searchButton =
+            ButtonComponent()
+                .build(AllIcons.Actions.Find, MessageHelper.getMessage("toolbar.note.search"))
 
         searchButton.addActionListener {
             notesListComponent.toggleSearch()

@@ -7,11 +7,14 @@ import com.nazarethlabs.notes.dto.Note
 import com.nazarethlabs.notes.repository.NoteStorageRepository
 
 class OpenNoteService {
-
-    fun open(project: Project, note: Note) {
-        val virtualFile = LocalFileSystem
-            .getInstance()
-            .findFileByPath(note.filePath)
+    fun open(
+        project: Project,
+        note: Note,
+    ) {
+        val virtualFile =
+            LocalFileSystem
+                .getInstance()
+                .findFileByPath(note.filePath)
 
         if (virtualFile != null) {
             FileEditorManager

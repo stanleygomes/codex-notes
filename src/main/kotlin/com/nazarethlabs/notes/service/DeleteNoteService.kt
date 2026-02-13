@@ -9,13 +9,16 @@ import com.nazarethlabs.notes.helper.MessageHelper
 import com.nazarethlabs.notes.repository.NoteStorageRepository
 
 class DeleteNoteService {
-
-    fun confirmAndDelete(project: Project, note: Note) {
-        val result = DialogHelper.showYesNoDialog(
-            project,
-            MessageHelper.getMessage("dialog.delete.note.message", note.title),
-            MessageHelper.getMessage("dialog.delete.note.title")
-        )
+    fun confirmAndDelete(
+        project: Project,
+        note: Note,
+    ) {
+        val result =
+            DialogHelper.showYesNoDialog(
+                project,
+                MessageHelper.getMessage("dialog.delete.note.message", note.title),
+                MessageHelper.getMessage("dialog.delete.note.title"),
+            )
 
         if (result == Messages.YES) {
             FileHelper.deleteFile(note.filePath)

@@ -1,7 +1,7 @@
 package com.nazarethlabs.notes.ui.toolbar.button
 
-import com.intellij.openapi.project.Project
 import com.intellij.icons.AllIcons
+import com.intellij.openapi.project.Project
 import com.intellij.util.ui.JBUI
 import com.nazarethlabs.notes.enum.SortTypeEnum
 import com.nazarethlabs.notes.helper.MessageHelper
@@ -13,26 +13,29 @@ import javax.swing.JMenuItem
 import javax.swing.JPopupMenu
 
 class ToolbarButtonSortComponent {
-
-    fun build(project: Project, notesListComponent: NotesListComponent): JButton {
-        val sortButton = ButtonComponent()
-            .build(
-                AllIcons.ObjectBrowser.Sorted,
-                MessageHelper.getMessage("toolbar.note.sort")
-            )
+    fun build(
+        project: Project,
+        notesListComponent: NotesListComponent,
+    ): JButton {
+        val sortButton =
+            ButtonComponent()
+                .build(
+                    AllIcons.ObjectBrowser.Sorted,
+                    MessageHelper.getMessage("toolbar.note.sort"),
+                )
 
         sortButton.addActionListener { event ->
             val menu = JPopupMenu()
             menu.border = JBUI.Borders.empty(5)
 
             menu.add(
-                createSortMenuItem(project, "toolbar.sort.by.title", SortTypeEnum.TITLE, notesListComponent)
+                createSortMenuItem(project, "toolbar.sort.by.title", SortTypeEnum.TITLE, notesListComponent),
             )
             menu.add(
-                createSortMenuItem(project, "toolbar.sort.by.date", SortTypeEnum.DATE, notesListComponent)
+                createSortMenuItem(project, "toolbar.sort.by.date", SortTypeEnum.DATE, notesListComponent),
             )
             menu.add(
-                createSortMenuItem(project, "toolbar.sort.by.favorite", SortTypeEnum.FAVORITE, notesListComponent)
+                createSortMenuItem(project, "toolbar.sort.by.favorite", SortTypeEnum.FAVORITE, notesListComponent),
             )
 
             val component = event.source as JButton
@@ -42,7 +45,12 @@ class ToolbarButtonSortComponent {
         return sortButton
     }
 
-    private fun createSortMenuItem(project: Project, messageKey: String, sortType: SortTypeEnum, notesListComponent: NotesListComponent): JMenuItem {
+    private fun createSortMenuItem(
+        project: Project,
+        messageKey: String,
+        sortType: SortTypeEnum,
+        notesListComponent: NotesListComponent,
+    ): JMenuItem {
         val itemInset = JBUI.Borders.empty(5, 10, 5, 10)
         val item = JMenuItem(MessageHelper.getMessage(messageKey))
         item.border = itemInset

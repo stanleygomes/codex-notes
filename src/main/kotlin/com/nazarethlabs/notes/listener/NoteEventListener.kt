@@ -29,7 +29,6 @@ class NoteEventListener {
     }
 
     companion object {
-        fun getInstance(project: Project): NoteEventListener =
-            project.service()
+        fun getInstance(project: Project): NoteEventListener = project.service()
     }
 }
