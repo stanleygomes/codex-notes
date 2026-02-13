@@ -24,6 +24,20 @@ concurrency:
 
 jobs:
 
+  # Validate Conventional Commits
+  validateCommits:
+    name: Validate Commits
+    runs-on: ubuntu-latest
+    steps:
+
+      # Check out the current repository
+      - name: Fetch Sources
+        uses: actions/checkout@v6
+
+      # Validate Conventional Commits
+      - name: Validate Conventional Commits
+        uses: wagoid/commitlint-github-action@v5
+
   # Prepare the environment and build the plugin
   build:
     name: Build
