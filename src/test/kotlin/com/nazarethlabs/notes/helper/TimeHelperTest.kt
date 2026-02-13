@@ -1,13 +1,14 @@
 package com.nazarethlabs.notes.helper
 
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
-import org.junit.Assert.*
 
 @RunWith(MockitoJUnitRunner::class)
 class TimeHelperTest {
-
     @Test
     fun `should return now when less than 60 seconds ago`() {
         val now = 1000000L

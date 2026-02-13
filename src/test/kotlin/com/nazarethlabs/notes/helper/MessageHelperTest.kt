@@ -7,7 +7,6 @@ import org.mockito.junit.MockitoJUnitRunner
 
 @RunWith(MockitoJUnitRunner::class)
 class MessageHelperTest {
-
     @Test
     fun `should return message when key exists`() {
         val key = "time.now"

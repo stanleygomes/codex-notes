@@ -11,7 +11,6 @@ import java.nio.file.Files
 
 @RunWith(MockitoJUnitRunner::class)
 class FileHelperTest {
-
     @Test
     fun `should create file when directory and name provided`() {
         val tempDir = Files.createTempDirectory("test").toFile()

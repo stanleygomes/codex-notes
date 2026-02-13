@@ -4,7 +4,6 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class FileExtensionHelperTest {
-
     @Test
     fun `should return normalized extension when input is valid without dot`() {
         val result = FileExtensionHelper.normalizeExtension("md")

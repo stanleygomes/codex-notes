@@ -34,4 +34,3 @@ class ToolbarButtonNoteActionsComponent {
         return actionsButton
     }
 }
-

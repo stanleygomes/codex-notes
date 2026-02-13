@@ -6,7 +6,6 @@ import org.mockito.junit.MockitoJUnitRunner
 
 @RunWith(MockitoJUnitRunner::class)
 class NoteEventListenerTest {
-
     private lateinit var noteEventListener: NoteEventListener
 
     @org.junit.Before

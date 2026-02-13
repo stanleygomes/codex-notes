@@ -11,14 +11,14 @@ import org.mockito.junit.MockitoJUnitRunner
 
 @RunWith(MockitoJUnitRunner::class)
 class DialogHelperTest {
-
     @Mock
     private lateinit var project: Project
 
     @Test
     fun `should return YES when user confirms`() {
         mockStatic(Messages::class.java).use { mockedMessages ->
-            mockedMessages.`when`<Int> { Messages.showYesNoDialog(project, "message", "title", Messages.getQuestionIcon()) }
+            mockedMessages
+                .`when`<Int> { Messages.showYesNoDialog(project, "message", "title", Messages.getQuestionIcon()) }
                 .thenReturn(Messages.YES)
 
             val result = DialogHelper.showYesNoDialog(project, "message", "title")
@@ -30,7 +30,8 @@ class DialogHelperTest {
     @Test
     fun `should return NO when user cancels`() {
         mockStatic(Messages::class.java).use { mockedMessages ->
-            mockedMessages.`when`<Int> { Messages.showYesNoDialog(project, "message", "title", Messages.getQuestionIcon()) }
+            mockedMessages
+                .`when`<Int> { Messages.showYesNoDialog(project, "message", "title", Messages.getQuestionIcon()) }
                 .thenReturn(Messages.NO)
 
             val result = DialogHelper.showYesNoDialog(project, "message", "title")
@@ -42,8 +43,17 @@ class DialogHelperTest {
     @Test
     fun `should return input when user enters value`() {
         mockStatic(Messages::class.java).use { mockedMessages ->
-            mockedMessages.`when`<String?> { Messages.showInputDialog(project, "message", "title", Messages.getQuestionIcon(), "initial", null) }
-                .thenReturn("input")
+            mockedMessages
+                .`when`<String?> {
+                    Messages.showInputDialog(
+                        project,
+                        "message",
+                        "title",
+                        Messages.getQuestionIcon(),
+                        "initial",
+                        null,
+                    )
+                }.thenReturn("input")
 
             val result = DialogHelper.showInputDialog(project, "message", "title", "initial")
 
@@ -54,8 +64,17 @@ class DialogHelperTest {
     @Test
     fun `should return null when user cancels input`() {
         mockStatic(Messages::class.java).use { mockedMessages ->
-            mockedMessages.`when`<String?> { Messages.showInputDialog(project, "message", "title", Messages.getQuestionIcon(), "initial", null) }
-                .thenReturn(null)
+            mockedMessages
+                .`when`<String?> {
+                    Messages.showInputDialog(
+                        project,
+                        "message",
+                        "title",
+                        Messages.getQuestionIcon(),
+                        "initial",
+                        null,
+                    )
+                }.thenReturn(null)
 
             val result = DialogHelper.showInputDialog(project, "message", "title", "initial")
 
