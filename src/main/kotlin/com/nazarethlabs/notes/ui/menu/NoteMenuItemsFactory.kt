@@ -49,7 +49,7 @@ class NoteMenuItemsFactory {
         project: Project,
         note: Note,
     ): JMenuItem {
-        val openItem = JMenuItem("${MyBundle.message("note.context.menu.open")} (Double-click)", AllIcons.Actions.MenuOpen)
+        val openItem = JMenuItem("${MyBundle.message("note.context.menu.open")} (Double-click)")
 
         openItem.border = itemInset
         openItem.addActionListener {
@@ -96,7 +96,7 @@ class NoteMenuItemsFactory {
         project: Project,
         note: Note,
     ): JMenuItem {
-        val deleteItem = JMenuItem("${MyBundle.message("note.context.menu.delete")} (Delete)", AllIcons.Actions.Cancel)
+        val deleteItem = JMenuItem("${MyBundle.message("note.context.menu.delete")} (Delete)")
         deleteItem.border = itemInset
 
         deleteItem.addActionListener {
@@ -106,4 +106,3 @@ class NoteMenuItemsFactory {
         return deleteItem
     }
 }
-
