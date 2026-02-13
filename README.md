@@ -7,18 +7,14 @@
 [![Gradle](https://img.shields.io/badge/Gradle-02303A.svg?style=for-the-badge&logo=Gradle&logoColor=white)](https://gradle.org/)
 [![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=openjdk&logoColor=white)](https://openjdk.org/)
 
-
 <!-- Plugin description -->
 **Codex Notes** is a powerful IntelliJ IDEA plugin for managing notes directly within your IDE. Keep your thoughts, code snippets, and documentation organized without leaving your development environment.
 
-## ✨ Features
-
-- 📝 **Create and manage notes** with markdown support
-- 🔍 **Search notes**
-- ⭐ **Favorite notes** for quick access
-- 🔄 **Sort notes** by title, date, or favorite status
-- ⚙️ **Customizable settings** for file extension and sorting preferences
-- 💾 **Persistent storage** - your notes are saved automatically
+- **Create, manage and search notes** with markdown support
+- **Favorite and color notes** for quick access
+- **Sort notes** by title, date, or favorite status
+- **Customizable settings** for file extension and sorting preferences
+- **Persistent storage** - your notes are saved automatically
 <!-- Plugin description end -->
 
 ## 📋 Table of Contents
