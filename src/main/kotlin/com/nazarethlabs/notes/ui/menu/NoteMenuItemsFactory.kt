@@ -5,10 +5,13 @@ import com.intellij.openapi.project.Project
 import com.intellij.util.ui.JBUI
 import com.nazarethlabs.notes.MyBundle
 import com.nazarethlabs.notes.dto.Note
+import com.nazarethlabs.notes.enum.NoteColorEnum
+import com.nazarethlabs.notes.service.ChangeNoteColorService
 import com.nazarethlabs.notes.service.DeleteNoteService
 import com.nazarethlabs.notes.service.FavoriteNoteService
 import com.nazarethlabs.notes.service.OpenNoteService
 import com.nazarethlabs.notes.service.RenameNoteService
+import javax.swing.JMenu
 import javax.swing.JMenuItem
 import javax.swing.JPopupMenu
 
@@ -18,6 +21,7 @@ class NoteMenuItemsFactory {
     private val renameNoteService = RenameNoteService()
     private val favoriteNoteService = FavoriteNoteService()
     private val deleteNoteService = DeleteNoteService()
+    private val changeNoteColorService = ChangeNoteColorService()
 
     fun createPopupMenu(
         project: Project,
@@ -36,6 +40,9 @@ class NoteMenuItemsFactory {
 
         val favoriteItem = buildMenuItemFavorite(note)
         menu.add(favoriteItem)
+
+        val colorMenu = buildColorMenu(note)
+        menu.add(colorMenu)
 
         menu.addSeparator()
 
@@ -90,6 +97,25 @@ class NoteMenuItemsFactory {
         }
 
         return favoriteItem
+    }
+
+    fun buildColorMenu(note: Note): JMenu {
+        val colorMenu = JMenu(MyBundle.message("note.context.menu.change.color"))
+        colorMenu.icon = AllIcons.Actions.Colors
+        colorMenu.border = itemInset
+
+        NoteColorEnum.entries.forEach { color ->
+            val colorItem = JMenuItem(MyBundle.message(color.displayNameKey))
+            colorItem.border = itemInset
+
+            colorItem.addActionListener {
+                changeNoteColorService.changeColor(note, color)
+            }
+
+            colorMenu.add(colorItem)
+        }
+
+        return colorMenu
     }
 
     fun buildMenuItemDelete(
