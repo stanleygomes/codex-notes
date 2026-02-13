@@ -29,6 +29,7 @@ class NotesListComponent : NoteListener {
     private lateinit var mainPanel: JPanel
     private lateinit var scrollPane: JScrollPane
     private lateinit var emptyStatePanel: JPanel
+    private lateinit var notesList: JList<Note>
     private var currentSortTypeEnum: SortTypeEnum = DATE
 
     fun build(project: Project): JPanel {
@@ -44,8 +45,8 @@ class NotesListComponent : NoteListener {
         searchPanel = SearchComponent().build(noteStorage, listModel)
         searchPanel.isVisible = false
 
-        val list = JList(listModel)
-        list.cellRenderer =
+        notesList = JList(listModel)
+        notesList.cellRenderer =
             ListCellRenderer { list, value, _, isSelected, _ ->
                 NoteListItemComponent()
                     .build(theList = list, note = value, isSelected = isSelected)
@@ -54,20 +55,20 @@ class NotesListComponent : NoteListener {
         val mouseListener =
             NoteListMouseListener(
                 project = project,
-                getSelectedValue = { list.selectedValue },
+                getSelectedValue = { notesList.selectedValue },
             )
 
-        list.addMouseListener(mouseListener)
+        notesList.addMouseListener(mouseListener)
 
         val keyListener =
             NoteListKeyListener(
                 project = project,
-                getSelectedValue = { list.selectedValue },
+                getSelectedValue = { notesList.selectedValue },
             )
 
-        list.addKeyListener(keyListener)
+        notesList.addKeyListener(keyListener)
 
-        scrollPane = JScrollPane(list)
+        scrollPane = JScrollPane(notesList)
         emptyStatePanel = EmptyStateComponent().build()
 
         mainPanel =
@@ -90,6 +91,8 @@ class NotesListComponent : NoteListener {
         currentSortTypeEnum = sortTypeEnum
         refreshList()
     }
+
+    fun getSelectedNote(): Note? = if (::notesList.isInitialized) notesList.selectedValue else null
 
     private fun refreshList() {
         listModel.clear()

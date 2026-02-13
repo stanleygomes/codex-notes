@@ -5,6 +5,7 @@ import com.intellij.ui.components.JBPanel
 import com.intellij.util.ui.JBUI
 import com.nazarethlabs.notes.ui.noteslist.NotesListComponent
 import com.nazarethlabs.notes.ui.toolbar.button.ToolbarButtonCreateNoteComponent
+import com.nazarethlabs.notes.ui.toolbar.button.ToolbarButtonNoteActionsComponent
 import com.nazarethlabs.notes.ui.toolbar.button.ToolbarButtonSearchComponent
 import com.nazarethlabs.notes.ui.toolbar.button.ToolbarButtonSettingsComponent
 import com.nazarethlabs.notes.ui.toolbar.button.ToolbarButtonSortComponent
@@ -44,6 +45,13 @@ class ToolbarComponent {
                         ToolbarButtonSortComponent()
                             .build(project, notesListComponent)
                     add(sortButton)
+
+                    add(Box.createHorizontalStrut(4))
+
+                    val actionsButton =
+                        ToolbarButtonNoteActionsComponent()
+                            .build(project) { notesListComponent.getSelectedNote() }
+                    add(actionsButton)
 
                     add(Box.createHorizontalStrut(4))
 
