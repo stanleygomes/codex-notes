@@ -38,34 +38,6 @@ jobs:
       - name: Validate Conventional Commits
         uses: wagoid/commitlint-github-action@v5
 
-  # Verify gradle.properties against template
-  templateVerify:
-    name: Template Verify
-    if: github.event.repository.name == 'intellij-platform-plugin-template'
-    runs-on: ubuntu-latest
-    steps:
-
-      # Check out the current repository
-      - name: Fetch Sources
-        uses: actions/checkout@v6
-
-      # Compare `gradle.properties` with `.github/template-cleanup/gradle.properties`
-      - name: Verify gradle.properties
-        run: |
-          echo "\`\`\`diff" >> $GITHUB_STEP_SUMMARY
-
-          diff -U 0 \
-            -I '^pluginVersion' \
-            -I '^pluginGroup' \
-            -I '^pluginName' \
-            -I '^pluginRepositoryUrl' \
-            --label .github/template-cleanup/gradle.properties \
-            --label gradle.properties \
-            .github/template-cleanup/gradle.properties gradle.properties \
-            >> $GITHUB_STEP_SUMMARY
-
-          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-
   # Run linting checks
   lint:
     name: Lint
@@ -94,7 +66,7 @@ jobs:
   # Prepare the environment and build the plugin
   build:
     name: Build
-    needs: [ validateCommits, templateVerify, lint ]
+    needs: [ validateCommits, lint ]
     runs-on: ubuntu-latest
     steps:
 
