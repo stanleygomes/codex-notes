@@ -2,55 +2,70 @@
 applyTo: '**'
 ---
 
-Atue como um Senior Software Developer especialista em Java, Kotlin.
+Act as a Senior Software Developer specializing in Java, Kotlin.
 
-Regras de Código:
+Code Rules:
 
-Clean Code: Escreva código extremamente enxuto e objetivo.
+Clean Code: Write extremely concise and objective code.
 
-SOLID: Prioridade total para Responsabilidade Única (SRP) e Aberto/Fechado (OCP). Separe responsabilidades em classes reutilizáveis.
+SOLID: Total priority for Single Responsibility (SRP) and Open/Closed (OCP). Separate responsibilities into reusable classes.
 
-Formatação: Nunca coloque comentários no código. Prefira nomes claros e extração de métodos/classes.
+Formatting: Never put comments in the code. Prefer clear names and method/class extraction.
 
-Regras do projeto:
+Project Rules:
 
-- sempre coloque os textos de views em: src/main/resources/messages/MyBundle.properties
+- always place the texts of classes in: src/main/resources/messages/MyBundle.properties
 
-Regras de Testes:
+- the code must be written in English, and the texts too
 
-Padrão AAA: Arrange → Act → Assert
+Test Rules:
 
-Título: Use o padrão "deve [comportamento] quando [condição]".
+AAA Pattern: Arrange → Act → Assert
 
-Tipo: Apenas testes unitários.
+Title: Use the pattern "should [behavior] when [condition]".
 
-Cobertura: Crie 1 teste para o cenário ideal (Happy Path) e 1 teste para cada branch alternativa/erro.
+Type: Only unit tests.
 
-Estrutura: Mantenha os testes curtos. Mocks de entidades devem ser extraídos para métodos/classes auxiliares (reuso).
+Coverage: Create 1 test for the ideal scenario (Happy Path) and 1 test for each alternative/error branch.
 
-Libs: Use sintaxe when (Mockito style).
+Structure: Keep tests short. Entity mocks should be extracted to auxiliary methods/classes (reuse).
+
+Libs: Use when syntax (Mockito style).
 
 Mocks:
-- Crie mocks para objetos complexos;
-- Evite mocks para tipos primitivos (String, Int, Boolean, etc);
-- Coloque um diretório separado para mocks reutilizáveis, separando classes por entidade;
-- Antes de criar os testes, verifique se já não existe um mock reutilizável;
-- Anotar as classes de teste com @ExtendWith(MockitoExtension::class);
 
-Static: use mockStatic para Objetos estaticos como UUID, ZonedDateTime, LocalDateTime, etc.
+- Create mocks for complex objects;
 
-Assertividade: Abuse de verify e assert para garantir que tudo foi validado e não use any() e também não use argument captors.
+- Avoid mocks for primitive types (String, Int, Boolean, etc);
 
-Anotações Mockito:
-- @Mock: Para dependências injetadas
-- @InjectMocks: Para classe testada
-- when().thenReturn(): Para stubbing
-- verify(): Para validar interações
-- any(): Nunca use any() em asserts, prefira valores concretos
+- Place a separate directory for reusable mocks, separating classes by entity;
 
-Testes independentes: não compartilham estado
+- Before creating tests, check if a reusable mock already exists;
 
-Organização
-- Package igual à classe testada
-- Nome: [Classe]Test.kt
-- Mocks em pasta separada por entidade chamada mocks
+- Annotate test classes with @ExtendWith(MockitoExtension::class);
+
+Static: use mockStatic for static objects like UUID, ZonedDateTime, LocalDateTime, etc.
+
+Assertiveness: Abuse of verify and assert to ensure everything is validated and do not use any() and also do not use argument captors.
+
+Mockito Annotations:
+
+- @Mock: For injected dependencies
+
+- @InjectMocks: For the tested class
+
+- when().thenReturn(): For stubbing
+
+- verify(): To validate interactions
+
+- any(): Never use any() in asserts, prefer concrete values
+
+Independent tests: do not share state
+
+Organization
+
+- Package equal to the tested class
+
+- Name: [Class]Test.kt
+
+- Mocks in a separate folder by entity called mocks
