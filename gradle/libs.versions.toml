@@ -1,6 +1,7 @@
 [versions]
 # libraries
 junit = "4.13.2"
+mockito = "4.11.0"
 opentest4j = "1.3.0"
 
 # plugins
@@ -13,6 +14,7 @@ ktlint = "14.0.1"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
+mockito = { group = "org.mockito", name = "mockito-core", version.ref = "mockito" }
 opentest4j = { group = "org.opentest4j", name = "opentest4j", version.ref = "opentest4j" }
 
 [plugins]
