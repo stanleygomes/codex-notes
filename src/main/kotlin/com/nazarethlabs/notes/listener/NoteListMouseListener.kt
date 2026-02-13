@@ -6,6 +6,7 @@ import com.nazarethlabs.notes.service.OpenNoteService
 import com.nazarethlabs.notes.ui.menu.NoteContextMenuFactory
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
+import javax.swing.JList
 import javax.swing.SwingUtilities
 
 class NoteListMouseListener(
@@ -29,6 +30,13 @@ class NoteListMouseListener(
 
     private fun handleContextMenu(e: MouseEvent) {
         if (e.isPopupTrigger) {
+            val list = e.source as? JList<*> ?: return
+
+            val index = list.locationToIndex(e.point)
+            if (index >= 0) {
+                list.selectedIndex = index
+            }
+
             val selectedNote = getSelectedValue() ?: return
             val menu =
                 NoteContextMenuFactory()
