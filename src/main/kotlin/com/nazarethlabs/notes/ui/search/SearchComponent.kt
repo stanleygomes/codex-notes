@@ -1,4 +1,4 @@
-package com.nazarethlabs.notes.ui.noteslist
+package com.nazarethlabs.notes.ui.search
 
 import com.intellij.ui.components.JBTextField
 import com.intellij.util.ui.JBUI
@@ -7,7 +7,6 @@ import com.nazarethlabs.notes.dto.Note
 import com.nazarethlabs.notes.helper.SearchHelper
 import com.nazarethlabs.notes.repository.NoteStorageRepository
 import java.awt.BorderLayout
-import java.awt.BorderLayout.CENTER
 import javax.swing.DefaultListModel
 import javax.swing.JPanel
 import javax.swing.event.DocumentEvent
@@ -36,7 +35,7 @@ class SearchComponent {
 
         return JPanel(BorderLayout()).apply {
             border = JBUI.Borders.empty(5)
-            add(searchField, CENTER)
+            add(searchField, BorderLayout.CENTER)
         }
     }
 
