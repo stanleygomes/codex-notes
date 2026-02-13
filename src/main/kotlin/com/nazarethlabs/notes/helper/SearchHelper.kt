@@ -35,6 +35,10 @@ object SearchHelper {
             score += 100
         }
 
+        if (title == fullQuery) {
+            score += 200
+        }
+
         if (title.startsWith(fullQuery)) {
             score += 50
         }

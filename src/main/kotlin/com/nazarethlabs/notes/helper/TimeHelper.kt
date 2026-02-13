@@ -3,8 +3,8 @@ package com.nazarethlabs.notes.helper
 import com.nazarethlabs.notes.MyBundle
 
 object TimeHelper {
-    fun formatTimeAgo(updatedAt: Long): String {
-        val now = System.currentTimeMillis()
+    fun formatTimeAgo(updatedAt: Long, currentTime: Long = System.currentTimeMillis()): String {
+        val now = currentTime
         val diff = now - updatedAt
         val seconds = diff / 1000
         val minutes = seconds / 60
