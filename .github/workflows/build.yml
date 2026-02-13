@@ -119,6 +119,7 @@ jobs:
     name: Test
     needs: [ build ]
     runs-on: ubuntu-latest
+    environment: production
     steps:
 
       # Free GitHub Actions Environment Disk Space
