@@ -12,10 +12,6 @@ class NoteEventListener {
         listeners.add(listener)
     }
 
-    fun removeListener(listener: NoteListener) {
-        listeners.remove(listener)
-    }
-
     fun notifyNoteCreated() {
         listeners.forEach { it.onNoteCreated() }
     }
