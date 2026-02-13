@@ -32,7 +32,7 @@ class CreateNoteService {
         if (virtualFile != null) {
             NoteStorageRepository
                 .getInstance()
-                .addNote(project, title, virtualFile.path)
+                .addNote(title, virtualFile.path)
 
             FileEditorManager
                 .getInstance(project)

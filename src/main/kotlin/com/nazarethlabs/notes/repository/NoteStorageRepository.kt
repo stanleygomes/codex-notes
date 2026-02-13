@@ -5,7 +5,7 @@ import com.intellij.openapi.components.PersistentStateComponent
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.State
 import com.intellij.openapi.components.Storage
-import com.intellij.openapi.project.Project
+import com.intellij.openapi.project.ProjectManager
 import com.nazarethlabs.notes.dto.Note
 import com.nazarethlabs.notes.listener.NoteEventListener
 import com.nazarethlabs.notes.state.NoteState
@@ -25,7 +25,7 @@ class NoteStorageRepository : PersistentStateComponent<NoteState> {
         this.state = state
     }
 
-    fun addNote(project: Project, title: String, filePath: String): Note {
+    fun addNote(title: String, filePath: String): Note {
         val note = Note(
             id = UUID.randomUUID().toString(),
             title = title,
@@ -36,53 +36,42 @@ class NoteStorageRepository : PersistentStateComponent<NoteState> {
 
         state.notes.add(note)
 
-        NoteEventListener
-            .getInstance(project)
-            .notifyNoteCreated()
+        notifyAllProjects { it.notifyNoteCreated() }
 
         return note
     }
 
-    fun updateNote(project: Project, id: String, title: String? = null) {
+    fun updateNote(id: String, title: String? = null) {
         state.notes.find { it.id == id }?.apply {
             title?.let { this.title = it }
             updatedAt = System.currentTimeMillis()
         }
 
-        NoteEventListener
-            .getInstance(project)
-            .notifyNoteUpdated()
+        notifyAllProjects { it.notifyNoteUpdated() }
     }
 
-    fun toggleFavorite(project: Project, id: String) {
+    fun toggleFavorite(id: String) {
         state.notes.find { it.id == id }?.apply {
             isFavorite = !isFavorite
             updatedAt = System.currentTimeMillis()
         }
 
-        NoteEventListener
-            .getInstance(project)
-            .notifyNoteUpdated()
+        notifyAllProjects { it.notifyNoteUpdated() }
     }
 
-    fun removeNote(project: Project, id: String) {
+    fun removeNote(id: String) {
         state.notes.removeIf { it.id == id }
 
-        NoteEventListener
-            .getInstance(project)
-            .notifyNoteDeleted()
+        notifyAllProjects { it.notifyNoteDeleted() }
     }
 
     fun getAllNotes(): List<Note> = state.notes.toList()
 
-    fun findNotesByTitle(query: String): List<Note> =
-        state.notes.filter { it.title.contains(query, ignoreCase = true) }
-
-    fun sortByTitle(): List<Note> =
-        state.notes.sortedBy { it.title }
-
-    fun sortByDate(): List<Note> =
-        state.notes.sortedByDescending { it.updatedAt }
+    private fun notifyAllProjects(action: (NoteEventListener) -> Unit) {
+        ProjectManager.getInstance().openProjects.forEach { project ->
+            action(NoteEventListener.getInstance(project))
+        }
+    }
 
     companion object {
         fun getInstance(): NoteStorageRepository =

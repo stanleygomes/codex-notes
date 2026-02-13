@@ -39,7 +39,7 @@ class RenameNoteService {
                         note.filePath = FileHelper.getNewFilePath(note.filePath, newFileName)
                         NoteStorageRepository
                             .getInstance()
-                            .updateNote(project, note.id, newTitle)
+                            .updateNote(note.id, newTitle)
                     } else {
                         throw RuntimeException(
                             MessageHelper.getMessage("dialog.rename.error.failed")

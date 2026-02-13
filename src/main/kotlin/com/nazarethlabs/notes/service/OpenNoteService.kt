@@ -20,7 +20,7 @@ class OpenNoteService {
 
             NoteStorageRepository
                 .getInstance()
-                .updateNote(project, note.id)
+                .updateNote(note.id)
         }
     }
 }

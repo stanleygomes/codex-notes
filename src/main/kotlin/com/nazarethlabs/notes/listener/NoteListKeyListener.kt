@@ -40,7 +40,7 @@ class NoteListKeyListener(
         if (e.keyCode == VK_F) {
             val selectedNote = getSelectedValue() ?: return
             FavoriteNoteService()
-                .toggleFavorite(project, selectedNote)
+                .toggleFavorite(selectedNote)
         }
     }
 }

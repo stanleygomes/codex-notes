@@ -32,7 +32,7 @@ class NoteContextMenuFactory {
         val renameItem = buildMenuItemRename(project, note)
         menu.add(renameItem)
 
-        val favoriteItem = buildMenuItemFavorite(project, note)
+        val favoriteItem = buildMenuItemFavorite(note)
         menu.add(favoriteItem)
 
         menu.addSeparator()
@@ -65,7 +65,7 @@ class NoteContextMenuFactory {
         return renameItem
     }
 
-    private fun buildMenuItemFavorite(project: Project, note: Note): JMenuItem {
+    private fun buildMenuItemFavorite(note: Note): JMenuItem {
         val favoriteText = if (note.isFavorite) {
             "${MyBundle.message("note.context.menu.unfavorite")} (F)"
         } else {
@@ -77,7 +77,7 @@ class NoteContextMenuFactory {
         favoriteItem.border = itemInset
 
         favoriteItem.addActionListener {
-            favoriteNoteService.toggleFavorite(project, note)
+            favoriteNoteService.toggleFavorite(note)
         }
 
         return favoriteItem

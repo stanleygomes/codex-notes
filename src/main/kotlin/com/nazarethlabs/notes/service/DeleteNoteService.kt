@@ -22,7 +22,7 @@ class DeleteNoteService {
 
             NoteStorageRepository
                 .getInstance()
-                .removeNote(project, note.id)
+                .removeNote(note.id)
         }
     }
 }
