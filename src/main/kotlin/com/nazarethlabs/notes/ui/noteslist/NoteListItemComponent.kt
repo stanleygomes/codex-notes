@@ -29,12 +29,13 @@ class NoteListItemComponent {
                 if (note.color != NoteColorEnum.NONE) note.color.color else theList!!.background
             }
 
-        val foregroundColor = if (isSelected) {
-            theList!!.selectionForeground
-        } else {
-            val bgColor = if (note.color != NoteColorEnum.NONE) note.color.color else theList!!.background
-            if (isBackgroundTooLight(bgColor)) Color.BLACK else theList!!.foreground
-        }
+        val foregroundColor =
+            if (isSelected) {
+                theList!!.selectionForeground
+            } else {
+                val bgColor = if (note.color != NoteColorEnum.NONE) note.color.color else theList!!.background
+                if (isBackgroundTooLight(bgColor)) Color.BLACK else theList!!.foreground
+            }
         val panel = JPanel(BorderLayout())
 
         panel.border = JBUI.Borders.empty(5, 10, 5, 10)
@@ -61,19 +62,20 @@ class NoteListItemComponent {
 
         val dateLabel = JLabel(TimeHelper.formatTimeAgo(note.updatedAt))
         // Adjust date label color based on background for better contrast
-        dateLabel.foreground = if (isSelected) {
-            // When selected, use a slightly dimmed version of selection foreground
-            theList!!.selectionForeground.darker()
-        } else {
-            val bgColor = if (note.color != NoteColorEnum.NONE) note.color.color else theList!!.background
-            if (isBackgroundTooLight(bgColor)) {
-                // Dark background for date when main background is light
-                Color(64, 64, 64) // Dark gray
+        dateLabel.foreground =
+            if (isSelected) {
+                // When selected, use a slightly dimmed version of selection foreground
+                theList!!.selectionForeground.darker()
             } else {
-                // Light gray for date when main background is dark
-                Color(128, 128, 128)
+                val bgColor = if (note.color != NoteColorEnum.NONE) note.color.color else theList!!.background
+                if (isBackgroundTooLight(bgColor)) {
+                    // Dark background for date when main background is light
+                    Color(64, 64, 64) // Dark gray
+                } else {
+                    // Light gray for date when main background is dark
+                    Color(128, 128, 128)
+                }
             }
-        }
         dateLabel.font = dateLabel.font.deriveFont(dateLabel.font.size - 3f)
         rightPanel.add(dateLabel)
 
