@@ -9,6 +9,7 @@ plugins {
     alias(libs.plugins.changelog)
     alias(libs.plugins.qodana)
     alias(libs.plugins.kover)
+    alias(libs.plugins.ktlint)
 }
 
 group = providers.gradleProperty("pluginGroup").get()

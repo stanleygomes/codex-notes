@@ -28,3 +28,9 @@ inspections:
 
 run:
 	./gradlew runIde
+
+check:
+	./gradlew ktlintCheck --console=plain
+
+format:
+	./gradlew ktlintFormat --console=plain
