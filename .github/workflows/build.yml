@@ -66,10 +66,35 @@ jobs:
 
           echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
 
+  # Run linting checks
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+
+      # Check out the current repository
+      - name: Fetch Sources
+        uses: actions/checkout@v6
+
+      # Set up the Java environment for the next steps
+      - name: Setup Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: 21
+
+      # Setup Gradle
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v5
+
+      # Run Ktlint Check
+      - name: Run Ktlint Check
+        run: ./gradlew ktlintCheck --console=plain
+
   # Prepare the environment and build the plugin
   build:
     name: Build
-    needs: [ validateCommits, templateVerify ]
+    needs: [ validateCommits, templateVerify, lint ]
     runs-on: ubuntu-latest
     steps:
 
