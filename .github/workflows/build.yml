@@ -109,6 +109,7 @@ jobs:
 
       # Store an already-built plugin as an artifact for downloading
       - name: Upload artifact
+        if: github.event_name == 'push'
         uses: actions/upload-artifact@v6
         with:
           name: ${{ steps.artifact.outputs.filename }}
@@ -290,7 +291,21 @@ jobs:
         run: |
           VERSION=$(./gradlew properties --property version --quiet --console=plain | tail -n 1 | cut -f2- -d ' ')
           RELEASE_NOTE="./build/tmp/release_note.txt"
-          ./gradlew getChangelog --unreleased --no-header --quiet --console=plain --output-file=$RELEASE_NOTE
+          mkdir -p "$(dirname "$RELEASE_NOTE")"
+
+          # Generate commit list since last tag
+          PREVIOUS_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          if [ -n "$PREVIOUS_TAG" ]; then
+            COMMITS=$(git log --oneline --pretty=format:"- %s" $PREVIOUS_TAG..HEAD)
+          else
+            COMMITS=$(git log --oneline --pretty=format:"- %s" HEAD)
+          fi
+
+          echo "$COMMITS" > $RELEASE_NOTE
+          echo "" >> $RELEASE_NOTE
+          echo "## Changes" >> $RELEASE_NOTE
+          echo "" >> $RELEASE_NOTE
+          echo "Compare: https://github.com/stanleygomes/codex-notes/compare/$PREVIOUS_TAG...$VERSION" >> $RELEASE_NOTE
 
           gh release create $VERSION \
             --draft \
