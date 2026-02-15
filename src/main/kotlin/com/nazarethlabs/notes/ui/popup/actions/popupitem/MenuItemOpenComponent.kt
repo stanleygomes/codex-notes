@@ -1,4 +1,4 @@
-package com.nazarethlabs.notes.ui.popup.notesaction.popupitem
+package com.nazarethlabs.notes.ui.popup.actions.popupitem
 
 import com.intellij.openapi.project.Project
 import com.intellij.util.ui.JBUI

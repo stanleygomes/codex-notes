@@ -1,12 +1,12 @@
-package com.nazarethlabs.notes.ui.popup.notesaction
+package com.nazarethlabs.notes.ui.popup.actions
 
 import com.intellij.util.ui.JBUI
 import com.nazarethlabs.notes.dto.Note
-import com.nazarethlabs.notes.ui.popup.notesaction.popupitem.MenuItemColorComponent
-import com.nazarethlabs.notes.ui.popup.notesaction.popupitem.MenuItemDeleteComponent
-import com.nazarethlabs.notes.ui.popup.notesaction.popupitem.MenuItemFavoriteComponent
-import com.nazarethlabs.notes.ui.popup.notesaction.popupitem.MenuItemOpenComponent
-import com.nazarethlabs.notes.ui.popup.notesaction.popupitem.MenuItemRenameComponent
+import com.nazarethlabs.notes.ui.popup.actions.popupitem.MenuItemColorComponent
+import com.nazarethlabs.notes.ui.popup.actions.popupitem.MenuItemDeleteComponent
+import com.nazarethlabs.notes.ui.popup.actions.popupitem.MenuItemFavoriteComponent
+import com.nazarethlabs.notes.ui.popup.actions.popupitem.MenuItemOpenComponent
+import com.nazarethlabs.notes.ui.popup.actions.popupitem.MenuItemRenameComponent
 import com.intellij.openapi.project.Project
 import javax.swing.JPopupMenu
 

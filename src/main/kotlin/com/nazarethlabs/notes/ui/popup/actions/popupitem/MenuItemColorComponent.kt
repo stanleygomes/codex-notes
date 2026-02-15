@@ -1,4 +1,4 @@
-package com.nazarethlabs.notes.ui.popup.notesaction.popupitem
+package com.nazarethlabs.notes.ui.popup.actions.popupitem
 
 import com.intellij.icons.AllIcons
 import com.intellij.util.ui.JBUI

@@ -5,7 +5,7 @@ import com.intellij.openapi.project.Project
 import com.nazarethlabs.notes.dto.Note
 import com.nazarethlabs.notes.helper.MessageHelper.getMessage
 import com.nazarethlabs.notes.ui.component.ButtonComponent
-import com.nazarethlabs.notes.ui.popup.notesaction.NoteActionsPopupMenuComponent
+import com.nazarethlabs.notes.ui.popup.actions.NoteActionsPopupMenuComponent
 import javax.swing.JButton
 
 class ToolbarButtonNoteActionsComponent {

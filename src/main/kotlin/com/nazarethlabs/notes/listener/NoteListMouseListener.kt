@@ -3,7 +3,7 @@ package com.nazarethlabs.notes.listener
 import com.intellij.openapi.project.Project
 import com.nazarethlabs.notes.dto.Note
 import com.nazarethlabs.notes.service.note.OpenNoteService
-import com.nazarethlabs.notes.ui.popup.notesaction.NoteActionsPopupMenuComponent
+import com.nazarethlabs.notes.ui.popup.actions.NoteActionsPopupMenuComponent
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import javax.swing.JList
