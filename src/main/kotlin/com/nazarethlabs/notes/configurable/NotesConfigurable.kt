@@ -1,4 +1,4 @@
-package com.nazarethlabs.notes.settings
+package com.nazarethlabs.notes.configurable
 
 import com.intellij.openapi.options.Configurable
 import com.nazarethlabs.notes.helper.MessageHelper

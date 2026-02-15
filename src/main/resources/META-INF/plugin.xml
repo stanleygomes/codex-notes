@@ -14,7 +14,7 @@
         <applicationService serviceImplementation="com.nazarethlabs.notes.repository.NoteStorageRepository"/>
         <projectService serviceImplementation="com.nazarethlabs.notes.listener.NoteEventListener"/>
         <applicationService serviceImplementation="com.nazarethlabs.notes.repository.NotesSettingsRepository"/>
-        <projectConfigurable parentId="tools" instance="com.nazarethlabs.notes.ui.settings.NotesConfigComponent"
+        <projectConfigurable parentId="tools" instance="com.nazarethlabs.notes.configurable.NotesConfigurable"
                              id="notes.settings"
                              displayName="Notes Plugin"/>
     </extensions>
