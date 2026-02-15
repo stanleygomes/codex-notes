@@ -27,7 +27,7 @@ class ToolbarRightComponent {
 
             val sortButton =
                 ToolbarButtonSortComponent()
-                    .build(project, notesListComponent)
+                    .build(notesListComponent)
             add(sortButton)
 
             add(Box.createHorizontalStrut(4))

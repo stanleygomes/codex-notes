@@ -1,7 +1,7 @@
 package com.nazarethlabs.notes.ui.popup.actions
 
-import com.intellij.util.ui.JBUI
 import com.nazarethlabs.notes.dto.Note
+import com.nazarethlabs.notes.ui.component.PopupMenuComponent
 import com.nazarethlabs.notes.ui.popup.actions.popupitem.MenuItemColorComponent
 import com.nazarethlabs.notes.ui.popup.actions.popupitem.MenuItemDeleteComponent
 import com.nazarethlabs.notes.ui.popup.actions.popupitem.MenuItemFavoriteComponent
@@ -15,8 +15,8 @@ class NoteActionsPopupMenuComponent {
         project: Project,
         note: Note,
     ): JPopupMenu {
-        val menu = JPopupMenu()
-        menu.border = JBUI.Borders.empty(5)
+        val menu = PopupMenuComponent()
+            .build()
 
         val openItem = MenuItemOpenComponent().build(project, note)
         menu.add(openItem)
