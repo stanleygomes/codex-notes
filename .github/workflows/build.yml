@@ -97,9 +97,10 @@ jobs:
             COMMITS=$(git log --oneline --pretty=format:"- %s" HEAD)
           fi
 
+          echo "## Changes" >> $RELEASE_NOTE
           echo "$COMMITS" > $RELEASE_NOTE
           echo "" >> $RELEASE_NOTE
-          echo "## Changes" >> $RELEASE_NOTE
+          echo "## Diff" >> $RELEASE_NOTE
           echo "" >> $RELEASE_NOTE
           if [ -n "$PREVIOUS_TAG" ]; then
             echo "Compare: https://github.com/stanleygomes/codex-notes/compare/$PREVIOUS_TAG...$VERSION" >> $RELEASE_NOTE
