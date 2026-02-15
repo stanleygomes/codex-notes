@@ -77,12 +77,12 @@
 
 ## ⌨️ Keyboard Shortcuts
 
-| Action | Shortcut |
-|--------|----------|
-| Open note | `Double-click` or `Enter` |
-| Rename note | `F2` |
-| Toggle favorite | `F` |
-| Delete note | `Delete` |
+| Action          | Shortcut                  |
+|-----------------|---------------------------|
+| Open note       | `Double-click` or `Enter` |
+| Rename note     | `F2`                      |
+| Toggle favorite | `F`                       |
+| Delete note     | `Delete`                  |
 
 ## ⚙️ Configuration
 
@@ -184,7 +184,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🔗 Links
 
-- [GitHub Repository](https://github.com/stanleygomes/codex-notes)
 - [Issue Tracker](https://github.com/stanleygomes/codex-notes/issues)
 - [Changelog](CHANGELOG.md)
 - [Plugin Configuration File](https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html?from=IJPluginTemplate)
