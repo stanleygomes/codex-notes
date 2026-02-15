@@ -20,9 +20,7 @@ class RenameNoteService {
         }
     }
 
-    private fun getFileExtension(filePath: String): String {
-        return filePath.substringAfterLast('.', "")
-    }
+    private fun getFileExtension(filePath: String): String = filePath.substringAfterLast('.', "")
 
     private fun getNewTitle(
         project: Project,
@@ -61,16 +59,12 @@ class RenameNoteService {
     private fun createNewFileName(
         newTitle: String,
         fileExtension: String,
-    ): String {
-        return if (fileExtension.isNotEmpty()) "$newTitle.$fileExtension" else newTitle
-    }
+    ): String = if (fileExtension.isNotEmpty()) "$newTitle.$fileExtension" else newTitle
 
     private fun fileExists(
         parentPath: String,
         fileName: String,
-    ): Boolean {
-        return FileHelper.fileExists(parentPath, fileName)
-    }
+    ): Boolean = FileHelper.fileExists(parentPath, fileName)
 
     private fun performRename(
         project: Project,

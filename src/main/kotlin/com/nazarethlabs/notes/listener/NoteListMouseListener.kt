@@ -30,7 +30,11 @@ class NoteListMouseListener(
         handleContextMenu(e, project, getSelectedValue)
     }
 
-    fun handleContextMenu(e: MouseEvent, project: Project, getSelectedValue: () -> Note?) {
+    fun handleContextMenu(
+        e: MouseEvent,
+        project: Project,
+        getSelectedValue: () -> Note?,
+    ) {
         if (e.isPopupTrigger) {
             val list = e.source as? JList<*> ?: return
 

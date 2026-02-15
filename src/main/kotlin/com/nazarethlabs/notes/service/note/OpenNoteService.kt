@@ -20,9 +20,7 @@ class OpenNoteService {
         }
     }
 
-    private fun findVirtualFile(filePath: String): VirtualFile? {
-        return LocalFileSystem.getInstance().findFileByPath(filePath)
-    }
+    private fun findVirtualFile(filePath: String): VirtualFile? = LocalFileSystem.getInstance().findFileByPath(filePath)
 
     private fun openFile(
         project: Project,

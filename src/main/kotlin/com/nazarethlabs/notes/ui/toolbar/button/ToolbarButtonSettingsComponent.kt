@@ -3,7 +3,6 @@ package com.nazarethlabs.notes.ui.toolbar.button
 import com.intellij.icons.AllIcons.General.Settings
 import com.intellij.openapi.options.ShowSettingsUtil
 import com.intellij.openapi.project.Project
-import com.nazarethlabs.notes.helper.MessageHelper
 import com.nazarethlabs.notes.helper.MessageHelper.getMessage
 import com.nazarethlabs.notes.ui.component.ButtonComponent
 import javax.swing.JButton

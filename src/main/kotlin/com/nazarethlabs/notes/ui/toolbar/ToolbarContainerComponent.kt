@@ -8,7 +8,10 @@ import java.awt.BorderLayout.WEST
 import javax.swing.JComponent
 
 class ToolbarContainerComponent {
-    fun build(left: JComponent, right: JComponent): JBPanel<JBPanel<*>> =
+    fun build(
+        left: JComponent,
+        right: JComponent,
+    ): JBPanel<JBPanel<*>> =
         JBPanel<JBPanel<*>>().apply {
             layout = BorderLayout()
             border = JBUI.Borders.empty(8, 10)

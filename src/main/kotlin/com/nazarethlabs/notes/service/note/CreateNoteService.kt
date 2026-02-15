@@ -30,16 +30,12 @@ class CreateNoteService {
         return NoteNameHelper.generateUntitledName(notes)
     }
 
-    private fun getExtension(): String {
-        return NotesSettingsService().getDefaultFileExtension()
-    }
+    private fun getExtension(): String = NotesSettingsService().getDefaultFileExtension()
 
     private fun createFileName(
         title: String,
         extension: String,
-    ): String {
-        return "$title$extension"
-    }
+    ): String = "$title$extension"
 
     private fun createTempFile(fileName: String): File {
         val tempDir = FileHelper.getTempDir()

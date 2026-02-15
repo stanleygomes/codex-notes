@@ -15,9 +15,8 @@ object FileExtensionHelper {
         return normalized
     }
 
-    private fun sanitizeExtension(extension: String): String {
-        return extension
+    private fun sanitizeExtension(extension: String): String =
+        extension
             .trim()
             .replace(Regex("[^a-zA-Z0-9.]"), "")
-    }
 }

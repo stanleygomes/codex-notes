@@ -1,5 +1,6 @@
 package com.nazarethlabs.notes.ui.popup.actions
 
+import com.intellij.openapi.project.Project
 import com.nazarethlabs.notes.dto.Note
 import com.nazarethlabs.notes.ui.component.PopupMenuComponent
 import com.nazarethlabs.notes.ui.popup.actions.popupitem.MenuItemColorComponent
@@ -7,7 +8,6 @@ import com.nazarethlabs.notes.ui.popup.actions.popupitem.MenuItemDeleteComponent
 import com.nazarethlabs.notes.ui.popup.actions.popupitem.MenuItemFavoriteComponent
 import com.nazarethlabs.notes.ui.popup.actions.popupitem.MenuItemOpenComponent
 import com.nazarethlabs.notes.ui.popup.actions.popupitem.MenuItemRenameComponent
-import com.intellij.openapi.project.Project
 import javax.swing.JPopupMenu
 
 class NoteActionsPopupMenuComponent {
@@ -15,8 +15,9 @@ class NoteActionsPopupMenuComponent {
         project: Project,
         note: Note,
     ): JPopupMenu {
-        val menu = PopupMenuComponent()
-            .build()
+        val menu =
+            PopupMenuComponent()
+                .build()
 
         val openItem = MenuItemOpenComponent().build(project, note)
         menu.add(openItem)
