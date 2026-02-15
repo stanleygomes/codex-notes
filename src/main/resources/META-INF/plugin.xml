@@ -9,12 +9,12 @@
     <resource-bundle>messages.MyBundle</resource-bundle>
 
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow factoryClass="com.nazarethlabs.notes.AppWindowFactory" id="Codex Notes" icon="/icons/tab-icon.svg"/>
-        <postStartupActivity implementation="com.nazarethlabs.notes.AppStartupActivity" />
-        <applicationService serviceImplementation="com.nazarethlabs.notes.repository.NoteStorageRepository"/>
-        <projectService serviceImplementation="com.nazarethlabs.notes.listener.NoteEventListener"/>
-        <applicationService serviceImplementation="com.nazarethlabs.notes.repository.NotesSettingsRepository"/>
-        <projectConfigurable parentId="tools" instance="com.nazarethlabs.notes.configurable.NotesConfigurable"
+        <toolWindow factoryClass="com.nazarethlabs.codex.AppWindowFactory" id="Codex Notes" icon="/icons/tab-icon.svg"/>
+        <postStartupActivity implementation="com.nazarethlabs.codex.AppStartupActivity" />
+        <applicationService serviceImplementation="com.nazarethlabs.codex.repository.NoteStorageRepository"/>
+        <projectService serviceImplementation="com.nazarethlabs.codex.listener.NoteEventListener"/>
+        <applicationService serviceImplementation="com.nazarethlabs.codex.repository.NotesSettingsRepository"/>
+        <projectConfigurable parentId="tools" instance="com.nazarethlabs.codex.configurable.NotesConfigurable"
                              id="notes.settings"
                              displayName="Notes Plugin"/>
     </extensions>
