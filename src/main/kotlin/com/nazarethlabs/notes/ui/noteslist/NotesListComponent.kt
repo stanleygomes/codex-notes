@@ -4,13 +4,12 @@ import com.intellij.openapi.project.Project
 import com.nazarethlabs.notes.dto.Note
 import com.nazarethlabs.notes.enum.SortTypeEnum
 import com.nazarethlabs.notes.enum.SortTypeEnum.DATE
-import com.nazarethlabs.notes.enum.SortTypeEnum.FAVORITE
-import com.nazarethlabs.notes.enum.SortTypeEnum.TITLE
 import com.nazarethlabs.notes.listener.NoteEventListener
 import com.nazarethlabs.notes.listener.NoteListKeyListener
 import com.nazarethlabs.notes.listener.NoteListMouseListener
 import com.nazarethlabs.notes.listener.NoteListener
 import com.nazarethlabs.notes.repository.NoteStorageRepository
+import com.nazarethlabs.notes.service.note.NotesSortService
 import com.nazarethlabs.notes.service.settings.NotesSettingsService
 import com.nazarethlabs.notes.ui.component.EmptyStateComponent
 import com.nazarethlabs.notes.ui.search.SearchComponent
@@ -42,7 +41,8 @@ class NotesListComponent : NoteListener {
         currentSortTypeEnum = NotesSettingsService().getDefaultSortType()
         NoteEventListener.getInstance(project).addListener(this)
 
-        refreshList()
+        refreshList(listModel)
+        updateView()
 
         searchPanel = SearchComponent().build(listModel)
         searchPanel.isVisible = false
@@ -85,36 +85,18 @@ class NotesListComponent : NoteListener {
     fun toggleSearch() {
         searchPanel.isVisible = !searchPanel.isVisible
         if (!searchPanel.isVisible) {
-            refreshList()
+            refreshList(listModel)
+            updateView()
         }
     }
 
     fun sortBy(sortTypeEnum: SortTypeEnum) {
         currentSortTypeEnum = sortTypeEnum
-        refreshList()
+        refreshList(listModel)
+        updateView()
     }
 
     fun getSelectedNote(): Note? = if (::notesList.isInitialized) notesList.selectedValue else null
-
-    private fun refreshList() {
-        listModel.clear()
-
-        val notes =
-            when (currentSortTypeEnum) {
-                TITLE -> noteStorage.getAllNotes().sortedBy { it.title.lowercase() }
-                DATE -> noteStorage.getAllNotes().sortedByDescending { it.updatedAt }
-                FAVORITE ->
-                    noteStorage.getAllNotes().sortedWith(
-                        compareByDescending<Note> { it.isFavorite }.thenByDescending { it.updatedAt },
-                    )
-            }
-
-        notes.forEach { note ->
-            listModel.addElement(note)
-        }
-
-        updateView()
-    }
 
     private fun updateView() {
         if (::mainPanel.isInitialized) {
@@ -127,14 +109,29 @@ class NotesListComponent : NoteListener {
     }
 
     override fun onNoteCreated() {
-        refreshList()
+        refreshList(listModel)
+        updateView()
     }
 
     override fun onNoteUpdated() {
-        refreshList()
+        refreshList(listModel)
+        updateView()
     }
 
     override fun onNoteDeleted() {
-        refreshList()
+        refreshList(listModel)
+        updateView()
+    }
+
+    private fun refreshList(
+        listModel: DefaultListModel<Note>,
+    ) {
+        listModel.clear()
+        val notes = NotesSortService()
+            .refreshList(currentSortTypeEnum)
+
+        notes.forEach { note ->
+            listModel.addElement(note)
+        }
     }
 }
