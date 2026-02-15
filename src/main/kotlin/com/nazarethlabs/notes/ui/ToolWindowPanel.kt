@@ -6,7 +6,7 @@ import com.nazarethlabs.notes.ui.noteslist.NotesListComponent
 import com.nazarethlabs.notes.ui.toolbar.ToolbarComponent
 
 class ToolWindowPanel {
-    fun create(project: Project): JBPanel<JBPanel<*>> {
+    fun build(project: Project): JBPanel<JBPanel<*>> {
         val notesListComponent = NotesListComponent()
         val toolbar = ToolbarComponent()
             .build(project, notesListComponent)

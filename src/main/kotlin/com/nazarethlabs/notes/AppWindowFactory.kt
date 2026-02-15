@@ -32,6 +32,6 @@ class AppWindowFactory : ToolWindowFactory {
     ) {
         fun getContent() =
             ToolWindowPanel()
-                .create(project)
+                .build(project)
     }
 }
