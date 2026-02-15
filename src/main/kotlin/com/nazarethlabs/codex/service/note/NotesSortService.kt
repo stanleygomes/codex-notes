@@ -5,15 +5,17 @@ import com.nazarethlabs.codex.enum.SortTypeEnum
 import com.nazarethlabs.codex.repository.NoteStorageRepository
 
 class NotesSortService {
-    private val noteStorage = NoteStorageRepository()
+    private val noteStorage = NoteStorageRepository.getInstance()
 
-    fun refreshList(currentSortTypeEnum: SortTypeEnum): List<Note> =
-        when (currentSortTypeEnum) {
-            SortTypeEnum.TITLE -> noteStorage.getAllNotes().sortedBy { it.title.lowercase() }
-            SortTypeEnum.DATE -> noteStorage.getAllNotes().sortedByDescending { it.updatedAt }
+    fun refreshList(currentSortTypeEnum: SortTypeEnum): List<Note> {
+        val allNotes = noteStorage.getAllNotes()
+        return when (currentSortTypeEnum) {
+            SortTypeEnum.TITLE -> allNotes.sortedBy { it.title.lowercase() }
+            SortTypeEnum.DATE -> allNotes.sortedByDescending { it.updatedAt }
             SortTypeEnum.FAVORITE ->
-                noteStorage.getAllNotes().sortedWith(
+                allNotes.sortedWith(
                     compareByDescending<Note> { it.isFavorite }.thenByDescending { it.updatedAt },
                 )
         }
+    }
 }

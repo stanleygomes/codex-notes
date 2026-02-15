@@ -6,7 +6,7 @@ import com.nazarethlabs.codex.repository.NoteStorageRepository
 
 class SearchNoteService {
     fun filterNotes(filterText: String): List<Note> {
-        val noteStorage = NoteStorageRepository()
+        val noteStorage = NoteStorageRepository.getInstance()
         return SearchHelper.search(noteStorage.getAllNotes(), filterText)
     }
 }

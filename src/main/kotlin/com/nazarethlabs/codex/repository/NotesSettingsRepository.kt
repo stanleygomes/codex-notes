@@ -26,7 +26,7 @@ class NotesSettingsRepository : PersistentStateComponent<ConfigurationState> {
         fun getInstance(): NotesSettingsRepository = ApplicationManager.getApplication().getService(NotesSettingsRepository::class.java)
     }
 
-    fun getDefaultFileExtension(): String = state.configuration.defaultFileExtension!!
+    fun getDefaultFileExtension(): String = state.configuration.defaultFileExtension
 
     fun setDefaultFileExtension(extension: String) {
         state.configuration.defaultFileExtension = extension
