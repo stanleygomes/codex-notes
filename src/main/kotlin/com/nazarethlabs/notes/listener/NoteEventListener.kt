@@ -13,15 +13,21 @@ class NoteEventListener {
     }
 
     fun notifyNoteCreated() {
-        listeners.forEach { it.onNoteCreated() }
+        listeners.forEach {
+            it.onNoteCreated()
+        }
     }
 
     fun notifyNoteUpdated() {
-        listeners.forEach { it.onNoteUpdated() }
+        listeners.forEach {
+            it.onNoteUpdated()
+        }
     }
 
     fun notifyNoteDeleted() {
-        listeners.forEach { it.onNoteDeleted() }
+        listeners.forEach {
+            it.onNoteDeleted()
+        }
     }
 
     companion object {

@@ -12,7 +12,24 @@ class RenameNoteService {
         project: Project,
         note: Note,
     ) {
-        val fileExtension = note.filePath.substringAfterLast('.', "")
+        val fileExtension = getFileExtension(note.filePath)
+        val parentPath = FileHelper.getParentPath(note.filePath)
+        val newTitle = getNewTitle(project, note.title, fileExtension, parentPath)
+        if (newTitle != null) {
+            performRename(project, note, newTitle, fileExtension)
+        }
+    }
+
+    private fun getFileExtension(filePath: String): String {
+        return filePath.substringAfterLast('.', "")
+    }
+
+    private fun getNewTitle(
+        project: Project,
+        currentTitle: String,
+        fileExtension: String,
+        parentPath: String,
+    ): String? {
         var newTitle: String?
         do {
             newTitle =
@@ -20,44 +37,66 @@ class RenameNoteService {
                     project,
                     MessageHelper.getMessage("dialog.rename.note.message"),
                     MessageHelper.getMessage("dialog.rename.note.title"),
-                    note.title,
+                    currentTitle,
                 )
 
-            if (newTitle.isNullOrBlank() || newTitle == note.title) {
-                return
+            if (newTitle.isNullOrBlank() || newTitle == currentTitle) {
+                return null
             }
 
-            val newFileName = if (fileExtension.isNotEmpty()) "$newTitle.$fileExtension" else newTitle
+            val newFileName = createNewFileName(newTitle, fileExtension)
 
-            if (FileHelper.fileExists(FileHelper.getParentPath(note.filePath), newFileName)) {
+            if (fileExists(parentPath, newFileName)) {
                 DialogHelper.showWarningDialog(
                     project,
                     MessageHelper.getMessage("dialog.rename.error.exists", newTitle),
                     MessageHelper.getMessage("dialog.rename.error.title"),
                 )
             } else {
-                try {
-                    if (FileHelper.renameFile(note.filePath, newFileName)) {
-                        note.title = newTitle
-                        note.filePath = FileHelper.getNewFilePath(note.filePath, newFileName)
-                        NoteStorageRepository
-                            .getInstance()
-                            .updateNote(note.id, newTitle)
-                    } else {
-                        throw RuntimeException(
-                            MessageHelper.getMessage("dialog.rename.error.failed"),
-                        )
-                    }
-                } catch (_: Exception) {
-                    DialogHelper.showErrorDialog(
-                        project,
-                        MessageHelper.getMessage("dialog.rename.error.failed"),
-                        MessageHelper.getMessage("dialog.rename.error.title"),
-                    )
-                }
-
-                break
+                return newTitle
             }
         } while (true)
+    }
+
+    private fun createNewFileName(
+        newTitle: String,
+        fileExtension: String,
+    ): String {
+        return if (fileExtension.isNotEmpty()) "$newTitle.$fileExtension" else newTitle
+    }
+
+    private fun fileExists(
+        parentPath: String,
+        fileName: String,
+    ): Boolean {
+        return FileHelper.fileExists(parentPath, fileName)
+    }
+
+    private fun performRename(
+        project: Project,
+        note: Note,
+        newTitle: String,
+        fileExtension: String,
+    ) {
+        val newFileName = createNewFileName(newTitle, fileExtension)
+        try {
+            if (FileHelper.renameFile(note.filePath, newFileName)) {
+                note.title = newTitle
+                note.filePath = FileHelper.getNewFilePath(note.filePath, newFileName)
+                NoteStorageRepository
+                    .getInstance()
+                    .updateNote(note.id, newTitle)
+            } else {
+                throw RuntimeException(
+                    MessageHelper.getMessage("dialog.rename.error.failed"),
+                )
+            }
+        } catch (_: Exception) {
+            DialogHelper.showErrorDialog(
+                project,
+                MessageHelper.getMessage("dialog.rename.error.failed"),
+                MessageHelper.getMessage("dialog.rename.error.title"),
+            )
+        }
     }
 }

@@ -7,8 +7,7 @@ object TimeHelper {
         updatedAt: Long,
         currentTime: Long = System.currentTimeMillis(),
     ): String {
-        val now = currentTime
-        val diff = now - updatedAt
+        val diff = currentTime - updatedAt
         val seconds = diff / 1000
         val minutes = seconds / 60
         val hours = minutes / 60

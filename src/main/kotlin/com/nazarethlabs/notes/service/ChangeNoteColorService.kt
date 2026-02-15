@@ -11,13 +11,8 @@ class ChangeNoteColorService {
         note: Note,
         color: NoteColorEnum,
     ) {
-        val allNotes = noteStorage.getAllNotes()
-        val targetNote = allNotes.find { it.id == note.id }
-
-        if (targetNote != null) {
-            targetNote.color = color
-            targetNote.updatedAt = System.currentTimeMillis()
-            noteStorage.updateNote(targetNote.id)
-        }
+        note.color = color
+        note.updatedAt = System.currentTimeMillis()
+        noteStorage.updateNote(note.id)
     }
 }

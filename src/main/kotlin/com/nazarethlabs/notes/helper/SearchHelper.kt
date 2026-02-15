@@ -29,31 +29,51 @@ object SearchHelper {
         terms: List<String>,
     ): Int {
         val title = note.title.lowercase()
-        var score = 0
+        val titleWords = title.split(" ", "-", "_", ".").filter { it.isNotEmpty() }
 
+        return scoreForFullQueryMatch(title, fullQuery) +
+            scoreForTermMatches(title, terms) +
+            scoreForWordMatches(titleWords, terms)
+    }
+
+    private fun scoreForFullQueryMatch(
+        title: String,
+        fullQuery: String,
+    ): Int {
+        var score = 0
         if (title.contains(fullQuery)) {
             score += 100
         }
-
         if (title == fullQuery) {
             score += 200
         }
-
         if (title.startsWith(fullQuery)) {
             score += 50
         }
+        return score
+    }
 
+    private fun scoreForTermMatches(
+        title: String,
+        terms: List<String>,
+    ): Int {
+        var score = 0
         terms.forEach { term ->
             if (title.contains(term)) {
                 score += 10
             }
-
             if (title.startsWith(term)) {
                 score += 5
             }
         }
+        return score
+    }
 
-        val titleWords = title.split(" ", "-", "_", ".").filter { it.isNotEmpty() }
+    private fun scoreForWordMatches(
+        titleWords: List<String>,
+        terms: List<String>,
+    ): Int {
+        var score = 0
         terms.forEach { term ->
             titleWords.forEach { word ->
                 if (word.startsWith(term)) {
@@ -64,7 +84,6 @@ object SearchHelper {
                 }
             }
         }
-
         return score
     }
 }

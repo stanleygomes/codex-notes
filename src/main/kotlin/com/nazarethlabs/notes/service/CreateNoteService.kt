@@ -7,41 +7,50 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.nazarethlabs.notes.helper.FileHelper
 import com.nazarethlabs.notes.helper.NoteNameHelper
 import com.nazarethlabs.notes.repository.NoteStorageRepository
+import java.io.File
 
 class CreateNoteService {
     fun create(project: Project): VirtualFile? {
-        val notes =
-            NoteStorageRepository
-                .getInstance()
-                .getAllNotes()
-
-        val title =
-            NoteNameHelper
-                .generateUntitledName(notes)
-
-        val extension =
-            NotesSettingsService()
-                .getDefaultFileExtension()
-
-        val fileName = "$title$extension"
-        val tempDir = FileHelper.getTempDir()
-        val file = FileHelper.createFile(tempDir, fileName)
-
-        val virtualFile =
-            LocalFileSystem
-                .getInstance()
-                .findFileByIoFile(file)
+        val title = generateTitle()
+        val extension = getExtension()
+        val fileName = createFileName(title, extension)
+        val file = createTempFile(fileName)
+        val virtualFile = LocalFileSystem.getInstance().findFileByIoFile(file)
 
         if (virtualFile != null) {
-            NoteStorageRepository
-                .getInstance()
-                .addNote(title, virtualFile.path)
-
-            FileEditorManager
-                .getInstance(project)
-                .openFile(virtualFile, true)
+            addNoteAndOpen(project, title, virtualFile)
         }
 
         return virtualFile
+    }
+
+    private fun generateTitle(): String {
+        val notes = NoteStorageRepository.getInstance().getAllNotes()
+        return NoteNameHelper.generateUntitledName(notes)
+    }
+
+    private fun getExtension(): String {
+        return NotesSettingsService().getDefaultFileExtension()
+    }
+
+    private fun createFileName(
+        title: String,
+        extension: String,
+    ): String {
+        return "$title$extension"
+    }
+
+    private fun createTempFile(fileName: String): File {
+        val tempDir = FileHelper.getTempDir()
+        return FileHelper.createFile(tempDir, fileName)
+    }
+
+    private fun addNoteAndOpen(
+        project: Project,
+        title: String,
+        virtualFile: VirtualFile,
+    ) {
+        NoteStorageRepository.getInstance().addNote(title, virtualFile.path)
+        FileEditorManager.getInstance(project).openFile(virtualFile, true)
     }
 }
