@@ -1,4 +1,4 @@
-package com.nazarethlabs.notes.ui.noteslist
+package com.nazarethlabs.notes.ui.component
 
 import com.intellij.ui.JBColor
 import com.nazarethlabs.notes.MyBundle
@@ -12,7 +12,7 @@ class EmptyStateComponent {
     fun build(): JPanel {
         val label = JLabel(MyBundle.message("empty.state.message"))
         label.horizontalAlignment = SwingConstants.CENTER
-        label.font = Font(label.font.family, Font.BOLD, 16)
+        label.font = label.font.deriveFont(Font.BOLD)
         label.foreground = JBColor.GRAY
 
         return JPanel(BorderLayout()).apply {
