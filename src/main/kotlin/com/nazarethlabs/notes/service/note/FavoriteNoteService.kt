@@ -1,4 +1,4 @@
-package com.nazarethlabs.notes.service
+package com.nazarethlabs.notes.service.note
 
 import com.nazarethlabs.notes.dto.Note
 import com.nazarethlabs.notes.repository.NoteStorageRepository

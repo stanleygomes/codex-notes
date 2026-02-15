@@ -1,4 +1,4 @@
-package com.nazarethlabs.notes.service
+package com.nazarethlabs.notes.service.note
 
 import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.project.Project

@@ -5,7 +5,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.util.ui.JBUI
 import com.nazarethlabs.notes.enum.SortTypeEnum
 import com.nazarethlabs.notes.helper.MessageHelper
-import com.nazarethlabs.notes.service.NotesSettingsService
+import com.nazarethlabs.notes.service.settings.NotesSettingsService
 import com.nazarethlabs.notes.ui.component.ButtonComponent
 import com.nazarethlabs.notes.ui.noteslist.NotesListComponent
 import javax.swing.JButton

@@ -6,11 +6,11 @@ import com.intellij.util.ui.JBUI
 import com.nazarethlabs.notes.MyBundle
 import com.nazarethlabs.notes.dto.Note
 import com.nazarethlabs.notes.enum.NoteColorEnum
-import com.nazarethlabs.notes.service.ChangeNoteColorService
-import com.nazarethlabs.notes.service.DeleteNoteService
-import com.nazarethlabs.notes.service.FavoriteNoteService
-import com.nazarethlabs.notes.service.OpenNoteService
-import com.nazarethlabs.notes.service.RenameNoteService
+import com.nazarethlabs.notes.service.note.ChangeNoteColorService
+import com.nazarethlabs.notes.service.note.DeleteNoteService
+import com.nazarethlabs.notes.service.note.FavoriteNoteService
+import com.nazarethlabs.notes.service.note.OpenNoteService
+import com.nazarethlabs.notes.service.note.RenameNoteService
 import javax.swing.JMenu
 import javax.swing.JMenuItem
 import javax.swing.JPopupMenu

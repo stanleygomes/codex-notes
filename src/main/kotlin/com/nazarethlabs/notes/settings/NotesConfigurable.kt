@@ -2,7 +2,7 @@ package com.nazarethlabs.notes.settings
 
 import com.intellij.openapi.options.Configurable
 import com.nazarethlabs.notes.helper.MessageHelper
-import com.nazarethlabs.notes.service.NotesConfigService
+import com.nazarethlabs.notes.service.settings.NotesConfigService
 import com.nazarethlabs.notes.ui.settings.NotesConfigComponent
 import javax.swing.JComponent
 

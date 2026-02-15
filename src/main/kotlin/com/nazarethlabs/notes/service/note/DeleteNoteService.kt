@@ -1,4 +1,4 @@
-package com.nazarethlabs.notes.service
+package com.nazarethlabs.notes.service.note
 
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.Messages

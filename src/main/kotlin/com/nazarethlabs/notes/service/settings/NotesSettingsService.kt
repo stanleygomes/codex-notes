@@ -1,4 +1,4 @@
-package com.nazarethlabs.notes.service
+package com.nazarethlabs.notes.service.settings
 
 import com.nazarethlabs.notes.enum.SortTypeEnum
 import com.nazarethlabs.notes.repository.NotesSettingsRepository

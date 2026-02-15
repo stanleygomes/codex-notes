@@ -1,4 +1,4 @@
-package com.nazarethlabs.notes.service
+package com.nazarethlabs.notes.service.settings
 
 import com.nazarethlabs.notes.helper.FileExtensionHelper
 import com.nazarethlabs.notes.ui.settings.NotesConfigComponent

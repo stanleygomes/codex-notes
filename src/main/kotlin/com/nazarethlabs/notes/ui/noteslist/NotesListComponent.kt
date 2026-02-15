@@ -11,7 +11,7 @@ import com.nazarethlabs.notes.listener.NoteListKeyListener
 import com.nazarethlabs.notes.listener.NoteListMouseListener
 import com.nazarethlabs.notes.listener.NoteListener
 import com.nazarethlabs.notes.repository.NoteStorageRepository
-import com.nazarethlabs.notes.service.NotesSettingsService
+import com.nazarethlabs.notes.service.settings.NotesSettingsService
 import com.nazarethlabs.notes.ui.search.SearchComponent
 import java.awt.BorderLayout
 import java.awt.BorderLayout.CENTER

@@ -1,4 +1,4 @@
-package com.nazarethlabs.notes.service
+package com.nazarethlabs.notes.service.note
 
 import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.project.Project
@@ -7,6 +7,7 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.nazarethlabs.notes.helper.FileHelper
 import com.nazarethlabs.notes.helper.NoteNameHelper
 import com.nazarethlabs.notes.repository.NoteStorageRepository
+import com.nazarethlabs.notes.service.settings.NotesSettingsService
 import java.io.File
 
 class CreateNoteService {
