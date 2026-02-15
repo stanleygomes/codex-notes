@@ -4,6 +4,9 @@ import com.intellij.icons.AllIcons
 import com.intellij.openapi.project.Project
 import com.intellij.util.ui.JBUI
 import com.nazarethlabs.notes.enum.SortTypeEnum
+import com.nazarethlabs.notes.enum.SortTypeEnum.DATE
+import com.nazarethlabs.notes.enum.SortTypeEnum.FAVORITE
+import com.nazarethlabs.notes.enum.SortTypeEnum.TITLE
 import com.nazarethlabs.notes.helper.MessageHelper
 import com.nazarethlabs.notes.service.settings.NotesSettingsService
 import com.nazarethlabs.notes.ui.component.ButtonComponent
@@ -29,13 +32,13 @@ class ToolbarButtonSortComponent {
             menu.border = JBUI.Borders.empty(5)
 
             menu.add(
-                createSortMenuItem(project, "toolbar.sort.by.title", SortTypeEnum.TITLE, notesListComponent),
+                createSortMenuItem("toolbar.sort.by.title", TITLE, notesListComponent),
             )
             menu.add(
-                createSortMenuItem(project, "toolbar.sort.by.date", SortTypeEnum.DATE, notesListComponent),
+                createSortMenuItem("toolbar.sort.by.date", DATE, notesListComponent),
             )
             menu.add(
-                createSortMenuItem(project, "toolbar.sort.by.favorite", SortTypeEnum.FAVORITE, notesListComponent),
+                createSortMenuItem("toolbar.sort.by.favorite", FAVORITE, notesListComponent),
             )
 
             val component = event.source as JButton
@@ -46,7 +49,6 @@ class ToolbarButtonSortComponent {
     }
 
     private fun createSortMenuItem(
-        project: Project,
         messageKey: String,
         sortType: SortTypeEnum,
         notesListComponent: NotesListComponent,
