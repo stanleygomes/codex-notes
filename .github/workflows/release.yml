@@ -86,7 +86,7 @@ jobs:
           git config user.name "GitHub Action"
 
           git checkout -b $BRANCH
-          git commit -am "chore: Release updates - $VERSION"
+          git commit -am "chore: release updates - $VERSION"
           git push --set-upstream origin $BRANCH
 
           gh label create "$LABEL" \
