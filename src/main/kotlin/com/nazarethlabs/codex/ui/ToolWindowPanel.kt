@@ -8,6 +8,7 @@ import com.nazarethlabs.codex.ui.noteslist.NotesListComponent
 import com.nazarethlabs.codex.ui.search.SearchComponent
 import com.nazarethlabs.codex.ui.toolbar.ToolbarComponent
 import javax.swing.JPanel
+import javax.swing.SwingUtilities
 
 class ToolWindowPanel : SearchStateListener {
     private lateinit var searchPanel: JPanel
@@ -34,5 +35,14 @@ class ToolWindowPanel : SearchStateListener {
 
     override fun onSearchVisibilityChanged(isVisible: Boolean) {
         searchPanel.isVisible = isVisible
+        if (isVisible) {
+            SwingUtilities.invokeLater {
+                focusSearchField(searchPanel)
+            }
+        }
     }
+}
+
+internal fun focusSearchField(searchPanel: JPanel) {
+    searchPanel.components.firstOrNull()?.requestFocusInWindow()
 }
