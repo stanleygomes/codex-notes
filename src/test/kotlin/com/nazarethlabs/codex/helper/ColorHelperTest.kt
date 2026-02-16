@@ -2,6 +2,7 @@ package com.nazarethlabs.codex.helper
 
 import com.nazarethlabs.codex.dto.Note
 import com.nazarethlabs.codex.enum.NoteColorEnum
+import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -53,13 +54,13 @@ class ColorHelperTest {
     fun `should use note color for background when note has custom color`() {
         val note = Note(title = "Test", color = NoteColorEnum.GREEN)
         val (backgroundColor, _) = colorHelper.calculateColors(null, note, false)
-        assert(backgroundColor == NoteColorEnum.GREEN.color)
+        assertEquals(NoteColorEnum.GREEN.color, backgroundColor)
     }
 
     @Test
     fun `should return dark foreground for light note colors`() {
         val note = Note(title = "Test", color = NoteColorEnum.YELLOW)
         val (_, foregroundColor) = colorHelper.calculateColors(null, note, false)
-        assert(foregroundColor == Color.BLACK)
+        assertEquals(Color.BLACK, foregroundColor)
     }
 }

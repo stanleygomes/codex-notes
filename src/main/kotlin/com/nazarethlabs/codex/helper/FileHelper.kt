@@ -1,6 +1,7 @@
 package com.nazarethlabs.codex.helper
 
 import java.io.File
+import java.io.IOException
 
 object FileHelper {
     fun createFile(
@@ -11,7 +12,9 @@ object FileHelper {
             val file = File(dir, fileName)
             file.writeText("")
             file
-        } catch (_: Exception) {
+        } catch (_: IOException) {
+            null
+        } catch (_: SecurityException) {
             null
         }
 
