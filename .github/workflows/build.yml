@@ -54,6 +54,9 @@ jobs:
     name: Build
     needs: [ validateCommits, lint ]
     runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.update_version.outputs.version }}
+      previous_version: ${{ steps.update_version.outputs.previous_version }}
     steps:
 
       # Free GitHub Actions Environment Disk Space
@@ -66,6 +69,41 @@ jobs:
       # Check out the current repository
       - name: Fetch Sources
         uses: actions/checkout@v6
+
+      # Update version for release builds
+      - name: Update Version for Release
+        if: github.ref == 'refs/heads/master'
+        id: update_version
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          CURRENT_VERSION=$(grep 'pluginVersion =' gradle.properties | cut -d'=' -f2 | tr -d ' ')
+          LAST_TAG=$(gh api repos/{owner}/{repo}/releases/latest --jq '.tag_name' 2>/dev/null || echo "")
+          COMMITS=$(git log --oneline $LAST_TAG..HEAD 2>/dev/null || echo "")
+
+          INCREMENT="patch"
+          if echo "$COMMITS" | grep -q "BREAKING CHANGE\|!:"; then
+            INCREMENT="major"
+          elif echo "$COMMITS" | grep -q "^feat"; then
+            INCREMENT="minor"
+          fi
+
+          IFS='.' read -r major minor patch <<< "$CURRENT_VERSION"
+          case $INCREMENT in
+            major)
+              VERSION="$((major + 1)).0.0"
+              ;;
+            minor)
+              VERSION="$major.$((minor + 1)).0"
+              ;;
+            patch)
+              VERSION="$major.$minor.$((patch + 1))"
+              ;;
+          esac
+
+          sed -i "s/pluginVersion = .*/pluginVersion = $VERSION/" gradle.properties
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "previous_version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
 
       # Set up the Java environment for the next steps
       - name: Setup Java
@@ -272,52 +310,17 @@ jobs:
             --jq '.[] | select(.draft == true) | .id' \
             | xargs -I '{}' gh api -X DELETE repos/{owner}/{repo}/releases/{}
 
-      # Calculate next version
-      - name: Calculate Next Version
-        id: calc_version
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          CURRENT_VERSION=$(grep 'pluginVersion =' gradle.properties | cut -d'=' -f2 | tr -d ' ')
-          LAST_TAG=$(gh api repos/{owner}/{repo}/releases/latest --jq '.tag_name' 2>/dev/null || echo "")
-          COMMITS=$(git log --oneline $LAST_TAG..HEAD 2>/dev/null || echo "")
-
-          INCREMENT="patch"
-          if echo "$COMMITS" | grep -q "BREAKING CHANGE\|!:"; then
-            INCREMENT="major"
-          elif echo "$COMMITS" | grep -q "^feat"; then
-            INCREMENT="minor"
-          fi
-
-          IFS='.' read -r major minor patch <<< "$CURRENT_VERSION"
-          case $INCREMENT in
-            major)
-              VERSION="$((major + 1)).0.0"
-              ;;
-            minor)
-              VERSION="$major.$((minor + 1)).0"
-              ;;
-            patch)
-              VERSION="$major.$minor.$((patch + 1))"
-              ;;
-          esac
-
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
-          echo "current_version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
-
       # Create a new release draft which is not publicly visible and requires manual acceptance
       - name: Create Release Draft
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          VERSION=${{ steps.calc_version.outputs.version }}
-          CURRENT_VERSION=${{ steps.calc_version.outputs.current_version }}
+          VERSION=${{ needs.build.outputs.version }}
+          PREVIOUS_TAG=${{ needs.build.outputs.previous_version }}
 
           RELEASE_NOTE="./build/tmp/release_note.txt"
           mkdir -p "$(dirname "$RELEASE_NOTE")"
 
-          # Get last release tag
-          PREVIOUS_TAG=$CURRENT_VERSION
           if [ -n "$PREVIOUS_TAG" ]; then
             COMMITS=$(git log --oneline --pretty=format:"- %s" $PREVIOUS_TAG..HEAD)
           else
