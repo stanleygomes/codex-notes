@@ -34,8 +34,8 @@ class ColorHelper {
         theList: JList<out Note>?,
         note: Note,
         isSelected: Boolean,
-    ): Color {
-        return if (isSelected) {
+    ): Color =
+        if (isSelected) {
             // When selected, use a slightly dimmed version of selection foreground
             theList!!.selectionForeground.darker()
         } else {
@@ -48,7 +48,6 @@ class ColorHelper {
                 Color(128, 128, 128)
             }
         }
-    }
 
     private fun isBackgroundTooLight(color: Color): Boolean {
         // Calculate the brightness of the color using the luminance formula

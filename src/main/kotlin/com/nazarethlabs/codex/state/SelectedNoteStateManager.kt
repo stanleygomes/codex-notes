@@ -30,4 +30,3 @@ class SelectedNoteStateManager {
 interface SelectedNoteListener {
     fun onSelectedNoteChanged(note: Note?)
 }
-

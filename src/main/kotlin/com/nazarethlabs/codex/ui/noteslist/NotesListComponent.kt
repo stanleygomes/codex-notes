@@ -73,7 +73,6 @@ class NotesListComponent : NotesStateListener {
         return mainPanel
     }
 
-
     override fun onNotesStateChanged(notes: List<Note>) {
         listModel.clear()
         notes.forEach { note ->
