@@ -52,9 +52,11 @@ jobs:
       # Calculate next version
       - name: Calculate Next Version
         id: calc_version
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           CURRENT_VERSION=$(grep 'pluginVersion =' gradle.properties | cut -d'=' -f2 | tr -d ' ')
-          LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          LAST_TAG=$(gh api repos/{owner}/{repo}/releases/latest --jq '.tag_name' 2>/dev/null || echo "")
           COMMITS=$(git log --oneline $LAST_TAG..HEAD 2>/dev/null || echo "")
 
           INCREMENT="patch"
