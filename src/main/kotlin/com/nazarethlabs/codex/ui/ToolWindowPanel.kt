@@ -7,7 +7,10 @@ import com.nazarethlabs.codex.state.SearchStateManager
 import com.nazarethlabs.codex.ui.noteslist.NotesListComponent
 import com.nazarethlabs.codex.ui.search.SearchComponent
 import com.nazarethlabs.codex.ui.toolbar.ToolbarComponent
+import java.awt.Component
+import java.awt.Container
 import javax.swing.JPanel
+import javax.swing.JTextField
 import javax.swing.SwingUtilities
 
 class ToolWindowPanel : SearchStateListener {
@@ -44,5 +47,12 @@ class ToolWindowPanel : SearchStateListener {
 }
 
 internal fun focusSearchField(searchPanel: JPanel) {
-    searchPanel.components.firstOrNull()?.requestFocusInWindow()
+    findSearchField(searchPanel)?.requestFocusInWindow()
 }
+
+private fun findSearchField(component: Component): JTextField? =
+    when (component) {
+        is JTextField -> component
+        is Container -> component.components.firstNotNullOfOrNull(::findSearchField)
+        else -> null
+    }

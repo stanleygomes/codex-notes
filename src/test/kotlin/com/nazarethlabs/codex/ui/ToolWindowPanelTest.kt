@@ -1,33 +1,45 @@
 package com.nazarethlabs.codex.ui
 
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
-import java.awt.Component
 import javax.swing.JPanel
+import javax.swing.JTextField
 
 class ToolWindowPanelTest {
     @Test
-    fun `should focus first search component when search panel has components`() {
+    fun `should focus search text field when found in search panel`() {
         val searchPanel = JPanel()
-        val focusableComponent = FocusableComponent()
-        searchPanel.add(focusableComponent)
-        searchPanel.add(FocusableComponent())
+        val focusableField = FocusableTextField()
+        searchPanel.add(JPanel())
+        searchPanel.add(focusableField)
 
         focusSearchField(searchPanel)
 
-        assertTrue(focusableComponent.focusRequested)
+        assertTrue(focusableField.focusRequested)
     }
 
     @Test
-    fun `should not fail when search panel has no components`() {
+    fun `should not focus non text component when search panel has no text field`() {
         val searchPanel = JPanel()
+        val focusableComponent = FocusableComponent()
+        searchPanel.add(focusableComponent)
 
         focusSearchField(searchPanel)
 
-        assertTrue(searchPanel.components.isEmpty())
+        assertFalse(focusableComponent.focusRequested)
     }
 
-    private class FocusableComponent : Component() {
+    private class FocusableTextField : JTextField() {
+        var focusRequested = false
+
+        override fun requestFocusInWindow(): Boolean {
+            focusRequested = true
+            return true
+        }
+    }
+
+    private class FocusableComponent : java.awt.Component() {
         var focusRequested = false
 
         override fun requestFocusInWindow(): Boolean {
