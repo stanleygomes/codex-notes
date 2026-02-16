@@ -123,10 +123,6 @@ class NoteEventListenerTest {
 
     @Test
     fun `should not add duplicate listener when same listener added twice`() {
-        val listener = TestNoteListener()
-        noteEventListener.addListener(listener)
-        noteEventListener.addListener(listener)
-
         var callCount = 0
         val countingListener =
             object : NoteListener {
