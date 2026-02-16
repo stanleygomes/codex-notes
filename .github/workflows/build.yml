@@ -10,12 +10,235 @@ concurrency:
 
 jobs:
 
+  # Validate Conventional Commits
+  validateCommits:
+    name: Validate Commits
+    runs-on: ubuntu-latest
+    steps:
+
+      # Check out the current repository
+      - name: Fetch Sources
+        uses: actions/checkout@v6
+
+      # Validate Conventional Commits
+      - name: Validate Conventional Commits
+        uses: wagoid/commitlint-github-action@v5
+
+  # Run linting checks
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+
+      # Check out the current repository
+      - name: Fetch Sources
+        uses: actions/checkout@v6
+
+      # Set up the Java environment for the next steps
+      - name: Setup Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: 21
+
+      # Setup Gradle
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v5
+
+      # Run Ktlint Check
+      - name: Run Ktlint Check
+        run: ./gradlew ktlintCheck --console=plain
+
+  # Prepare the environment and build the plugin
+  build:
+    name: Build
+    needs: [ validateCommits, lint ]
+    runs-on: ubuntu-latest
+    steps:
+
+      # Free GitHub Actions Environment Disk Space
+      - name: Maximize Build Space
+        uses: jlumbroso/free-disk-space@v1.3.1
+        with:
+          tool-cache: false
+          large-packages: false
+
+      # Check out the current repository
+      - name: Fetch Sources
+        uses: actions/checkout@v6
+
+      # Set up the Java environment for the next steps
+      - name: Setup Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: 21
+
+      # Setup Gradle
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v5
+
+      # Build plugin
+      - name: Build plugin
+        run: ./gradlew buildPlugin
+
+      # Prepare plugin archive content for creating artifact
+      - name: Prepare Plugin Artifact
+        id: artifact
+        shell: bash
+        run: |
+          cd ${{ github.workspace }}/build/distributions
+          FILENAME=`ls *.zip`
+          unzip "$FILENAME" -d content
+
+          echo "filename=${FILENAME:0:-4}" >> $GITHUB_OUTPUT
+
+      # Store an already-built plugin as an artifact for downloading
+      - name: Upload artifact
+        if: github.event_name == 'push'
+        uses: actions/upload-artifact@v6
+        with:
+          name: ${{ steps.artifact.outputs.filename }}
+          path: ./build/distributions/content/*/*
+
+  # Run tests and upload a code coverage report
+  test:
+    name: Test
+    needs: [ build ]
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+
+      # Free GitHub Actions Environment Disk Space
+      - name: Maximize Build Space
+        uses: jlumbroso/free-disk-space@v1.3.1
+        with:
+          tool-cache: false
+          large-packages: false
+
+      # Check out the current repository
+      - name: Fetch Sources
+        uses: actions/checkout@v6
+
+      # Set up the Java environment for the next steps
+      - name: Setup Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: 21
+
+      # Setup Gradle
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v5
+        with:
+          cache-read-only: true
+
+      # Run tests
+      - name: Run Tests
+        run: ./gradlew check
+
+      # Collect Tests Result of failed tests
+      - name: Collect Tests Result
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v6
+        with:
+          name: tests-result
+          path: ${{ github.workspace }}/build/reports/tests
+
+      # Upload the Kover report to CodeCov
+      - name: Upload Code Coverage Report
+        uses: codecov/codecov-action@v5
+        with:
+          files: ${{ github.workspace }}/build/reports/kover/report.xml
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+  # Run Qodana inspections and provide a report
+  inspectCode:
+    name: Inspect code
+    needs: [ build ]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      checks: write
+      pull-requests: write
+    steps:
+
+      # Free GitHub Actions Environment Disk Space
+      - name: Maximize Build Space
+        uses: jlumbroso/free-disk-space@v1.3.1
+        with:
+          tool-cache: false
+          large-packages: false
+
+      # Check out the current repository
+      - name: Fetch Sources
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.pull_request.head.sha }} # to check out the actual pull request commit, not the merge commit
+          fetch-depth: 0 # a full history is required for pull request analysis
+
+      # Set up the Java environment for the next steps
+      - name: Setup Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: 21
+
+      # Run Qodana inspections
+      - name: Qodana - Code Inspection
+        uses: JetBrains/qodana-action@v2025.1.1
+        with:
+          cache-default-branch-only: true
+
+  # Run plugin structure verification along with IntelliJ Plugin Verifier
+  verify:
+    name: Verify plugin
+    needs: [ build ]
+    runs-on: ubuntu-latest
+    steps:
+
+      # Free GitHub Actions Environment Disk Space
+      - name: Maximize Build Space
+        uses: jlumbroso/free-disk-space@v1.3.1
+        with:
+          tool-cache: false
+          large-packages: false
+
+      # Check out the current repository
+      - name: Fetch Sources
+        uses: actions/checkout@v6
+
+      # Set up the Java environment for the next steps
+      - name: Setup Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: 21
+
+      # Setup Gradle
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v5
+        with:
+          cache-read-only: true
+
+      # Run Verify Plugin task and IntelliJ Plugin Verifier tool
+      - name: Run Plugin Verification tasks
+        run: ./gradlew verifyPlugin
+
+      # Collect Plugin Verifier Result
+      - name: Collect Plugin Verifier Result
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v6
+        with:
+          name: pluginVerifier-result
+          path: ${{ github.workspace }}/build/reports/pluginVerifier
+
   # Prepare a draft release for GitHub Releases page for the manual verification
   # If accepted and published, the release workflow would be triggered
   releaseDraft:
     name: Release draft
     if: github.event_name != 'pull_request'
-#    needs: [ build, test, inspectCode, verify ]
+    needs: [ build, test, inspectCode, verify ]
     runs-on: ubuntu-latest
     permissions:
       contents: write
