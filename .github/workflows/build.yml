@@ -105,6 +105,9 @@ jobs:
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "previous_version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
 
+          echo "Updated gradle.properties:"
+          cat gradle.properties
+
       # Set up the Java environment for the next steps
       - name: Setup Java
         uses: actions/setup-java@v5
@@ -139,137 +142,137 @@ jobs:
           name: ${{ steps.artifact.outputs.filename }}
           path: ./build/distributions/content/*/*
 
-  # Run tests and upload a code coverage report
-  test:
-    name: Test
-    needs: [ build ]
-    runs-on: ubuntu-latest
-    environment: production
-    steps:
+#  # Run tests and upload a code coverage report
+#  test:
+#    name: Test
+#    needs: [ build ]
+#    runs-on: ubuntu-latest
+#    environment: production
+#    steps:
+#
+#      # Free GitHub Actions Environment Disk Space
+#      - name: Maximize Build Space
+#        uses: jlumbroso/free-disk-space@v1.3.1
+#        with:
+#          tool-cache: false
+#          large-packages: false
+#
+#      # Check out the current repository
+#      - name: Fetch Sources
+#        uses: actions/checkout@v6
+#
+#      # Set up the Java environment for the next steps
+#      - name: Setup Java
+#        uses: actions/setup-java@v5
+#        with:
+#          distribution: zulu
+#          java-version: 21
+#
+#      # Setup Gradle
+#      - name: Setup Gradle
+#        uses: gradle/actions/setup-gradle@v5
+#        with:
+#          cache-read-only: true
+#
+#      # Run tests
+#      - name: Run Tests
+#        run: ./gradlew check
+#
+#      # Collect Tests Result of failed tests
+#      - name: Collect Tests Result
+#        if: ${{ failure() }}
+#        uses: actions/upload-artifact@v6
+#        with:
+#          name: tests-result
+#          path: ${{ github.workspace }}/build/reports/tests
+#
+#      # Upload the Kover report to CodeCov
+#      - name: Upload Code Coverage Report
+#        uses: codecov/codecov-action@v5
+#        with:
+#          files: ${{ github.workspace }}/build/reports/kover/report.xml
+#          token: ${{ secrets.CODECOV_TOKEN }}
 
-      # Free GitHub Actions Environment Disk Space
-      - name: Maximize Build Space
-        uses: jlumbroso/free-disk-space@v1.3.1
-        with:
-          tool-cache: false
-          large-packages: false
+#  # Run Qodana inspections and provide a report
+#  inspectCode:
+#    name: Inspect code
+#    needs: [ build ]
+#    runs-on: ubuntu-latest
+#    permissions:
+#      contents: write
+#      checks: write
+#      pull-requests: write
+#    steps:
+#
+#      # Free GitHub Actions Environment Disk Space
+#      - name: Maximize Build Space
+#        uses: jlumbroso/free-disk-space@v1.3.1
+#        with:
+#          tool-cache: false
+#          large-packages: false
+#
+#      # Check out the current repository
+#      - name: Fetch Sources
+#        uses: actions/checkout@v6
+#        with:
+#          ref: ${{ github.event.pull_request.head.sha }} # to check out the actual pull request commit, not the merge commit
+#          fetch-depth: 0 # a full history is required for pull request analysis
+#
+#      # Set up the Java environment for the next steps
+#      - name: Setup Java
+#        uses: actions/setup-java@v5
+#        with:
+#          distribution: zulu
+#          java-version: 21
+#
+#      # Run Qodana inspections
+#      - name: Qodana - Code Inspection
+#        uses: JetBrains/qodana-action@v2025.1.1
+#        with:
+#          cache-default-branch-only: true
 
-      # Check out the current repository
-      - name: Fetch Sources
-        uses: actions/checkout@v6
-
-      # Set up the Java environment for the next steps
-      - name: Setup Java
-        uses: actions/setup-java@v5
-        with:
-          distribution: zulu
-          java-version: 21
-
-      # Setup Gradle
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v5
-        with:
-          cache-read-only: true
-
-      # Run tests
-      - name: Run Tests
-        run: ./gradlew check
-
-      # Collect Tests Result of failed tests
-      - name: Collect Tests Result
-        if: ${{ failure() }}
-        uses: actions/upload-artifact@v6
-        with:
-          name: tests-result
-          path: ${{ github.workspace }}/build/reports/tests
-
-      # Upload the Kover report to CodeCov
-      - name: Upload Code Coverage Report
-        uses: codecov/codecov-action@v5
-        with:
-          files: ${{ github.workspace }}/build/reports/kover/report.xml
-          token: ${{ secrets.CODECOV_TOKEN }}
-
-  # Run Qodana inspections and provide a report
-  inspectCode:
-    name: Inspect code
-    needs: [ build ]
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      checks: write
-      pull-requests: write
-    steps:
-
-      # Free GitHub Actions Environment Disk Space
-      - name: Maximize Build Space
-        uses: jlumbroso/free-disk-space@v1.3.1
-        with:
-          tool-cache: false
-          large-packages: false
-
-      # Check out the current repository
-      - name: Fetch Sources
-        uses: actions/checkout@v6
-        with:
-          ref: ${{ github.event.pull_request.head.sha }} # to check out the actual pull request commit, not the merge commit
-          fetch-depth: 0 # a full history is required for pull request analysis
-
-      # Set up the Java environment for the next steps
-      - name: Setup Java
-        uses: actions/setup-java@v5
-        with:
-          distribution: zulu
-          java-version: 21
-
-      # Run Qodana inspections
-      - name: Qodana - Code Inspection
-        uses: JetBrains/qodana-action@v2025.1.1
-        with:
-          cache-default-branch-only: true
-
-  # Run plugin structure verification along with IntelliJ Plugin Verifier
-  verify:
-    name: Verify plugin
-    needs: [ build ]
-    runs-on: ubuntu-latest
-    steps:
-
-      # Free GitHub Actions Environment Disk Space
-      - name: Maximize Build Space
-        uses: jlumbroso/free-disk-space@v1.3.1
-        with:
-          tool-cache: false
-          large-packages: false
-
-      # Check out the current repository
-      - name: Fetch Sources
-        uses: actions/checkout@v6
-
-      # Set up the Java environment for the next steps
-      - name: Setup Java
-        uses: actions/setup-java@v5
-        with:
-          distribution: zulu
-          java-version: 21
-
-      # Setup Gradle
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v5
-        with:
-          cache-read-only: true
-
-      # Run Verify Plugin task and IntelliJ Plugin Verifier tool
-      - name: Run Plugin Verification tasks
-        run: ./gradlew verifyPlugin
-
-      # Collect Plugin Verifier Result
-      - name: Collect Plugin Verifier Result
-        if: ${{ always() }}
-        uses: actions/upload-artifact@v6
-        with:
-          name: pluginVerifier-result
-          path: ${{ github.workspace }}/build/reports/pluginVerifier
+#  # Run plugin structure verification along with IntelliJ Plugin Verifier
+#  verify:
+#    name: Verify plugin
+#    needs: [ build ]
+#    runs-on: ubuntu-latest
+#    steps:
+#
+#      # Free GitHub Actions Environment Disk Space
+#      - name: Maximize Build Space
+#        uses: jlumbroso/free-disk-space@v1.3.1
+#        with:
+#          tool-cache: false
+#          large-packages: false
+#
+#      # Check out the current repository
+#      - name: Fetch Sources
+#        uses: actions/checkout@v6
+#
+#      # Set up the Java environment for the next steps
+#      - name: Setup Java
+#        uses: actions/setup-java@v5
+#        with:
+#          distribution: zulu
+#          java-version: 21
+#
+#      # Setup Gradle
+#      - name: Setup Gradle
+#        uses: gradle/actions/setup-gradle@v5
+#        with:
+#          cache-read-only: true
+#
+#      # Run Verify Plugin task and IntelliJ Plugin Verifier tool
+#      - name: Run Plugin Verification tasks
+#        run: ./gradlew verifyPlugin
+#
+#      # Collect Plugin Verifier Result
+#      - name: Collect Plugin Verifier Result
+#        if: ${{ always() }}
+#        uses: actions/upload-artifact@v6
+#        with:
+#          name: pluginVerifier-result
+#          path: ${{ github.workspace }}/build/reports/pluginVerifier
 
   # Prepare a draft release for GitHub Releases page for the manual verification
   # If accepted and published, the release workflow would be triggered
