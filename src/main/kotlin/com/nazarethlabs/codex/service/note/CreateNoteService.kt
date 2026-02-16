@@ -4,7 +4,9 @@ import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.vfs.VirtualFile
+import com.nazarethlabs.codex.helper.DialogHelper
 import com.nazarethlabs.codex.helper.FileHelper
+import com.nazarethlabs.codex.helper.MessageHelper
 import com.nazarethlabs.codex.helper.NoteNameHelper
 import com.nazarethlabs.codex.repository.NoteStorageRepository
 import com.nazarethlabs.codex.service.settings.NotesSettingsService
@@ -16,6 +18,12 @@ class CreateNoteService {
         val extension = getExtension()
         val fileName = createFileName(title, extension)
         val file = createTempFile(fileName)
+
+        if (file == null) {
+            notifyCreateFailed(project)
+            return null
+        }
+
         val virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(file)
 
         if (virtualFile != null) {
@@ -37,7 +45,7 @@ class CreateNoteService {
         extension: String,
     ): String = "$title$extension"
 
-    private fun createTempFile(fileName: String): File {
+    private fun createTempFile(fileName: String): File? {
         val tempDir = FileHelper.getTempDir()
         return FileHelper.createFile(tempDir, fileName)
     }
@@ -49,5 +57,13 @@ class CreateNoteService {
     ) {
         NoteStorageRepository.getInstance().addNote(title, virtualFile.path)
         FileEditorManager.getInstance(project).openFile(virtualFile, true)
+    }
+
+    private fun notifyCreateFailed(project: Project) {
+        DialogHelper.showErrorDialog(
+            project,
+            MessageHelper.getMessage("error.note.create.failed.message"),
+            MessageHelper.getMessage("error.note.create.failed.title"),
+        )
     }
 }

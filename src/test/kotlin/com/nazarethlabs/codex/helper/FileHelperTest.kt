@@ -2,6 +2,8 @@ package com.nazarethlabs.codex.helper
 
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -16,7 +18,8 @@ class FileHelperTest {
         val tempDir = Files.createTempDirectory("test").toFile()
         val fileName = "test.txt"
         val file = FileHelper.createFile(tempDir.absolutePath, fileName)
-        assertTrue(file.exists())
+        assertNotNull(file)
+        assertTrue(file!!.exists())
         assertEquals("", file.readText())
         file.delete()
         tempDir.delete()
@@ -107,5 +110,17 @@ class FileHelperTest {
         val expected = System.getProperty("java.io.tmpdir")
         val result = FileHelper.getTempDir()
         assertEquals(expected, result)
+    }
+
+    @Test
+    fun `should return null when directory does not exist for file creation`() {
+        val result = FileHelper.createFile("/nonexistent/directory/path", "test.txt")
+        assertNull(result)
+    }
+
+    @Test
+    fun `should return file path as parent when file has no parent directory`() {
+        val result = FileHelper.getParentPath("file.txt")
+        assertEquals("file.txt", result)
     }
 }

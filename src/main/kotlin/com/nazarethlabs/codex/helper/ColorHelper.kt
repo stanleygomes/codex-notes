@@ -4,6 +4,7 @@ import com.nazarethlabs.codex.dto.Note
 import com.nazarethlabs.codex.enum.NoteColorEnum.NONE
 import java.awt.Color
 import java.awt.Color.BLACK
+import java.awt.Color.WHITE
 import javax.swing.JList
 
 class ColorHelper {
@@ -14,17 +15,17 @@ class ColorHelper {
     ): Pair<Color, Color> {
         val backgroundColor =
             if (isSelected) {
-                theList!!.selectionBackground
+                theList?.selectionBackground ?: Color.GRAY
             } else {
-                if (note.color != NONE) note.color.color else theList!!.background
+                if (note.color != NONE) note.color.color else theList?.background ?: WHITE
             }
 
         val foregroundColor =
             if (isSelected) {
-                theList!!.selectionForeground
+                theList?.selectionForeground ?: WHITE
             } else {
-                val bgColor = if (note.color != NONE) note.color.color else theList!!.background
-                if (isBackgroundTooLight(bgColor)) BLACK else theList!!.foreground
+                val bgColor = if (note.color != NONE) note.color.color else theList?.background ?: WHITE
+                if (isBackgroundTooLight(bgColor)) BLACK else theList?.foreground ?: BLACK
             }
 
         return Pair(backgroundColor, foregroundColor)
@@ -36,23 +37,18 @@ class ColorHelper {
         isSelected: Boolean,
     ): Color =
         if (isSelected) {
-            // When selected, use a slightly dimmed version of selection foreground
-            theList!!.selectionForeground.darker()
+            (theList?.selectionForeground ?: WHITE).darker()
         } else {
-            val bgColor = if (note.color != NONE) note.color.color else theList!!.background
+            val bgColor = if (note.color != NONE) note.color.color else theList?.background ?: WHITE
             if (isBackgroundTooLight(bgColor)) {
-                // Dark background for date when main background is light
-                Color(64, 64, 64) // Dark gray
+                Color(64, 64, 64)
             } else {
-                // Light gray for date when main background is dark
                 Color(128, 128, 128)
             }
         }
 
     private fun isBackgroundTooLight(color: Color): Boolean {
-        // Calculate the brightness of the color using the luminance formula
         val brightness = (color.red * 0.299 + color.green * 0.587 + color.blue * 0.114)
-        // If brightness is greater than 186, the color is considered too light
         return brightness > 186
     }
 }

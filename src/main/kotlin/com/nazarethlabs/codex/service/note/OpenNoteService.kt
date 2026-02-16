@@ -5,6 +5,8 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.vfs.VirtualFile
 import com.nazarethlabs.codex.dto.Note
+import com.nazarethlabs.codex.helper.DialogHelper
+import com.nazarethlabs.codex.helper.MessageHelper
 import com.nazarethlabs.codex.repository.NoteStorageRepository
 
 class OpenNoteService {
@@ -17,6 +19,8 @@ class OpenNoteService {
         if (virtualFile != null) {
             openFile(project, virtualFile)
             updateNote(note)
+        } else {
+            notifyFileNotFound(project, note)
         }
     }
 
@@ -31,5 +35,16 @@ class OpenNoteService {
 
     private fun updateNote(note: Note) {
         NoteStorageRepository.getInstance().updateNote(note.id)
+    }
+
+    private fun notifyFileNotFound(
+        project: Project,
+        note: Note,
+    ) {
+        DialogHelper.showErrorDialog(
+            project,
+            MessageHelper.getMessage("error.note.file.not.found.message", note.title),
+            MessageHelper.getMessage("error.note.file.not.found.title"),
+        )
     }
 }

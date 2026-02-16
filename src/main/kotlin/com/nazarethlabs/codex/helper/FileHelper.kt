@@ -6,11 +6,14 @@ object FileHelper {
     fun createFile(
         dir: String,
         fileName: String,
-    ): File {
-        val file = File(dir, fileName)
-        file.writeText("")
-        return file
-    }
+    ): File? =
+        try {
+            val file = File(dir, fileName)
+            file.writeText("")
+            file
+        } catch (_: Exception) {
+            null
+        }
 
     fun deleteFile(filePath: String) {
         val file = File(filePath)
@@ -43,7 +46,7 @@ object FileHelper {
 
     fun getParentPath(filePath: String): String {
         val file = File(filePath)
-        return file.parent
+        return file.parent ?: filePath
     }
 
     fun getTempDir(): String = System.getProperty("java.io.tmpdir")
