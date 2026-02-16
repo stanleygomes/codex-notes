@@ -30,7 +30,7 @@ class NoteListMouseListener(
         handleContextMenu(e, project, getSelectedValue)
     }
 
-    fun handleContextMenu(
+    private fun handleContextMenu(
         e: MouseEvent,
         project: Project,
         getSelectedValue: () -> Note?,

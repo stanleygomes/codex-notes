@@ -41,10 +41,6 @@ class NotesStateManager : NoteListener {
         listener.onNotesStateChanged(currentNotes)
     }
 
-    fun removeListener(listener: NotesStateListener) {
-        listeners.remove(listener)
-    }
-
     fun sortBy(sortType: SortTypeEnum) {
         currentSortType = sortType
         isSearchActive = false
@@ -71,10 +67,6 @@ class NotesStateManager : NoteListener {
         currentSearchText = ""
         refreshNotes()
     }
-
-    fun getCurrentNotes(): List<Note> = currentNotes
-
-    fun isSearchActive(): Boolean = isSearchActive
 
     fun refresh() {
         refreshNotes()
