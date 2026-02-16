@@ -30,6 +30,8 @@ class NotesListComponent : NotesStateListener {
         this.project = project
         this.stateManager = NotesStateManager.getInstance()
 
+        stateManager.registerProject(project)
+
         listModel = DefaultListModel()
         stateManager.addListener(this)
 

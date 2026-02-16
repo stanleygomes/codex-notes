@@ -2,6 +2,7 @@ package com.nazarethlabs.codex.state
 
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.service
+import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.ProjectManager
 import com.nazarethlabs.codex.dto.Note
 import com.nazarethlabs.codex.enum.SortTypeEnum
@@ -39,6 +40,10 @@ class NotesStateManager : NoteListener {
     fun addListener(listener: NotesStateListener) {
         listeners.add(listener)
         listener.onNotesStateChanged(currentNotes)
+    }
+
+    fun registerProject(project: Project) {
+        NoteEventListener.getInstance(project).addListener(this)
     }
 
     fun sortBy(sortType: SortTypeEnum) {

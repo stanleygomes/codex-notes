@@ -9,7 +9,9 @@ class NoteEventListener {
     private val listeners = mutableListOf<NoteListener>()
 
     fun addListener(listener: NoteListener) {
-        listeners.add(listener)
+        if (!listeners.contains(listener)) {
+            listeners.add(listener)
+        }
     }
 
     fun notifyNoteCreated() {

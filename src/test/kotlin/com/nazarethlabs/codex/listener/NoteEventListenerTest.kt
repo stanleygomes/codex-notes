@@ -120,4 +120,50 @@ class NoteEventListenerTest {
         assert(!listener.updatedCalled)
         assert(listener.deletedCalled)
     }
+
+    @Test
+    fun `should not add duplicate listener when same listener added twice`() {
+        val listener = TestNoteListener()
+        noteEventListener.addListener(listener)
+        noteEventListener.addListener(listener)
+
+        var callCount = 0
+        val countingListener =
+            object : NoteListener {
+                override fun onNoteCreated() {
+                    callCount++
+                }
+
+                override fun onNoteUpdated() {}
+
+                override fun onNoteDeleted() {}
+            }
+
+        noteEventListener.addListener(countingListener)
+        noteEventListener.addListener(countingListener)
+        noteEventListener.notifyNoteCreated()
+
+        assert(callCount == 1)
+    }
+
+    @Test
+    fun `should notify listener only once when added multiple times and note deleted`() {
+        var deleteCallCount = 0
+        val countingListener =
+            object : NoteListener {
+                override fun onNoteCreated() {}
+
+                override fun onNoteUpdated() {}
+
+                override fun onNoteDeleted() {
+                    deleteCallCount++
+                }
+            }
+
+        noteEventListener.addListener(countingListener)
+        noteEventListener.addListener(countingListener)
+        noteEventListener.notifyNoteDeleted()
+
+        assert(deleteCallCount == 1)
+    }
 }
