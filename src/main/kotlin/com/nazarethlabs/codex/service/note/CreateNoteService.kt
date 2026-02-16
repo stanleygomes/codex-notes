@@ -16,7 +16,7 @@ class CreateNoteService {
         val extension = getExtension()
         val fileName = createFileName(title, extension)
         val file = createTempFile(fileName)
-        val virtualFile = LocalFileSystem.getInstance().findFileByIoFile(file)
+        val virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(file)
 
         if (virtualFile != null) {
             addNoteAndOpen(project, title, virtualFile)
