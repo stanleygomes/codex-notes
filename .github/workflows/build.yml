@@ -80,6 +80,7 @@ jobs:
           esac
 
           echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "current_version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
 
       # Create a new release draft which is not publicly visible and requires manual acceptance
       - name: Create Release Draft
@@ -87,12 +88,13 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           VERSION=${{ steps.calc_version.outputs.version }}
+          CURRENT_VERSION=${{ steps.calc_version.outputs.current_version }}
 
           RELEASE_NOTE="./build/tmp/release_note.txt"
           mkdir -p "$(dirname "$RELEASE_NOTE")"
 
           # Get last release tag
-          PREVIOUS_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          PREVIOUS_TAG=$CURRENT_VERSION
           if [ -n "$PREVIOUS_TAG" ]; then
             COMMITS=$(git log --oneline --pretty=format:"- %s" $PREVIOUS_TAG..HEAD)
           else
