@@ -77,7 +77,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          CURRENT_VERSION=$(grep 'pluginVersion =' gradle.properties | cut -d'=' -f2 | tr -d ' ')
+          CURRENT_VERSION=$(grep 'pluginVersion' gradle.properties | cut -d'=' -f2 | tr -d ' ')
           LAST_TAG=$(gh api repos/{owner}/{repo}/releases/latest --jq '.tag_name' 2>/dev/null || echo "")
           COMMITS=$(git log --oneline $LAST_TAG..HEAD 2>/dev/null || echo "")
 
@@ -101,7 +101,7 @@ jobs:
               ;;
           esac
 
-          sed -i "s/pluginVersion = .*/pluginVersion = $VERSION/" gradle.properties
+          sed -i "s/pluginVersion.*/pluginVersion = $VERSION/" gradle.properties
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "previous_version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
 
