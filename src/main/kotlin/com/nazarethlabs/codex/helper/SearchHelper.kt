@@ -3,6 +3,16 @@ package com.nazarethlabs.codex.helper
 import com.nazarethlabs.codex.dto.Note
 
 object SearchHelper {
+    private const val SCORE_TITLE_EXACT_MATCH = 200
+    private const val SCORE_TITLE_CONTAINS_QUERY = 100
+    private const val SCORE_TITLE_STARTS_WITH_QUERY = 50
+    private const val SCORE_TITLE_TERM_CONTAINS = 10
+    private const val SCORE_TITLE_TERM_STARTS_WITH = 5
+    private const val SCORE_TITLE_WORD_EXACT_MATCH = 7
+    private const val SCORE_TITLE_WORD_STARTS_WITH = 3
+    private const val SCORE_CONTENT_CONTAINS_QUERY = 30
+    private const val SCORE_CONTENT_TERM_MATCH = 5
+
     fun search(
         notes: List<Note>,
         query: String,
@@ -53,12 +63,12 @@ object SearchHelper {
         var score = 0
 
         if (contentLower.contains(fullQuery)) {
-            score += 30
+            score += SCORE_CONTENT_CONTAINS_QUERY
         }
 
         terms.forEach { term ->
             if (contentLower.contains(term)) {
-                score += 5
+                score += SCORE_CONTENT_TERM_MATCH
             }
         }
 
@@ -71,13 +81,13 @@ object SearchHelper {
     ): Int {
         var score = 0
         if (title.contains(fullQuery)) {
-            score += 100
+            score += SCORE_TITLE_CONTAINS_QUERY
         }
         if (title == fullQuery) {
-            score += 200
+            score += SCORE_TITLE_EXACT_MATCH
         }
         if (title.startsWith(fullQuery)) {
-            score += 50
+            score += SCORE_TITLE_STARTS_WITH_QUERY
         }
         return score
     }
@@ -89,10 +99,10 @@ object SearchHelper {
         var score = 0
         terms.forEach { term ->
             if (title.contains(term)) {
-                score += 10
+                score += SCORE_TITLE_TERM_CONTAINS
             }
             if (title.startsWith(term)) {
-                score += 5
+                score += SCORE_TITLE_TERM_STARTS_WITH
             }
         }
         return score
@@ -106,10 +116,10 @@ object SearchHelper {
         terms.forEach { term ->
             titleWords.forEach { word ->
                 if (word.startsWith(term)) {
-                    score += 3
+                    score += SCORE_TITLE_WORD_STARTS_WITH
                 }
                 if (word == term) {
-                    score += 7
+                    score += SCORE_TITLE_WORD_EXACT_MATCH
                 }
             }
         }
