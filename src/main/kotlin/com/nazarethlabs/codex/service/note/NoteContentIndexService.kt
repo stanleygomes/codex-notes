@@ -3,7 +3,7 @@ package com.nazarethlabs.codex.service.note
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.Service
 import com.nazarethlabs.codex.dto.Note
-import java.io.File
+import com.nazarethlabs.codex.helper.FileHelper
 import java.util.concurrent.ConcurrentHashMap
 
 @Service(Service.Level.APP)
@@ -11,20 +11,19 @@ class NoteContentIndexService {
     private val contentCache = ConcurrentHashMap<String, CachedContent>()
 
     fun getContent(note: Note): String? {
-        val file = File(note.filePath)
-        if (!file.exists() || !file.isFile) {
+        if (!FileHelper.isFile(note.filePath)) {
             contentCache.remove(note.id)
             return null
         }
 
-        val lastModified = file.lastModified()
+        val lastModified = FileHelper.getLastModified(note.filePath)
         val cached = contentCache[note.id]
 
         if (cached != null && cached.lastModified == lastModified) {
             return cached.content
         }
 
-        return readAndCacheContent(note.id, file, lastModified)
+        return readAndCacheContent(note.id, note.filePath, lastModified)
     }
 
     fun getContentForSearch(notes: List<Note>): Map<String, String> =
@@ -42,14 +41,14 @@ class NoteContentIndexService {
 
     private fun readAndCacheContent(
         noteId: String,
-        file: File,
+        filePath: String,
         lastModified: Long,
     ): String? =
         try {
-            val content = file.readText()
+            val content = FileHelper.readText(filePath)
             contentCache[noteId] = CachedContent(content, lastModified)
             content
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             contentCache.remove(noteId)
             null
         }
