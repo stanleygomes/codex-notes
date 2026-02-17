@@ -1,14 +1,10 @@
-package com.nazarethlabs.codex.service.settings
+package com.nazarethlabs.codex.helper
 
 import java.awt.Desktop
-import java.io.File
 
-class OpenNotesFolderService {
+object OpenFolderHelper {
     fun openFolder(path: String): Boolean {
-        val folder = File(path)
-        if (!folder.exists()) {
-            folder.mkdirs()
-        }
+        val folder = FileHelper.ensureDirectoryExists(path)
 
         return try {
             when {
@@ -17,20 +13,20 @@ class OpenNotesFolderService {
                     true
                 }
                 isLinux() -> {
-                    Runtime.getRuntime().exec(arrayOf("xdg-open", folder.absolutePath))
+                    ProcessBuilder("xdg-open", folder.absolutePath).start()
                     true
                 }
                 isMac() -> {
-                    Runtime.getRuntime().exec(arrayOf("open", folder.absolutePath))
+                    ProcessBuilder("open", folder.absolutePath).start()
                     true
                 }
                 isWindows() -> {
-                    Runtime.getRuntime().exec(arrayOf("explorer", folder.absolutePath))
+                    ProcessBuilder("explorer", folder.absolutePath).start()
                     true
                 }
                 else -> false
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             false
         }
     }
