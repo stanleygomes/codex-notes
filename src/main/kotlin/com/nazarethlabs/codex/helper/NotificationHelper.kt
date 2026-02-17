@@ -32,4 +32,3 @@ object NotificationHelper {
             .notify(project)
     }
 }
-
