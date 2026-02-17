@@ -14,32 +14,34 @@ import javax.swing.JPopupMenu
 class NoteActionsPopupMenuComponent {
     fun createPopupMenu(
         project: Project,
-        note: Note,
+        notes: List<Note>,
     ): JPopupMenu {
         val menu =
             PopupMenuComponent()
                 .build()
 
-        val openItem = MenuItemOpenComponent().build(project, note)
+        val openItem = MenuItemOpenComponent().build(project, notes)
         menu.add(openItem)
 
         menu.addSeparator()
 
-        val renameItem = MenuItemRenameComponent().build(project, note)
+        val renameItem = MenuItemRenameComponent().build(project, notes)
         menu.add(renameItem)
 
-        val favoriteItem = MenuItemFavoriteComponent().build(note)
+        val favoriteItem = MenuItemFavoriteComponent().build(notes)
         menu.add(favoriteItem)
 
-        val colorMenu = MenuItemColorComponent().build(note)
+        val colorMenu = MenuItemColorComponent().build(notes)
         menu.add(colorMenu)
 
         menu.addSeparator()
 
-        val openFileLocationItem = MenuItemOpenFileLocationComponent().build(note)
+        val openFileLocationItem = MenuItemOpenFileLocationComponent().build(notes)
         menu.add(openFileLocationItem)
 
-        val deleteItem = MenuItemDeleteComponent().build(project, note)
+        menu.addSeparator()
+
+        val deleteItem = MenuItemDeleteComponent().build(project, notes)
         menu.add(deleteItem)
 
         return menu

@@ -2,11 +2,8 @@ package com.nazarethlabs.codex.listener
 
 import com.intellij.openapi.project.Project
 import com.nazarethlabs.codex.dto.Note
-import com.nazarethlabs.codex.service.note.DeleteNoteService
 import com.nazarethlabs.codex.service.note.DeleteNotesService
-import com.nazarethlabs.codex.service.note.FavoriteNoteService
 import com.nazarethlabs.codex.service.note.FavoriteNotesService
-import com.nazarethlabs.codex.service.note.OpenNoteService
 import com.nazarethlabs.codex.service.note.OpenNotesService
 import com.nazarethlabs.codex.service.note.RenameNoteService
 import java.awt.event.KeyAdapter
@@ -33,19 +30,11 @@ class NoteListKeyListener(
     }
 
     private fun handleOpen(notes: List<Note>) {
-        if (notes.size == 1) {
-            OpenNoteService().open(project, notes.first())
-        } else {
-            OpenNotesService().openAll(project, notes)
-        }
+        OpenNotesService().openAll(project, notes)
     }
 
     private fun handleDelete(notes: List<Note>) {
-        if (notes.size == 1) {
-            DeleteNoteService().confirmAndDelete(project, notes.first())
-        } else {
-            DeleteNotesService().confirmAndDelete(project, notes)
-        }
+        DeleteNotesService().confirmAndDelete(project, notes)
     }
 
     private fun handleRename(notes: List<Note>) {
@@ -56,7 +45,7 @@ class NoteListKeyListener(
 
     private fun handleFavorite(notes: List<Note>) {
         if (notes.size == 1) {
-            FavoriteNoteService().toggleFavorite(notes.first())
+            FavoriteNotesService().toggleFavorite(notes.first())
         } else {
             val allFavorited = notes.all { it.isFavorite }
             if (allFavorited) {

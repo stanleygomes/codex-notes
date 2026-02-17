@@ -14,12 +14,19 @@ class MenuItemRenameComponent {
 
     fun build(
         project: Project,
-        note: Note,
+        notes: List<Note>,
     ): JMenuItem {
-        return menuItemComponent.build(
-            text = "${MyBundle.message("note.context.menu.rename")} (F2)",
-            icon = AllIcons.Actions.Edit,
-            action = { renameNoteService.rename(project, note) },
-        )
+        val isSingleNote = notes.size == 1
+
+        val menuItem =
+            menuItemComponent.build(
+                text = "${MyBundle.message("note.context.menu.rename")} (F2)",
+                icon = AllIcons.Actions.Edit,
+                action = { if (isSingleNote) renameNoteService.rename(project, notes.first()) },
+            )
+
+        menuItem.isEnabled = isSingleNote
+
+        return menuItem
     }
 }

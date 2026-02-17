@@ -21,4 +21,10 @@ class FavoriteNotesService {
             }
         }
     }
+
+    fun toggleFavorite(note: Note) {
+        NoteStorageRepository
+            .getInstance()
+            .toggleFavorite(note.id)
+    }
 }

@@ -1,5 +1,6 @@
 package com.nazarethlabs.codex.ui
 
+import com.nazarethlabs.codex.helper.UiFieldHelper
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -14,7 +15,7 @@ class ToolWindowPanelTest {
         searchPanel.add(JPanel())
         searchPanel.add(focusableField)
 
-        focusSearchField(searchPanel)
+        UiFieldHelper.focusField(searchPanel)
 
         assertTrue(focusableField.focusRequested)
     }
@@ -25,7 +26,7 @@ class ToolWindowPanelTest {
         val focusableComponent = FocusableComponent()
         searchPanel.add(focusableComponent)
 
-        focusSearchField(searchPanel)
+        UiFieldHelper.focusField(searchPanel)
 
         assertFalse(focusableComponent.focusRequested)
     }

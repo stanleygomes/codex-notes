@@ -10,10 +10,17 @@ class MenuItemOpenFileLocationComponent {
     private val openNoteFileLocationService = OpenNoteFileLocationService()
     private val menuItemComponent = MenuItemComponent()
 
-    fun build(note: Note): JMenuItem {
-        return menuItemComponent.build(
-            text = MyBundle.message("note.context.menu.open.file.location"),
-            action = { openNoteFileLocationService.openFileLocation(note) },
-        )
+    fun build(notes: List<Note>): JMenuItem {
+        val isSingleNote = notes.size == 1
+
+        val menuItem =
+            menuItemComponent.build(
+                text = MyBundle.message("note.context.menu.open.file.location"),
+                action = { if (isSingleNote) openNoteFileLocationService.openFileLocation(notes.first()) },
+            )
+
+        menuItem.isEnabled = isSingleNote
+
+        return menuItem
     }
 }
