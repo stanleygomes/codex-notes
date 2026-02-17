@@ -74,6 +74,8 @@ class NoteStorageRepository : PersistentStateComponent<NoteState> {
 
     fun getAllNotes(): List<Note> = state.notes.toList()
 
+    fun getNotes(): List<Note> = state.notes.toList()
+
     private fun notifyAllProjects(action: (NoteEventListener) -> Unit) {
         ProjectManager.getInstance().openProjects.forEach { project ->
             action(NoteEventListener.getInstance(project))

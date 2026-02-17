@@ -18,5 +18,6 @@
         <projectConfigurable parentId="tools" instance="com.nazarethlabs.codex.configurable.NotesConfigurable"
                              id="notes.settings"
                              displayName="Notes Plugin"/>
+        <searchEverywhereContributor implementation="com.nazarethlabs.codex.search.NotesSearchEverywhereContributorFactory"/>
     </extensions>
 </idea-plugin>
