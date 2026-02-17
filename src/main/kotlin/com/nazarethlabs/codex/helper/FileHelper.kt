@@ -48,4 +48,12 @@ object FileHelper {
     }
 
     fun getDefaultNotesDir(): String = File(System.getProperty("user.home"), ".codex-notes").absolutePath
+
+    fun ensureDirectoryExists(path: String): File {
+        val dir = File(path)
+        if (!dir.exists()) {
+            dir.mkdirs()
+        }
+        return dir
+    }
 }
