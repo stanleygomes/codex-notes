@@ -29,13 +29,16 @@ class NotesConfigFormComponent {
                 1,
                 false,
             ).addComponentToRightColumn(descriptionLabel, 1)
+            .addComponent(JPanel().apply { preferredSize = java.awt.Dimension(0, 10) })
             .addLabeledComponent(
                 MessageHelper.getMessage("settings.notes.directory.label"),
                 notesDirectoryField!!,
                 1,
                 false,
             ).addComponentToRightColumn(notesDirectoryDescriptionLabel, 1)
+            .addComponent(JPanel().apply { preferredSize = java.awt.Dimension(0, 10) })
             .addLabeledComponent("", openFolderPanelComponent.createOpenFolderPanel(), 1, false)
+            .addComponent(JPanel().apply { preferredSize = java.awt.Dimension(0, 10) })
             .addLabeledComponent("", exportNotesPanelComponent.createExportNotesPanel(), 1, false)
             .addComponentFillVertically(JPanel(), 0)
             .panel

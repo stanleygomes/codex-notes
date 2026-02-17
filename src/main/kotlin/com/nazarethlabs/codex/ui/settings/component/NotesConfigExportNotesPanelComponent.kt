@@ -6,19 +6,33 @@ import com.intellij.util.ui.JBUI
 import com.nazarethlabs.codex.helper.MessageHelper
 import com.nazarethlabs.codex.repository.NoteStorageRepository
 import com.nazarethlabs.codex.service.note.ExportNotesService
-import java.awt.FlowLayout
 import java.io.File
 import javax.swing.JButton
 import javax.swing.JFileChooser
 import javax.swing.JPanel
+import javax.swing.BoxLayout
+import javax.swing.JLabel
 
 class NotesConfigExportNotesPanelComponent {
     private val exportNotesService = ExportNotesService()
 
     fun createExportNotesPanel(): JPanel {
-        val panel = JPanel(FlowLayout(FlowLayout.LEFT, 0, 0))
+        val panel = JPanel()
+        panel.layout = BoxLayout(panel, BoxLayout.Y_AXIS)
         panel.border = JBUI.Borders.empty()
+
+        val titleLabel = JLabel(MessageHelper.getMessage("settings.export.notes.title"))
+        titleLabel.font = titleLabel.font.deriveFont(14.0f).deriveFont(java.awt.Font.BOLD)
+        panel.add(titleLabel)
+
+        val descriptionLabel = JLabel(MessageHelper.getMessage("settings.export.notes.description"))
+        descriptionLabel.font = descriptionLabel.font.deriveFont(12.0f)
+        panel.add(descriptionLabel)
+
+        panel.add(JPanel().apply { preferredSize = java.awt.Dimension(0, 10) })
+
         panel.add(createExportNotesButton())
+
         return panel
     }
 

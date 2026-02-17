@@ -42,8 +42,8 @@ class NotesListComponent : NotesStateListener {
                     .build(theList = list, note = value, isSelected = isSelected)
             }
 
-        notesList.selectionMode = ListSelectionModel.MULTIPLE_INTERVAL_SELECTION
         notesList = ListComponent(listModel, cellRenderer).build()
+        notesList.selectionMode = ListSelectionModel.MULTIPLE_INTERVAL_SELECTION
 
         val mouseListener =
             NoteListMouseListener(
