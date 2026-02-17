@@ -1,7 +1,6 @@
 package com.nazarethlabs.codex.editor.search
 
 import com.intellij.ui.SimpleColoredComponent
-import com.intellij.ui.SimpleTextAttributes
 import com.intellij.ui.SimpleTextAttributes.GRAYED_ATTRIBUTES
 import com.intellij.ui.SimpleTextAttributes.REGULAR_ATTRIBUTES
 import com.intellij.ui.SimpleTextAttributes.SELECTED_SIMPLE_CELL_ATTRIBUTES
