@@ -3,6 +3,7 @@ package com.nazarethlabs.codex.action
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.project.Project
 import com.nazarethlabs.codex.dto.Note
+import com.nazarethlabs.codex.editor.action.CreateNoteAction
 import com.nazarethlabs.codex.helper.NoteNameHelper
 import com.nazarethlabs.codex.repository.NoteStorageRepository
 import org.junit.Assert.assertEquals

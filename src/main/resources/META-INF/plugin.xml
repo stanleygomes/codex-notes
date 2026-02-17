@@ -24,7 +24,7 @@
 
     <actions>
         <action id="codex.CreateNote"
-                class="com.nazarethlabs.codex.action.CreateNoteAction"
+                class="com.nazarethlabs.codex.editor.action.CreateNoteAction"
                 text="New Codex Note"
                 description="Create a new note in Codex Notes"
                 icon="/icons/tab-icon.svg">
