@@ -114,7 +114,7 @@ class NotesSearchEverywhereContributorTest {
             )
 
         val mockContributor = spy(contributor)
-        doReturn(notes).`when`(mockContributor).getNotes()
+        doReturn(notes).`when`(mockContributor).getAllNotes()
         `when`(progressIndicator.isCanceled).thenReturn(false)
 
         val processedNotes = mutableListOf<Note>()
@@ -148,7 +148,7 @@ class NotesSearchEverywhereContributorTest {
             )
 
         val mockContributor = spy(contributor)
-        doReturn(notes).`when`(mockContributor).getNotes()
+        doReturn(notes).`when`(mockContributor).getAllNotes()
         `when`(progressIndicator.isCanceled).thenReturn(false)
 
         val processedNotes = mutableListOf<Note>()
@@ -180,7 +180,7 @@ class NotesSearchEverywhereContributorTest {
             )
 
         val mockContributor = spy(contributor)
-        doReturn(notes).`when`(mockContributor).getNotes()
+        doReturn(notes).`when`(mockContributor).getAllNotes()
         `when`(progressIndicator.isCanceled).thenReturn(false)
 
         val processedNotes = mutableListOf<Note>()
@@ -206,7 +206,7 @@ class NotesSearchEverywhereContributorTest {
             )
 
         val mockContributor = spy(contributor)
-        doReturn(notes).`when`(mockContributor).getNotes()
+        doReturn(notes).`when`(mockContributor).getAllNotes()
         `when`(progressIndicator.isCanceled).thenReturn(false)
 
         val processedNotes = mutableListOf<Note>()
@@ -234,7 +234,7 @@ class NotesSearchEverywhereContributorTest {
             )
 
         val mockContributor = spy(contributor)
-        doReturn(notes).`when`(mockContributor).getNotes()
+        doReturn(notes).`when`(mockContributor).getAllNotes()
         `when`(progressIndicator.isCanceled).thenReturn(true)
 
         val processedNotes = mutableListOf<Note>()
@@ -252,10 +252,10 @@ class NotesSearchEverywhereContributorTest {
         tempDir.delete()
     }
 
-    private fun NotesSearchEverywhereContributor.getNotes(): List<Note> {
+    private fun NotesSearchEverywhereContributor.getAllNotes(): List<Note> {
         val field = this::class.java.getDeclaredField("noteStorage")
         field.isAccessible = true
         field.set(this, noteStorage)
-        return noteStorage.getNotes()
+        return noteStorage.getAllNotes()
     }
 }
