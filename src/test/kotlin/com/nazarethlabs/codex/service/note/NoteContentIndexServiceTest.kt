@@ -67,14 +67,15 @@ class NoteContentIndexServiceTest {
     fun `should return updated content when file modified`() {
         val noteFile = File(tempDir, "note.md")
         noteFile.writeText("Original content")
+        val originalTimestamp = noteFile.lastModified()
 
         val note = Note(id = "1", title = "Note 1", filePath = noteFile.absolutePath)
 
         val content1 = service.getContent(note)
         assertEquals("Original content", content1)
 
-        Thread.sleep(50)
         noteFile.writeText("Updated content")
+        noteFile.setLastModified(originalTimestamp + 1000)
 
         val content2 = service.getContent(note)
         assertEquals("Updated content", content2)
