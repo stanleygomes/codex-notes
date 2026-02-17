@@ -60,4 +60,45 @@ class NoteNameHelperTest {
         val result = NoteNameHelper.generateUntitledName(notes)
         assertEquals("Untitled 2", result)
     }
+
+    @Test
+    fun `should return base title 2 when no duplicates exist`() {
+        val notes = emptyList<Note>()
+        val result = NoteNameHelper.generateDuplicateName("My Note", notes)
+        assertEquals("My Note 2", result)
+    }
+
+    @Test
+    fun `should return base title 2 when only original exists`() {
+        val notes =
+            listOf(
+                Note(title = "My Note"),
+            )
+        val result = NoteNameHelper.generateDuplicateName("My Note", notes)
+        assertEquals("My Note 2", result)
+    }
+
+    @Test
+    fun `should return next number when duplicates already exist`() {
+        val notes =
+            listOf(
+                Note(title = "My Note"),
+                Note(title = "My Note 2"),
+                Note(title = "My Note 3"),
+            )
+        val result = NoteNameHelper.generateDuplicateName("My Note", notes)
+        assertEquals("My Note 4", result)
+    }
+
+    @Test
+    fun `should return max plus one when sequential gaps exist in duplicates`() {
+        val notes =
+            listOf(
+                Note(title = "My Note"),
+                Note(title = "My Note 2"),
+                Note(title = "My Note 5"),
+            )
+        val result = NoteNameHelper.generateDuplicateName("My Note", notes)
+        assertEquals("My Note 6", result)
+    }
 }
