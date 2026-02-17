@@ -1,4 +1,4 @@
-package com.nazarethlabs.codex.configurable
+package com.nazarethlabs.codex.editor.configurable
 
 import com.intellij.openapi.options.Configurable
 import com.nazarethlabs.codex.helper.MessageHelper

@@ -1,18 +1,22 @@
-package com.nazarethlabs.codex.search
+package com.nazarethlabs.codex.editor.search
 
 import com.intellij.ui.SimpleColoredComponent
 import com.intellij.ui.SimpleTextAttributes
+import com.intellij.ui.SimpleTextAttributes.GRAYED_ATTRIBUTES
+import com.intellij.ui.SimpleTextAttributes.REGULAR_ATTRIBUTES
+import com.intellij.ui.SimpleTextAttributes.SELECTED_SIMPLE_CELL_ATTRIBUTES
 import com.nazarethlabs.codex.dto.Note
+import com.nazarethlabs.codex.helper.DateHelper
 import java.awt.BorderLayout
+import java.awt.BorderLayout.CENTER
 import java.awt.Component
-import java.text.SimpleDateFormat
 import java.util.Date
 import javax.swing.JList
 import javax.swing.JPanel
 import javax.swing.ListCellRenderer
 
 class NoteSearchCellRenderer : ListCellRenderer<Note> {
-    private val dateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm")
+    private val dateFormat = DateHelper.dateTimeFormat
 
     override fun getListCellRendererComponent(
         list: JList<out Note>?,
@@ -32,18 +36,18 @@ class NoteSearchCellRenderer : ListCellRenderer<Note> {
         component.append(
             "$prefix${value.title}",
             if (isSelected) {
-                SimpleTextAttributes.SELECTED_SIMPLE_CELL_ATTRIBUTES
+                SELECTED_SIMPLE_CELL_ATTRIBUTES
             } else {
-                SimpleTextAttributes.REGULAR_ATTRIBUTES
+                REGULAR_ATTRIBUTES
             },
         )
 
         component.append(
             " - ${dateFormat.format(Date(value.updatedAt))}",
             if (isSelected) {
-                SimpleTextAttributes.SELECTED_SIMPLE_CELL_ATTRIBUTES
+                SELECTED_SIMPLE_CELL_ATTRIBUTES
             } else {
-                SimpleTextAttributes.GRAYED_ATTRIBUTES
+                GRAYED_ATTRIBUTES
             },
         )
 
@@ -53,7 +57,7 @@ class NoteSearchCellRenderer : ListCellRenderer<Note> {
             component.isOpaque = true
         }
 
-        panel.add(component, BorderLayout.CENTER)
+        panel.add(component, CENTER)
         return panel
     }
 }

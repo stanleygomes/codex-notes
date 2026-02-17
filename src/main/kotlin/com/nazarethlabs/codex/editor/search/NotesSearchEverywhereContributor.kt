@@ -1,14 +1,16 @@
-package com.nazarethlabs.codex.search
+package com.nazarethlabs.codex.editor.search
 
 import com.intellij.ide.actions.searcheverywhere.SearchEverywhereContributor
 import com.intellij.ide.actions.searcheverywhere.SearchEverywhereContributorFactory
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.progress.ProgressIndicator
+import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.util.Processor
 import com.nazarethlabs.codex.dto.Note
+import com.nazarethlabs.codex.helper.FileHelper
 import com.nazarethlabs.codex.repository.NoteStorageRepository
-import java.io.File
 import javax.swing.ListCellRenderer
 
 class NotesSearchEverywhereContributorFactory : SearchEverywhereContributorFactory<Note> {
@@ -60,10 +62,9 @@ class NotesSearchEverywhereContributor(
         pattern: String,
     ): Boolean {
         return try {
-            val file = File(note.filePath)
-            if (!file.exists()) return false
+            if (!FileHelper.isFile(note.filePath)) return false
 
-            val content = file.readText().lowercase()
+            val content = FileHelper.readText(note.filePath).lowercase()
             content.contains(pattern)
         } catch (e: Exception) {
             false
@@ -83,18 +84,17 @@ class NotesSearchEverywhereContributor(
         searchText: String,
     ): Boolean {
         event.project?.let { project ->
-            val file = File(selected.filePath)
-            if (file.exists()) {
-                com.intellij.openapi.fileEditor.FileEditorManager
-                    .getInstance(project)
-                    .openFile(
-                        com.intellij.openapi.vfs.LocalFileSystem
-                            .getInstance()
-                            .findFileByPath(selected.filePath) ?: return false,
-                        true,
-                    )
-                return true
-            }
+            if (!FileHelper.isFile(selected.filePath)) return false
+
+            FileEditorManager
+                .getInstance(project)
+                .openFile(
+                    LocalFileSystem
+                        .getInstance()
+                        .findFileByPath(selected.filePath) ?: return false,
+                    true,
+                )
+            return true
         }
         return false
     }

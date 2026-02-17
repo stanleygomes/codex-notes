@@ -1,4 +1,4 @@
-package com.nazarethlabs.codex.search
+package com.nazarethlabs.codex.editor.search
 
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.progress.ProgressIndicator
