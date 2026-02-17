@@ -1,6 +1,7 @@
 package com.nazarethlabs.codex.helper
 
 import java.io.File
+import java.io.FileInputStream
 
 object FileHelper {
     fun createFile(
@@ -56,4 +57,16 @@ object FileHelper {
         }
         return dir
     }
+
+    fun getFileName(filePath: String): String {
+        val file = File(filePath)
+        return file.name
+    }
+
+    fun isFile(filePath: String): Boolean {
+        val file = File(filePath)
+        return file.exists() && file.isFile
+    }
+
+    fun getFileInputStream(filePath: String): FileInputStream = FileInputStream(File(filePath))
 }

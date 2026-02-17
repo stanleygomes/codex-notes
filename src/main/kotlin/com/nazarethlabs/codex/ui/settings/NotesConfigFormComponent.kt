@@ -1,22 +1,18 @@
 package com.nazarethlabs.codex.ui.settings
 
-import com.intellij.icons.AllIcons
 import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.JBTextField
 import com.intellij.util.ui.FormBuilder
-import com.intellij.util.ui.JBUI
 import com.nazarethlabs.codex.helper.MessageHelper
-import com.nazarethlabs.codex.helper.OpenFolderHelper
-import com.nazarethlabs.codex.service.settings.NotesSettingsService
-import java.awt.FlowLayout
-import javax.swing.JButton
+import com.nazarethlabs.codex.ui.settings.component.NotesConfigExportNotesPanelComponent
+import com.nazarethlabs.codex.ui.settings.component.NotesConfigOpenFolderPanelComponent
 import javax.swing.JPanel
 
 class NotesConfigFormComponent {
     private var fileExtensionField: JBTextField? = null
     private var notesDirectoryField: JBTextField? = null
-    private val openNotesFolderService = OpenFolderHelper
-    private val notesSettingsService = NotesSettingsService()
+    private val openFolderPanelComponent = NotesConfigOpenFolderPanelComponent()
+    private val exportNotesPanelComponent = NotesConfigExportNotesPanelComponent()
 
     fun build(): JPanel {
         fileExtensionField = JBTextField()
@@ -39,28 +35,10 @@ class NotesConfigFormComponent {
                 1,
                 false,
             ).addComponentToRightColumn(notesDirectoryDescriptionLabel, 1)
-            .addLabeledComponent("", createOpenFolderPanel(), 1, false)
+            .addLabeledComponent("", openFolderPanelComponent.createOpenFolderPanel(), 1, false)
+            .addLabeledComponent("", exportNotesPanelComponent.createExportNotesPanel(), 1, false)
             .addComponentFillVertically(JPanel(), 0)
             .panel
-    }
-
-    private fun createOpenFolderButton(): JButton {
-        val button = JButton(MessageHelper.getMessage("settings.open.notes.folder.button"))
-        button.icon = AllIcons.Actions.MenuOpen
-        button.toolTipText = MessageHelper.getMessage("settings.open.notes.folder.tooltip")
-
-        button.addActionListener {
-            openNotesFolderService.openFolder(notesSettingsService.getNotesDirectory())
-        }
-
-        return button
-    }
-
-    private fun createOpenFolderPanel(): JPanel {
-        val panel = JPanel(FlowLayout(FlowLayout.LEFT, 0, 0))
-        panel.border = JBUI.Borders.empty()
-        panel.add(createOpenFolderButton())
-        return panel
     }
 
     fun getFileExtensionField(): JBTextField? = fileExtensionField
