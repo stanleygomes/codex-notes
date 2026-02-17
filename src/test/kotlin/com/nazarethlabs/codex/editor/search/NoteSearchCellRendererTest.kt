@@ -1,4 +1,4 @@
-package com.nazarethlabs.codex.search
+package com.nazarethlabs.codex.editor.search
 
 import com.nazarethlabs.codex.dto.Note
 import org.junit.Assert.assertEquals
