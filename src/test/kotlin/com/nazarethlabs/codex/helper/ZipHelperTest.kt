@@ -20,7 +20,8 @@ class ZipHelperTest {
         file2.writeText("Content of note 2")
 
         val outputPath = File(tempDir, "output.zip").absolutePath
-        val zipFile = ZipHelper.createZipFromFiles(listOf(file1, file2), outputPath)
+        val zipPath = ZipHelper.createZipFromFiles(listOf(file1.absolutePath, file2.absolutePath), outputPath)
+        val zipFile = File(zipPath)
 
         assertTrue(zipFile.exists())
         ZipFile(zipFile).use { zip ->
@@ -44,7 +45,8 @@ class ZipHelperTest {
         val nonExistentFile = File(tempDir, "missing.md")
 
         val outputPath = File(tempDir, "output.zip").absolutePath
-        val zipFile = ZipHelper.createZipFromFiles(listOf(existingFile, nonExistentFile), outputPath)
+        val zipPath = ZipHelper.createZipFromFiles(listOf(existingFile.absolutePath, nonExistentFile.absolutePath), outputPath)
+        val zipFile = File(zipPath)
 
         assertTrue(zipFile.exists())
         ZipFile(zipFile).use { zip ->
@@ -62,7 +64,8 @@ class ZipHelperTest {
     fun `should create empty zip when no valid files provided`() {
         val tempDir = Files.createTempDirectory("test-zip").toFile()
         val outputPath = File(tempDir, "output.zip").absolutePath
-        val zipFile = ZipHelper.createZipFromFiles(emptyList(), outputPath)
+        val zipPath = ZipHelper.createZipFromFiles(emptyList(), outputPath)
+        val zipFile = File(zipPath)
 
         assertTrue(zipFile.exists())
         ZipFile(zipFile).use { zip ->
@@ -81,7 +84,8 @@ class ZipHelperTest {
         file.writeText("Content")
 
         val outputPath = File(tempDir, "subdir/output.zip").absolutePath
-        val zipFile = ZipHelper.createZipFromFiles(listOf(file), outputPath)
+        val zipPath = ZipHelper.createZipFromFiles(listOf(file.absolutePath), outputPath)
+        val zipFile = File(zipPath)
 
         assertTrue(zipFile.exists())
         assertTrue(zipFile.parentFile.exists())
@@ -100,7 +104,8 @@ class ZipHelperTest {
         file.writeText(content)
 
         val outputPath = File(tempDir, "output.zip").absolutePath
-        val zipFile = ZipHelper.createZipFromFiles(listOf(file), outputPath)
+        val zipPath = ZipHelper.createZipFromFiles(listOf(file.absolutePath), outputPath)
+        val zipFile = File(zipPath)
 
         ZipFile(zipFile).use { zip ->
             val entry = zip.entries().nextElement()

@@ -15,16 +15,18 @@ class MenuItemColorComponent {
     private val menuComponent = MenuComponent()
 
     fun build(note: Note): JMenu {
-        val colorMenu = menuComponent.build(
-            text = MyBundle.message("note.context.menu.change.color"),
-            icon = AllIcons.Actions.Colors,
-        )
+        val colorMenu =
+            menuComponent.build(
+                text = MyBundle.message("note.context.menu.change.color"),
+                icon = AllIcons.Actions.Colors,
+            )
 
         NoteColorEnum.entries.forEach { color ->
-            val colorItem = menuItemComponent.build(
-                text = MyBundle.message(color.displayNameKey),
-                action = { changeNoteColorService.changeColor(note, color) },
-            )
+            val colorItem =
+                menuItemComponent.build(
+                    text = MyBundle.message(color.displayNameKey),
+                    action = { changeNoteColorService.changeColor(note, color) },
+                )
 
             colorMenu.add(colorItem)
         }

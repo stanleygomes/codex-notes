@@ -15,11 +15,10 @@ class MenuItemRenameComponent {
     fun build(
         project: Project,
         note: Note,
-    ): JMenuItem {
-        return menuItemComponent.build(
+    ): JMenuItem =
+        menuItemComponent.build(
             text = "${MyBundle.message("note.context.menu.rename")} (F2)",
             icon = AllIcons.Actions.Edit,
             action = { renameNoteService.rename(project, note) },
         )
-    }
 }

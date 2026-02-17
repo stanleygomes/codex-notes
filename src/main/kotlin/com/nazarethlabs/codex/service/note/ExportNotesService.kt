@@ -9,7 +9,8 @@ class ExportNotesService {
         notes: List<Note>,
         outputPath: String,
     ): File {
-        val noteFiles = notes.map { File(it.filePath) }
-        return ZipHelper.createZipFromFiles(noteFiles, outputPath)
+        val filePaths = notes.map { it.filePath }
+        val zipPath = ZipHelper.createZipFromFiles(filePaths, outputPath)
+        return File(zipPath)
     }
 }

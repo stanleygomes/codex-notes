@@ -14,10 +14,9 @@ class MenuItemOpenComponent {
     fun build(
         project: Project,
         note: Note,
-    ): JMenuItem {
-        return menuItemComponent.build(
+    ): JMenuItem =
+        menuItemComponent.build(
             text = "${MyBundle.message("note.context.menu.open")} (Double-click)",
             action = { openNoteService.open(project, note) },
         )
-    }
 }

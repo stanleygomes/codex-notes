@@ -14,10 +14,9 @@ class MenuItemDeleteComponent {
     fun build(
         project: Project,
         note: Note,
-    ): JMenuItem {
-        return menuItemComponent.build(
+    ): JMenuItem =
+        menuItemComponent.build(
             text = "${MyBundle.message("note.context.menu.delete")} (Delete)",
             action = { deleteNoteService.confirmAndDelete(project, note) },
         )
-    }
 }

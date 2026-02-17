@@ -10,10 +10,9 @@ class MenuItemOpenFileLocationComponent {
     private val openNoteFileLocationService = OpenNoteFileLocationService()
     private val menuItemComponent = MenuItemComponent()
 
-    fun build(note: Note): JMenuItem {
-        return menuItemComponent.build(
+    fun build(note: Note): JMenuItem =
+        menuItemComponent.build(
             text = MyBundle.message("note.context.menu.open.file.location"),
             action = { openNoteFileLocationService.openFileLocation(note) },
         )
-    }
 }

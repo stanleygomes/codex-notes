@@ -1,23 +1,21 @@
 package com.nazarethlabs.codex.helper
 
-import java.io.File
-import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
 
 object ZipHelper {
     fun createZipFromFiles(
-        files: List<File>,
+        filePaths: List<String>,
         outputPath: String,
-    ): File {
-        val zipFile = File(outputPath)
-        zipFile.parentFile?.mkdirs()
+    ): String {
+        val parentPath = FileHelper.getParentPath(outputPath)
+        FileHelper.ensureDirectoryExists(parentPath)
 
-        ZipOutputStream(FileOutputStream(zipFile)).use { zipOut ->
-            files.filter { it.exists() && it.isFile }.forEach { file ->
-                FileInputStream(file).use { fis ->
-                    val entry = ZipEntry(file.name)
+        ZipOutputStream(FileOutputStream(outputPath)).use { zipOut ->
+            filePaths.filter { FileHelper.isFile(it) }.forEach { filePath ->
+                FileHelper.getFileInputStream(filePath).use { fis ->
+                    val entry = ZipEntry(FileHelper.getFileName(filePath))
                     zipOut.putNextEntry(entry)
                     fis.copyTo(zipOut)
                     zipOut.closeEntry()
@@ -25,6 +23,6 @@ object ZipHelper {
             }
         }
 
-        return zipFile
+        return outputPath
     }
 }
