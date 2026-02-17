@@ -1,6 +1,7 @@
 package com.nazarethlabs.codex.ui.noteslist
 
 import com.intellij.icons.AllIcons.Nodes.Bookmark
+import com.intellij.ui.JBColor
 import com.intellij.util.ui.JBUI
 import com.nazarethlabs.codex.dto.Note
 import com.nazarethlabs.codex.enum.NoteColorEnum.NONE
@@ -10,6 +11,7 @@ import java.awt.BorderLayout
 import java.awt.BorderLayout.CENTER
 import java.awt.BorderLayout.EAST
 import java.awt.BorderLayout.NORTH
+import java.awt.BorderLayout.SOUTH
 import java.awt.BorderLayout.WEST
 import java.awt.Dimension
 import java.awt.FlowLayout
@@ -92,6 +94,23 @@ class NoteListItemComponent {
         }
 
         panel.add(contentPanel, CENTER)
+
+        val dividerPanel = JPanel()
+        dividerPanel.border = JBUI.Borders.empty(5, 0, 0, 0)
+        dividerPanel.isOpaque = false
+
+        val divider = JPanel()
+        divider.preferredSize = Dimension(0, 1)
+        divider.background = JBColor.border()
+        divider.isOpaque = true
+
+        val dividerWrapper = JPanel(BorderLayout())
+        dividerWrapper.isOpaque = false
+        dividerWrapper.add(divider, CENTER)
+
+        dividerPanel.add(dividerWrapper)
+
+        panel.add(dividerPanel, SOUTH)
 
         return panel
     }
