@@ -6,10 +6,12 @@ import com.nazarethlabs.codex.helper.MessageHelper.getMessage
 import com.nazarethlabs.codex.state.SelectedNoteStateManager
 import com.nazarethlabs.codex.ui.component.ButtonComponent
 import com.nazarethlabs.codex.ui.popup.actions.NoteActionsPopupMenuComponent
+import com.nazarethlabs.codex.ui.popup.actions.NotesBatchActionsPopupMenuComponent
 import javax.swing.JButton
 
 class ToolbarButtonNoteActionsComponent {
-    private val menuItemsFactory = NoteActionsPopupMenuComponent()
+    private val singleMenuFactory = NoteActionsPopupMenuComponent()
+    private val batchMenuFactory = NotesBatchActionsPopupMenuComponent()
 
     fun build(project: Project): JButton {
         val actionsButton =
@@ -17,10 +19,17 @@ class ToolbarButtonNoteActionsComponent {
                 .build(More, getMessage("toolbar.note.actions"))
 
         actionsButton.addActionListener { event ->
-            val selectedNote = SelectedNoteStateManager.getInstance().getSelectedNote() ?: return@addActionListener
-            val menu = menuItemsFactory.createPopupMenu(project, selectedNote)
-            val component = event.source as JButton
+            val selectedNotes = SelectedNoteStateManager.getInstance().getSelectedNotes()
+            if (selectedNotes.isEmpty()) return@addActionListener
 
+            val menu =
+                if (selectedNotes.size == 1) {
+                    singleMenuFactory.createPopupMenu(project, selectedNotes.first())
+                } else {
+                    batchMenuFactory.createPopupMenu(project, selectedNotes)
+                }
+
+            val component = event.source as JButton
             menu.show(component, 0, component.height)
         }
 

@@ -3,8 +3,11 @@ package com.nazarethlabs.codex.listener
 import com.intellij.openapi.project.Project
 import com.nazarethlabs.codex.dto.Note
 import com.nazarethlabs.codex.service.note.DeleteNoteService
+import com.nazarethlabs.codex.service.note.DeleteNotesService
 import com.nazarethlabs.codex.service.note.FavoriteNoteService
+import com.nazarethlabs.codex.service.note.FavoriteNotesService
 import com.nazarethlabs.codex.service.note.OpenNoteService
+import com.nazarethlabs.codex.service.note.OpenNotesService
 import com.nazarethlabs.codex.service.note.RenameNoteService
 import java.awt.event.KeyAdapter
 import java.awt.event.KeyEvent
@@ -15,31 +18,52 @@ import java.awt.event.KeyEvent.VK_F2
 
 class NoteListKeyListener(
     private val project: Project,
-    private val getSelectedValue: () -> Note?,
+    private val getSelectedValues: () -> List<Note>,
 ) : KeyAdapter() {
     override fun keyPressed(e: KeyEvent) {
-        if (e.keyCode == VK_ENTER) {
-            val selectedNote = getSelectedValue() ?: return
-            OpenNoteService()
-                .open(project, selectedNote)
-        }
+        val selectedNotes = getSelectedValues()
+        if (selectedNotes.isEmpty()) return
 
-        if (e.keyCode == VK_DELETE) {
-            val selectedNote = getSelectedValue() ?: return
-            DeleteNoteService()
-                .confirmAndDelete(project, selectedNote)
+        when (e.keyCode) {
+            VK_ENTER -> handleOpen(selectedNotes)
+            VK_DELETE -> handleDelete(selectedNotes)
+            VK_F2 -> handleRename(selectedNotes)
+            VK_F -> handleFavorite(selectedNotes)
         }
+    }
 
-        if (e.keyCode == VK_F2) {
-            val selectedNote = getSelectedValue() ?: return
-            RenameNoteService()
-                .rename(project, selectedNote)
+    private fun handleOpen(notes: List<Note>) {
+        if (notes.size == 1) {
+            OpenNoteService().open(project, notes.first())
+        } else {
+            OpenNotesService().openAll(project, notes)
         }
+    }
 
-        if (e.keyCode == VK_F) {
-            val selectedNote = getSelectedValue() ?: return
-            FavoriteNoteService()
-                .toggleFavorite(selectedNote)
+    private fun handleDelete(notes: List<Note>) {
+        if (notes.size == 1) {
+            DeleteNoteService().confirmAndDelete(project, notes.first())
+        } else {
+            DeleteNotesService().confirmAndDelete(project, notes)
+        }
+    }
+
+    private fun handleRename(notes: List<Note>) {
+        if (notes.size == 1) {
+            RenameNoteService().rename(project, notes.first())
+        }
+    }
+
+    private fun handleFavorite(notes: List<Note>) {
+        if (notes.size == 1) {
+            FavoriteNoteService().toggleFavorite(notes.first())
+        } else {
+            val allFavorited = notes.all { it.isFavorite }
+            if (allFavorited) {
+                FavoriteNotesService().unfavoriteAll(notes)
+            } else {
+                FavoriteNotesService().favoriteAll(notes)
+            }
         }
     }
 }
