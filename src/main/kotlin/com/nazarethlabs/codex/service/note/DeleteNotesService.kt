@@ -13,7 +13,7 @@ class DeleteNotesService {
         project: Project,
         notes: List<Note>,
     ) {
-        val noteNames = notes.joinToString(", ") { "\"${it.title}\"" }
+        val noteNames = formatNoteNames(notes)
         val result =
             DialogHelper.showYesNoDialog(
                 project,
@@ -28,6 +28,17 @@ class DeleteNotesService {
                     .getInstance()
                     .removeNote(note.id)
             }
+        }
+    }
+
+    private fun formatNoteNames(notes: List<Note>): String {
+        val maxDisplayedNotes = 5
+        return if (notes.size <= maxDisplayedNotes) {
+            notes.joinToString(", ") { "\"${it.title}\"" }
+        } else {
+            val displayedNames = notes.take(maxDisplayedNotes).joinToString(", ") { "\"${it.title}\"" }
+            val remainingCount = notes.size - maxDisplayedNotes
+            MessageHelper.getMessage("dialog.delete.notes.more", displayedNames, remainingCount.toString())
         }
     }
 }
