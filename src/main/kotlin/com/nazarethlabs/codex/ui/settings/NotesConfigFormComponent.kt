@@ -98,9 +98,9 @@ class NotesConfigFormComponent {
                         MessageHelper.getMessage("settings.export.notes.success", zipFile.absolutePath),
                         MessageHelper.getMessage("settings.display.name"),
                     )
-                } catch (_: Exception) {
+                } catch (e: Exception) {
                     Messages.showErrorDialog(
-                        MessageHelper.getMessage("settings.export.notes.error"),
+                        "${MessageHelper.getMessage("settings.export.notes.error")}: ${e.message}",
                         MessageHelper.getMessage("settings.display.name"),
                     )
                 }
