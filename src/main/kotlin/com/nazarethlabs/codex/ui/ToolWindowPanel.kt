@@ -2,12 +2,14 @@ package com.nazarethlabs.codex.ui
 
 import com.intellij.openapi.project.Project
 import com.intellij.ui.components.JBPanel
+import com.nazarethlabs.codex.helper.UiFieldHelper
 import com.nazarethlabs.codex.listener.SearchStateListener
 import com.nazarethlabs.codex.state.SearchStateManager
 import com.nazarethlabs.codex.ui.noteslist.NotesListComponent
 import com.nazarethlabs.codex.ui.search.SearchComponent
 import com.nazarethlabs.codex.ui.toolbar.ToolbarComponent
 import javax.swing.JPanel
+import javax.swing.SwingUtilities
 
 class ToolWindowPanel : SearchStateListener {
     private lateinit var searchPanel: JPanel
@@ -34,5 +36,10 @@ class ToolWindowPanel : SearchStateListener {
 
     override fun onSearchVisibilityChanged(isVisible: Boolean) {
         searchPanel.isVisible = isVisible
+        if (isVisible) {
+            SwingUtilities.invokeLater {
+                UiFieldHelper.focusField(searchPanel)
+            }
+        }
     }
 }
