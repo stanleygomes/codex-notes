@@ -14,18 +14,19 @@ class CreateNoteService {
     fun create(project: Project): VirtualFile? {
         val title = generateTitle()
         val extension = getExtension()
-        val fileName = createFileName(title, extension)
-        val file = createNoteFile(fileName, "")
-        val virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(file)
-
-        if (virtualFile != null) {
-            addNoteAndOpen(project, title, virtualFile)
-        }
-
-        return virtualFile
+        return createNoteFileAndOpen(project, title, extension, "")
     }
 
     fun createWithContent(
+        project: Project,
+        title: String,
+        extension: String,
+        content: String,
+    ): VirtualFile? {
+        return createNoteFileAndOpen(project, title, extension, content)
+    }
+
+    private fun createNoteFileAndOpen(
         project: Project,
         title: String,
         extension: String,
