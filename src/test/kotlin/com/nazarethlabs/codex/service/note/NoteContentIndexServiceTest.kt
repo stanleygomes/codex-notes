@@ -74,6 +74,7 @@ class NoteContentIndexServiceTest {
         val content1 = service.getContent(note)
         assertEquals("Original content", content1)
 
+        Thread.sleep(50)
         noteFile.writeText("Updated content")
         noteFile.setLastModified(originalTimestamp + 1000)
 
