@@ -8,6 +8,7 @@ object FileHelper {
         fileName: String,
     ): File {
         val file = File(dir, fileName)
+        file.parentFile?.mkdirs()
         file.writeText("")
         return file
     }
@@ -46,5 +47,5 @@ object FileHelper {
         return file.parent
     }
 
-    fun getTempDir(): String = System.getProperty("java.io.tmpdir")
+    fun getDefaultNotesDir(): String = File(System.getProperty("user.home"), ".codex-notes").absolutePath
 }

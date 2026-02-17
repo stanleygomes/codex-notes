@@ -9,11 +9,13 @@ import javax.swing.JPanel
 
 class NotesConfigComponent {
     private var fileExtensionField: JBTextField? = null
+    private var notesDirectoryField: JBTextField? = null
 
     fun build(): JComponent {
         val formPanelComponent = NotesConfigFormComponent()
         val formPanel = formPanelComponent.build()
         fileExtensionField = formPanelComponent.getFileExtensionField()
+        notesDirectoryField = formPanelComponent.getNotesDirectoryField()
 
         val mainPanel =
             JPanel(BorderLayout()).apply {
@@ -25,4 +27,6 @@ class NotesConfigComponent {
     }
 
     fun getFileExtensionField(): JBTextField? = fileExtensionField
+
+    fun getNotesDirectoryField(): JBTextField? = notesDirectoryField
 }

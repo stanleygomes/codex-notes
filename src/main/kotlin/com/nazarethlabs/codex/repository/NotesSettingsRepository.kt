@@ -37,4 +37,10 @@ class NotesSettingsRepository : PersistentStateComponent<ConfigurationState> {
     fun setDefaultSortType(sortType: SortTypeEnum) {
         state.configuration.defaultSortType = sortType
     }
+
+    fun getNotesDirectory(): String = state.configuration.notesDirectory
+
+    fun setNotesDirectory(directory: String) {
+        state.configuration.notesDirectory = directory
+    }
 }
