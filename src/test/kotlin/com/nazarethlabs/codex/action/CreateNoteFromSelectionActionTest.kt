@@ -2,6 +2,7 @@ package com.nazarethlabs.codex.action
 
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
+import com.intellij.openapi.actionSystem.Presentation
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.SelectionModel
 import com.intellij.openapi.project.Project
@@ -28,9 +29,13 @@ class CreateNoteFromSelectionActionTest {
     @Mock
     private lateinit var selectionModel: SelectionModel
 
+    @Mock
+    private lateinit var presentation: Presentation
+
     @Test
     fun `should be visible and enabled when text is selected`() {
         `when`(actionEvent.getData(CommonDataKeys.EDITOR)).thenReturn(editor)
+        `when`(actionEvent.presentation).thenReturn(presentation)
         `when`(editor.selectionModel).thenReturn(selectionModel)
         `when`(selectionModel.hasSelection()).thenReturn(true)
 
@@ -43,6 +48,7 @@ class CreateNoteFromSelectionActionTest {
     @Test
     fun `should be invisible when no text is selected`() {
         `when`(actionEvent.getData(CommonDataKeys.EDITOR)).thenReturn(editor)
+        `when`(actionEvent.presentation).thenReturn(presentation)
         `when`(editor.selectionModel).thenReturn(selectionModel)
         `when`(selectionModel.hasSelection()).thenReturn(false)
 
@@ -55,6 +61,7 @@ class CreateNoteFromSelectionActionTest {
     @Test
     fun `should be invisible when editor is null`() {
         `when`(actionEvent.getData(CommonDataKeys.EDITOR)).thenReturn(null)
+        `when`(actionEvent.presentation).thenReturn(presentation)
 
         val action = CreateNoteFromSelectionAction()
         action.update(actionEvent)
