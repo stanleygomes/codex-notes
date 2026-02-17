@@ -1,26 +1,23 @@
 package com.nazarethlabs.codex.ui.popup.actions.popupitem
 
 import com.intellij.openapi.project.Project
-import com.intellij.util.ui.JBUI
 import com.nazarethlabs.codex.MyBundle
 import com.nazarethlabs.codex.dto.Note
 import com.nazarethlabs.codex.service.note.DeleteNoteService
+import com.nazarethlabs.codex.ui.component.MenuItemComponent
 import javax.swing.JMenuItem
 
 class MenuItemDeleteComponent {
     private val deleteNoteService = DeleteNoteService()
+    private val menuItemComponent = MenuItemComponent()
 
     fun build(
         project: Project,
         note: Note,
     ): JMenuItem {
-        val deleteItem = JMenuItem("${MyBundle.message("note.context.menu.delete")} (Delete)")
-        deleteItem.border = JBUI.Borders.empty(5, 10, 5, 10)
-
-        deleteItem.addActionListener {
-            deleteNoteService.confirmAndDelete(project, note)
-        }
-
-        return deleteItem
+        return menuItemComponent.build(
+            text = "${MyBundle.message("note.context.menu.delete")} (Delete)",
+            action = { deleteNoteService.confirmAndDelete(project, note) },
+        )
     }
 }

@@ -8,8 +8,8 @@ import com.nazarethlabs.codex.listener.NotesStateListener
 import com.nazarethlabs.codex.state.NotesStateManager
 import com.nazarethlabs.codex.state.SelectedNoteStateManager
 import com.nazarethlabs.codex.ui.component.EmptyStateComponent
-import com.nazarethlabs.codex.ui.component.GenericJListComponent
-import com.nazarethlabs.codex.ui.component.ScrollableJListComponent
+import com.nazarethlabs.codex.ui.component.ListComponent
+import com.nazarethlabs.codex.ui.component.ScrollableListComponent
 import java.awt.BorderLayout
 import java.awt.BorderLayout.CENTER
 import javax.swing.DefaultListModel
@@ -42,8 +42,8 @@ class NotesListComponent : NotesStateListener {
                     .build(theList = list, note = value, isSelected = isSelected)
             }
 
-        notesList = GenericJListComponent(listModel, cellRenderer).build()
         notesList.selectionMode = ListSelectionModel.MULTIPLE_INTERVAL_SELECTION
+        notesList = ListComponent(listModel, cellRenderer).build()
 
         val mouseListener =
             NoteListMouseListener(
@@ -67,7 +67,7 @@ class NotesListComponent : NotesStateListener {
             }
         }
 
-        scrollPane = ScrollableJListComponent(notesList).build()
+        scrollPane = ScrollableListComponent(notesList).build()
         emptyStatePanel = EmptyStateComponent().build()
 
         mainPanel =

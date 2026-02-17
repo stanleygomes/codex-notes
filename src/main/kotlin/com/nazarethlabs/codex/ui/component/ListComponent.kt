@@ -4,7 +4,7 @@ import javax.swing.DefaultListModel
 import javax.swing.JList
 import javax.swing.ListCellRenderer
 
-class GenericJListComponent<T>(
+class ListComponent<T>(
     private val model: DefaultListModel<T>,
     private val cellRenderer: ListCellRenderer<in T>,
 ) {
