@@ -39,7 +39,7 @@ class NotesSearchEverywhereContributor(
     ) {
         if (pattern.isEmpty()) return
 
-        val notes = noteStorage.getNotes()
+        val notes = noteStorage.getAllNotes()
         val lowerPattern = pattern.lowercase()
 
         notes.forEach { note ->
