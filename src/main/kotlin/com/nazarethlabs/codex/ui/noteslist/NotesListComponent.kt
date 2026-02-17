@@ -2,9 +2,11 @@ package com.nazarethlabs.codex.ui.noteslist
 
 import com.intellij.openapi.project.Project
 import com.nazarethlabs.codex.dto.Note
+import com.nazarethlabs.codex.helper.ContentPreviewHelper
 import com.nazarethlabs.codex.listener.NoteListKeyListener
 import com.nazarethlabs.codex.listener.NoteListMouseListener
 import com.nazarethlabs.codex.listener.NotesStateListener
+import com.nazarethlabs.codex.service.note.NoteContentIndexService
 import com.nazarethlabs.codex.state.NotesStateManager
 import com.nazarethlabs.codex.state.SelectedNoteStateManager
 import com.nazarethlabs.codex.ui.component.EmptyStateComponent
@@ -36,10 +38,18 @@ class NotesListComponent : NotesStateListener {
         listModel = DefaultListModel()
         stateManager.addListener(this)
 
+        val contentIndexService = NoteContentIndexService.getInstance()
+
         val cellRenderer =
             ListCellRenderer { list, value, _, isSelected, _ ->
+                val contentPreview =
+                    if (value != null) {
+                        ContentPreviewHelper.generatePreview(contentIndexService.getContent(value))
+                    } else {
+                        ""
+                    }
                 NoteListItemComponent()
-                    .build(theList = list, note = value, isSelected = isSelected)
+                    .build(theList = list, note = value, isSelected = isSelected, contentPreview = contentPreview)
             }
 
         notesList = ListComponent(listModel, cellRenderer).build()
