@@ -15,6 +15,7 @@
         <projectService serviceImplementation="com.nazarethlabs.codex.listener.NoteEventListener"/>
         <applicationService serviceImplementation="com.nazarethlabs.codex.repository.NotesSettingsRepository"/>
         <applicationService serviceImplementation="com.nazarethlabs.codex.service.note.NoteContentIndexService"/>
+        <applicationService serviceImplementation="com.nazarethlabs.codex.state.SearchFilterStateManager"/>
         <projectConfigurable parentId="tools" instance="com.nazarethlabs.codex.editor.configurable.NotesConfigurable"
                              id="notes.settings"
                              displayName="Notes Plugin"/>
