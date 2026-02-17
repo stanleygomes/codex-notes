@@ -1,4 +1,4 @@
-package com.nazarethlabs.codex.service.settings
+package com.nazarethlabs.codex.helper
 
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -9,32 +9,34 @@ import java.io.File
 import java.nio.file.Files
 
 @RunWith(MockitoJUnitRunner::class)
-class OpenNotesFolderServiceTest {
+class OpenFolderHelperTest {
     @Test
     fun `should create directory when folder does not exist`() {
         val tempDir = Files.createTempDirectory("test").toFile()
         val nonExistentDir = File(tempDir, "nonexistent")
 
-        assertFalse(nonExistentDir.exists())
+        try {
+            assertFalse(nonExistentDir.exists())
 
-        val service = OpenNotesFolderService()
-        service.openFolder(nonExistentDir.absolutePath)
+            OpenFolderHelper.openFolder(nonExistentDir.absolutePath)
 
-        assertTrue(nonExistentDir.exists())
-
-        nonExistentDir.delete()
-        tempDir.delete()
+            assertTrue(nonExistentDir.exists())
+        } finally {
+            nonExistentDir.delete()
+            tempDir.delete()
+        }
     }
 
     @Test
     fun `should return true when opening existing folder`() {
         val tempDir = Files.createTempDirectory("test").toFile()
 
-        val service = OpenNotesFolderService()
-        val result = service.openFolder(tempDir.absolutePath)
+        try {
+            val result = OpenFolderHelper.openFolder(tempDir.absolutePath)
 
-        assertTrue(result)
-
-        tempDir.delete()
+            assertTrue(result)
+        } finally {
+            tempDir.delete()
+        }
     }
 }
