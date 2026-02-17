@@ -7,11 +7,11 @@ import com.nazarethlabs.codex.helper.MessageHelper
 import com.nazarethlabs.codex.repository.NoteStorageRepository
 import com.nazarethlabs.codex.service.note.ExportNotesService
 import java.io.File
+import javax.swing.BoxLayout
 import javax.swing.JButton
 import javax.swing.JFileChooser
-import javax.swing.JPanel
-import javax.swing.BoxLayout
 import javax.swing.JLabel
+import javax.swing.JPanel
 
 class NotesConfigExportNotesPanelComponent {
     private val exportNotesService = ExportNotesService()

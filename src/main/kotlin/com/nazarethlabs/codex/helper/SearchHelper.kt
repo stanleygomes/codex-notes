@@ -6,6 +6,7 @@ object SearchHelper {
     fun search(
         notes: List<Note>,
         query: String,
+        contentMap: Map<String, String> = emptyMap(),
     ): List<Note> {
         if (query.isBlank()) {
             return notes
@@ -16,7 +17,8 @@ object SearchHelper {
 
         return notes
             .map { note ->
-                val score = calculateScore(note, searchQuery, searchTerms)
+                val content = contentMap[note.id] ?: ""
+                val score = calculateScore(note, searchQuery, searchTerms, content)
                 note to score
             }.filter { it.second > 0 }
             .sortedByDescending { it.second }
@@ -27,13 +29,40 @@ object SearchHelper {
         note: Note,
         fullQuery: String,
         terms: List<String>,
+        content: String = "",
     ): Int {
         val title = note.title.lowercase()
         val titleWords = title.split(" ", "-", "_", ".").filter { it.isNotEmpty() }
 
         return scoreForFullQueryMatch(title, fullQuery) +
             scoreForTermMatches(title, terms) +
-            scoreForWordMatches(titleWords, terms)
+            scoreForWordMatches(titleWords, terms) +
+            scoreForContentMatches(content, fullQuery, terms)
+    }
+
+    private fun scoreForContentMatches(
+        content: String,
+        fullQuery: String,
+        terms: List<String>,
+    ): Int {
+        if (content.isBlank()) {
+            return 0
+        }
+
+        val contentLower = content.lowercase()
+        var score = 0
+
+        if (contentLower.contains(fullQuery)) {
+            score += 30
+        }
+
+        terms.forEach { term ->
+            if (contentLower.contains(term)) {
+                score += 5
+            }
+        }
+
+        return score
     }
 
     private fun scoreForFullQueryMatch(
