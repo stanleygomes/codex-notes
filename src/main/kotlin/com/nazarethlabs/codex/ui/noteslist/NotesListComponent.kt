@@ -34,6 +34,7 @@ class NotesListComponent : NotesStateListener {
         stateManager.addListener(this)
 
         notesList = JList(listModel)
+        notesList.border = null
         notesList.cellRenderer =
             ListCellRenderer { list, value, _, isSelected, _ ->
                 NoteListItemComponent()
@@ -63,6 +64,7 @@ class NotesListComponent : NotesStateListener {
         }
 
         scrollPane = JScrollPane(notesList)
+        scrollPane.border = null
         emptyStatePanel = EmptyStateComponent().build()
 
         mainPanel =
