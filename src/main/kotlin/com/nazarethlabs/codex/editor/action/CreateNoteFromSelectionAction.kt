@@ -40,21 +40,21 @@ class CreateNoteFromSelectionAction : AnAction() {
                     NotificationHelper.showError(
                         project,
                         MyBundle.message("action.create.note.from.selection.error.title"),
-                        "Failed to create note from selection",
+                        MyBundle.message("action.create.note.from.selection.error.message"),
                     )
                 }
             } catch (ex: Exception) {
                 NotificationHelper.showError(
                     project,
                     MyBundle.message("action.create.note.from.selection.error.title"),
-                    ex.message ?: "Unknown error",
+                    ex.message ?: MyBundle.message("action.create.note.from.selection.error.unknown"),
                 )
             }
         }
     }
 
     private fun generateTitleFromText(text: String): String {
-        val firstLine = text.lines().firstOrNull() ?: "Note"
+        val firstLine = text.lines().firstOrNull() ?: MyBundle.message("action.create.note.from.selection.default.title")
         val maxLength = 50
         return if (firstLine.length > maxLength) {
             firstLine.substring(0, maxLength).trim()
