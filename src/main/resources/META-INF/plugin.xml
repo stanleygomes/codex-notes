@@ -15,8 +15,9 @@
         <projectService serviceImplementation="com.nazarethlabs.codex.listener.NoteEventListener"/>
         <applicationService serviceImplementation="com.nazarethlabs.codex.repository.NotesSettingsRepository"/>
         <applicationService serviceImplementation="com.nazarethlabs.codex.service.note.NoteContentIndexService"/>
-        <projectConfigurable parentId="tools" instance="com.nazarethlabs.codex.configurable.NotesConfigurable"
+        <projectConfigurable parentId="tools" instance="com.nazarethlabs.codex.editor.configurable.NotesConfigurable"
                              id="notes.settings"
                              displayName="Notes Plugin"/>
+        <searchEverywhereContributor implementation="com.nazarethlabs.codex.editor.search.NotesSearchEverywhereContributorFactory"/>
     </extensions>
 </idea-plugin>
