@@ -12,17 +12,17 @@ import java.io.File
 import javax.swing.ListCellRenderer
 
 class NotesSearchEverywhereContributorFactory : SearchEverywhereContributorFactory<Note> {
-    override fun createContributor(initEvent: AnActionEvent): SearchEverywhereContributor<Note> {
-        return NotesSearchEverywhereContributor(initEvent)
-    }
+    override fun createContributor(initEvent: AnActionEvent): SearchEverywhereContributor<Note> =
+        NotesSearchEverywhereContributor(initEvent)
 }
 
 class NotesSearchEverywhereContributor(
-    private val event: AnActionEvent
+    private val event: AnActionEvent,
 ) : SearchEverywhereContributor<Note> {
-
-    private val noteStorage = ApplicationManager.getApplication()
-        .getService(NoteStorageRepository::class.java)
+    private val noteStorage =
+        ApplicationManager
+            .getApplication()
+            .getService(NoteStorageRepository::class.java)
 
     override fun getSearchProviderId(): String = "NotesSearchEverywhereContributor"
 
@@ -35,7 +35,7 @@ class NotesSearchEverywhereContributor(
     override fun fetchElements(
         pattern: String,
         progressIndicator: ProgressIndicator,
-        consumer: Processor<in Note>
+        consumer: Processor<in Note>,
     ) {
         if (pattern.isEmpty()) return
 
@@ -46,7 +46,7 @@ class NotesSearchEverywhereContributor(
             if (progressIndicator.isCanceled) return
 
             val titleMatches = note.title.lowercase().contains(lowerPattern)
-            
+
             val contentMatches = searchInNoteContent(note, lowerPattern)
 
             if (titleMatches || contentMatches) {
@@ -55,11 +55,14 @@ class NotesSearchEverywhereContributor(
         }
     }
 
-    private fun searchInNoteContent(note: Note, pattern: String): Boolean {
+    private fun searchInNoteContent(
+        note: Note,
+        pattern: String,
+    ): Boolean {
         return try {
             val file = File(note.filePath)
             if (!file.exists()) return false
-            
+
             val content = file.readText().lowercase()
             content.contains(pattern)
         } catch (e: Exception) {
@@ -67,23 +70,28 @@ class NotesSearchEverywhereContributor(
         }
     }
 
-    override fun getElementsRenderer(): ListCellRenderer<in Note> {
-        return NoteSearchCellRenderer()
-    }
+    override fun getElementsRenderer(): ListCellRenderer<in Note> = NoteSearchCellRenderer()
 
-    override fun getDataForItem(element: Note, dataId: String): Any? {
-        return null
-    }
+    override fun getDataForItem(
+        element: Note,
+        dataId: String,
+    ): Any? = null
 
-    override fun processSelectedItem(selected: Note, modifiers: Int, searchText: String): Boolean {
+    override fun processSelectedItem(
+        selected: Note,
+        modifiers: Int,
+        searchText: String,
+    ): Boolean {
         event.project?.let { project ->
             val file = File(selected.filePath)
             if (file.exists()) {
-                com.intellij.openapi.fileEditor.FileEditorManager.getInstance(project)
+                com.intellij.openapi.fileEditor.FileEditorManager
+                    .getInstance(project)
                     .openFile(
-                        com.intellij.openapi.vfs.LocalFileSystem.getInstance()
+                        com.intellij.openapi.vfs.LocalFileSystem
+                            .getInstance()
                             .findFileByPath(selected.filePath) ?: return false,
-                        true
+                        true,
                     )
                 return true
             }
