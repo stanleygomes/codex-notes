@@ -54,9 +54,9 @@ class NotesStateManager : NoteListener {
 
         currentNotes =
             if (isSearchActive) {
-                searchNoteService.filterNotes(searchText)
+                applyFavoritesFilter(searchNoteService.filterNotes(searchText))
             } else {
-                notesSortService.refreshList(currentSortType)
+                applyFavoritesFilter(notesSortService.refreshList(currentSortType))
             }
 
         notifyListeners()
@@ -87,11 +87,20 @@ class NotesStateManager : NoteListener {
     private fun refreshNotes() {
         currentNotes =
             if (isSearchActive) {
-                searchNoteService.filterNotes(currentSearchText)
+                applyFavoritesFilter(searchNoteService.filterNotes(currentSearchText))
             } else {
-                notesSortService.refreshList(currentSortType)
+                applyFavoritesFilter(notesSortService.refreshList(currentSortType))
             }
         notifyListeners()
+    }
+
+    private fun applyFavoritesFilter(notes: List<Note>): List<Note> {
+        val favoritesFilterManager = FavoritesFilterStateManager.getInstance()
+        return if (favoritesFilterManager.isFilteringFavorites()) {
+            notes.filter { it.isFavorite }
+        } else {
+            notes
+        }
     }
 
     private fun notifyListeners() {
