@@ -108,4 +108,95 @@ class SearchHelperTest {
         assertEquals(2, result.size)
         // Both should match, order based on score
     }
+
+    @Test
+    fun `should find notes by content when content map provided`() {
+        val notes =
+            listOf(
+                Note(id = "1", title = "Shopping List"),
+                Note(id = "2", title = "Todo"),
+            )
+        val contentMap =
+            mapOf(
+                "1" to "Buy apples and bananas",
+                "2" to "Clean the house",
+            )
+        val result = SearchHelper.search(notes, "apples", contentMap)
+        assertEquals(1, result.size)
+        assertEquals("Shopping List", result[0].title)
+    }
+
+    @Test
+    fun `should score title matches higher than content matches`() {
+        val notes =
+            listOf(
+                Note(id = "1", title = "Apple Recipe"),
+                Note(id = "2", title = "Shopping"),
+            )
+        val contentMap =
+            mapOf(
+                "1" to "How to cook",
+                "2" to "Buy apple and pear",
+            )
+        val result = SearchHelper.search(notes, "apple", contentMap)
+        assertEquals(2, result.size)
+        assertEquals("Apple Recipe", result[0].title)
+        assertEquals("Shopping", result[1].title)
+    }
+
+    @Test
+    fun `should find notes matching both title and content`() {
+        val notes =
+            listOf(
+                Note(id = "1", title = "Apple Notes"),
+                Note(id = "2", title = "Other"),
+            )
+        val contentMap =
+            mapOf(
+                "1" to "Information about apples",
+                "2" to "Something else",
+            )
+        val result = SearchHelper.search(notes, "apple", contentMap)
+        assertEquals(1, result.size)
+        assertEquals("Apple Notes", result[0].title)
+    }
+
+    @Test
+    fun `should handle empty content map`() {
+        val notes =
+            listOf(
+                Note(id = "1", title = "Apple Pie"),
+            )
+        val result = SearchHelper.search(notes, "apple", emptyMap())
+        assertEquals(1, result.size)
+        assertEquals("Apple Pie", result[0].title)
+    }
+
+    @Test
+    fun `should search content case insensitively`() {
+        val notes =
+            listOf(
+                Note(id = "1", title = "Note"),
+            )
+        val contentMap = mapOf("1" to "IMPORTANT Information")
+        val result = SearchHelper.search(notes, "important", contentMap)
+        assertEquals(1, result.size)
+    }
+
+    @Test
+    fun `should match multiple terms in content`() {
+        val notes =
+            listOf(
+                Note(id = "1", title = "Meeting Notes"),
+                Note(id = "2", title = "Other Notes"),
+            )
+        val contentMap =
+            mapOf(
+                "1" to "Project discussion with team",
+                "2" to "Random text",
+            )
+        val result = SearchHelper.search(notes, "project team", contentMap)
+        assertEquals(1, result.size)
+        assertEquals("Meeting Notes", result[0].title)
+    }
 }
