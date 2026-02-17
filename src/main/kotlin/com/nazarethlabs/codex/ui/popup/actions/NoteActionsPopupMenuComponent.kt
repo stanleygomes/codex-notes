@@ -7,6 +7,7 @@ import com.nazarethlabs.codex.ui.popup.actions.popupitem.MenuItemColorComponent
 import com.nazarethlabs.codex.ui.popup.actions.popupitem.MenuItemDeleteComponent
 import com.nazarethlabs.codex.ui.popup.actions.popupitem.MenuItemFavoriteComponent
 import com.nazarethlabs.codex.ui.popup.actions.popupitem.MenuItemOpenComponent
+import com.nazarethlabs.codex.ui.popup.actions.popupitem.MenuItemOpenFileLocationComponent
 import com.nazarethlabs.codex.ui.popup.actions.popupitem.MenuItemRenameComponent
 import javax.swing.JPopupMenu
 
@@ -34,6 +35,9 @@ class NoteActionsPopupMenuComponent {
         menu.add(colorMenu)
 
         menu.addSeparator()
+
+        val openFileLocationItem = MenuItemOpenFileLocationComponent().build(note)
+        menu.add(openFileLocationItem)
 
         val deleteItem = MenuItemDeleteComponent().build(project, note)
         menu.add(deleteItem)
