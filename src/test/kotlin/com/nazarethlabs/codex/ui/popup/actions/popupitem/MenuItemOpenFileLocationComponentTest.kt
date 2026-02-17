@@ -1,6 +1,7 @@
 package com.nazarethlabs.codex.ui.popup.actions.popupitem
 
 import com.nazarethlabs.codex.dto.Note
+import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -27,5 +28,15 @@ class MenuItemOpenFileLocationComponentTest {
         val menuItem = component.build(note)
 
         assertNotNull(menuItem.border)
+    }
+
+    @Test
+    fun `should have action listener attached when menu item is built`() {
+        val note = Note(id = "1", title = "Test Note", filePath = "/path/to/notes/test.md")
+        val component = MenuItemOpenFileLocationComponent()
+
+        val menuItem = component.build(note)
+
+        assertEquals(1, menuItem.actionListeners.size)
     }
 }
