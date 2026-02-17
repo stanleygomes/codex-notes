@@ -2,6 +2,7 @@ package com.nazarethlabs.codex.ui.toolbar
 
 import com.intellij.openapi.project.Project
 import com.intellij.ui.components.JBPanel
+import com.nazarethlabs.codex.ui.toolbar.button.ToolbarButtonFavoritesFilterComponent
 import com.nazarethlabs.codex.ui.toolbar.button.ToolbarButtonNoteActionsComponent
 import com.nazarethlabs.codex.ui.toolbar.button.ToolbarButtonSearchComponent
 import com.nazarethlabs.codex.ui.toolbar.button.ToolbarButtonSettingsComponent
@@ -19,6 +20,13 @@ class ToolbarRightComponent {
                 ToolbarButtonSearchComponent()
                     .build()
             add(searchButton)
+
+            add(Box.createHorizontalStrut(4))
+
+            val favoritesFilterButton =
+                ToolbarButtonFavoritesFilterComponent()
+                    .build()
+            add(favoritesFilterButton)
 
             add(Box.createHorizontalStrut(4))
 
