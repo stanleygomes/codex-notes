@@ -18,6 +18,18 @@
         <projectConfigurable parentId="tools" instance="com.nazarethlabs.codex.configurable.NotesConfigurable"
                              id="notes.settings"
                              displayName="Notes Plugin"/>
+        <notificationGroup id="Codex Notes" displayType="BALLOON"/>
         <searchEverywhereContributor implementation="com.nazarethlabs.codex.editor.search.NotesSearchEverywhereContributorFactory"/>
     </extensions>
+
+    <actions>
+        <action id="codex.CreateNote"
+                class="com.nazarethlabs.codex.action.CreateNoteAction"
+                text="New Codex Note"
+                description="Create a new note in Codex Notes"
+                icon="/icons/tab-icon.svg">
+            <add-to-group group-id="ToolsMenu" anchor="first"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt N"/>
+        </action>
+    </actions>
 </idea-plugin>
