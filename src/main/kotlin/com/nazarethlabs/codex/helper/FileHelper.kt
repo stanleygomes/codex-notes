@@ -70,6 +70,11 @@ object FileHelper {
 
     fun getFileInputStream(filePath: String): FileInputStream = FileInputStream(File(filePath))
 
+    fun getLastModified(filePath: String): Long {
+        val file = File(filePath)
+        return file.lastModified()
+    }
+
     fun readText(filePath: String): String {
         val file = File(filePath)
         return file.readText()
