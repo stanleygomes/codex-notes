@@ -4,6 +4,10 @@
 
 ## [Unreleased]
 
+### Added
+
+- Create note from selected text: New context menu action in the editor that allows creating notes directly from selected text
+
 ## [1.1.4] - 2026-02-16
 
 - chore: support for intelij 2024
