@@ -18,9 +18,9 @@ class SearchFilterComponent : SearchFilterStateListener {
     private val dateButtons = mutableMapOf<DateFilterEnum, JToggleButton>()
     private lateinit var favoriteButton: JToggleButton
     private val colorButtons = mutableMapOf<NoteColorEnum, JToggleButton>()
+    private val filterStateManager = SearchFilterStateManager.getInstance()
 
     fun build(): JPanel {
-        val filterStateManager = SearchFilterStateManager.getInstance()
         filterStateManager.addListener(this)
 
         val panel =
@@ -34,6 +34,10 @@ class SearchFilterComponent : SearchFilterStateListener {
         panel.add(buildColorFilterRow(filterStateManager))
 
         return panel
+    }
+
+    fun dispose() {
+        filterStateManager.removeListener(this)
     }
 
     private fun buildDateFilterRow(filterStateManager: SearchFilterStateManager): JPanel =

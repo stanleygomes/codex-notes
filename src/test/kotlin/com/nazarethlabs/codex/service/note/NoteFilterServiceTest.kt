@@ -104,7 +104,7 @@ class NoteFilterServiceTest {
     @Test
     fun `should filter notes by date when this month filter is active`() {
         val now = System.currentTimeMillis()
-        val twoMonthsAgo = now - 60L * 24 * 60 * 60 * 1000L
+        val twoMonthsAgo = Calendar.getInstance().apply { add(Calendar.MONTH, -2) }.timeInMillis
 
         val notes =
             listOf(

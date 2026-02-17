@@ -51,6 +51,10 @@ class SearchFilterStateManager {
         listeners.add(listener)
     }
 
+    fun removeListener(listener: SearchFilterStateListener) {
+        listeners.remove(listener)
+    }
+
     private fun notifyListenersAndRefresh() {
         listeners.forEach { it.onFilterStateChanged() }
         NotesStateManager.getInstance().refresh()
