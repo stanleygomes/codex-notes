@@ -18,9 +18,9 @@ class ColorHelper {
 
         val foregroundColor =
             if (isSelected) {
-                theList!!.selectionForeground
+                theList.selectionForeground
             } else {
-                theList!!.foreground
+                theList.foreground
             }
 
         return Pair(backgroundColor, foregroundColor)

@@ -10,6 +10,7 @@ object ContentPreviewHelper {
         if (content.isNullOrBlank()) return ""
         val cleaned = content.replace("\n", " ").trim()
         if (cleaned.length <= maxLength) return cleaned
+
         return cleaned.substring(0, maxLength) + "..."
     }
 }
