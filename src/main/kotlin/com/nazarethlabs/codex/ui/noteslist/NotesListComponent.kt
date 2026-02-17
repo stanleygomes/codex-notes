@@ -17,6 +17,7 @@ import javax.swing.JList
 import javax.swing.JPanel
 import javax.swing.JScrollPane
 import javax.swing.ListCellRenderer
+import javax.swing.ListSelectionModel
 
 class NotesListComponent : NotesStateListener {
     private lateinit var listModel: DefaultListModel<Note>
@@ -41,12 +42,13 @@ class NotesListComponent : NotesStateListener {
                     .build(theList = list, note = value, isSelected = isSelected)
             }
 
+        notesList.selectionMode = ListSelectionModel.MULTIPLE_INTERVAL_SELECTION
         notesList = ListComponent(listModel, cellRenderer).build()
 
         val mouseListener =
             NoteListMouseListener(
                 project = project,
-                getSelectedValue = { notesList.selectedValue },
+                getSelectedValues = { notesList.selectedValuesList },
             )
 
         notesList.addMouseListener(mouseListener)
@@ -54,14 +56,14 @@ class NotesListComponent : NotesStateListener {
         val keyListener =
             NoteListKeyListener(
                 project = project,
-                getSelectedValue = { notesList.selectedValue },
+                getSelectedValues = { notesList.selectedValuesList },
             )
 
         notesList.addKeyListener(keyListener)
 
         notesList.addListSelectionListener {
             if (!it.valueIsAdjusting) {
-                selectedNoteStateManager.setSelectedNote(notesList.selectedValue)
+                selectedNoteStateManager.setSelectedNotes(notesList.selectedValuesList)
             }
         }
 

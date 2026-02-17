@@ -9,7 +9,7 @@ import com.nazarethlabs.codex.ui.popup.actions.NoteActionsPopupMenuComponent
 import javax.swing.JButton
 
 class ToolbarButtonNoteActionsComponent {
-    private val menuItemsFactory = NoteActionsPopupMenuComponent()
+    private val menuFactory = NoteActionsPopupMenuComponent()
 
     fun build(project: Project): JButton {
         val actionsButton =
@@ -17,10 +17,12 @@ class ToolbarButtonNoteActionsComponent {
                 .build(More, getMessage("toolbar.note.actions"))
 
         actionsButton.addActionListener { event ->
-            val selectedNote = SelectedNoteStateManager.getInstance().getSelectedNote() ?: return@addActionListener
-            val menu = menuItemsFactory.createPopupMenu(project, selectedNote)
-            val component = event.source as JButton
+            val selectedNotes = SelectedNoteStateManager.getInstance().getSelectedNotes()
+            if (selectedNotes.isEmpty()) return@addActionListener
 
+            val menu = menuFactory.createPopupMenu(project, selectedNotes)
+
+            val component = event.source as JButton
             menu.show(component, 0, component.height)
         }
 

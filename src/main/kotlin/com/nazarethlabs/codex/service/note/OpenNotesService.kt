@@ -7,8 +7,17 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.nazarethlabs.codex.dto.Note
 import com.nazarethlabs.codex.repository.NoteStorageRepository
 
-class OpenNoteService {
-    fun open(
+class OpenNotesService {
+    fun openAll(
+        project: Project,
+        notes: List<Note>,
+    ) {
+        notes.forEach { note ->
+            open(project, note)
+        }
+    }
+
+    private fun open(
         project: Project,
         note: Note,
     ) {

@@ -3,6 +3,8 @@ package com.nazarethlabs.codex.helper
 import com.nazarethlabs.codex.MyBundle
 
 object TimeHelper {
+    fun getCurrentTimeMillis(): Long = System.currentTimeMillis()
+
     fun formatTimeAgo(
         updatedAt: Long,
         currentTime: Long = System.currentTimeMillis(),
