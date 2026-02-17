@@ -14,11 +14,13 @@ class FileHelperTest {
     @Test
     fun `should create file when directory and name provided`() {
         val tempDir = Files.createTempDirectory("test").toFile()
+        val notesDir = File(tempDir, "notes")
         val fileName = "test.txt"
-        val file = FileHelper.createFile(tempDir.absolutePath, fileName)
+        val file = FileHelper.createFile(notesDir.absolutePath, fileName)
         assertTrue(file.exists())
         assertEquals("", file.readText())
         file.delete()
+        notesDir.delete()
         tempDir.delete()
     }
 
@@ -103,9 +105,9 @@ class FileHelperTest {
     }
 
     @Test
-    fun `should return temp directory when called`() {
-        val expected = System.getProperty("java.io.tmpdir")
-        val result = FileHelper.getTempDir()
+    fun `should return default notes directory when called`() {
+        val expected = File(System.getProperty("user.home"), ".codex-notes").absolutePath
+        val result = FileHelper.getDefaultNotesDir()
         assertEquals(expected, result)
     }
 }

@@ -38,8 +38,8 @@ class CreateNoteService {
     ): String = "$title$extension"
 
     private fun createTempFile(fileName: String): File {
-        val tempDir = FileHelper.getTempDir()
-        return FileHelper.createFile(tempDir, fileName)
+        val notesDirectory = NotesSettingsService().getNotesDirectory()
+        return FileHelper.createFile(notesDirectory, fileName)
     }
 
     private fun addNoteAndOpen(

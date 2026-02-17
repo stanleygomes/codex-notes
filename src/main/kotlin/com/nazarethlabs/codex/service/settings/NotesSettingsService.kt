@@ -1,9 +1,12 @@
 package com.nazarethlabs.codex.service.settings
 
 import com.nazarethlabs.codex.enum.SortTypeEnum
+import com.nazarethlabs.codex.helper.FileHelper
 import com.nazarethlabs.codex.repository.NotesSettingsRepository
 
 class NotesSettingsService {
+    private fun normalizeNotesDirectory(directory: String): String = directory.ifBlank { FileHelper.getDefaultNotesDir() }
+
     fun getDefaultFileExtension(): String =
         NotesSettingsRepository
             .getInstance()
@@ -24,5 +27,17 @@ class NotesSettingsService {
         NotesSettingsRepository
             .getInstance()
             .setDefaultSortType(sortType)
+    }
+
+    fun getNotesDirectory(): String =
+        NotesSettingsRepository
+            .getInstance()
+            .getNotesDirectory()
+            .let(::normalizeNotesDirectory)
+
+    fun setNotesDirectory(directory: String) {
+        NotesSettingsRepository
+            .getInstance()
+            .setNotesDirectory(normalizeNotesDirectory(directory))
     }
 }
