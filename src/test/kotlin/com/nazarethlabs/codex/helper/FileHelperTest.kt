@@ -105,6 +105,20 @@ class FileHelperTest {
     }
 
     @Test
+    fun `should create file with content when directory name and content provided`() {
+        val tempDir = Files.createTempDirectory("test").toFile()
+        val notesDir = File(tempDir, "notes")
+        val fileName = "test.txt"
+        val content = "Hello, World!"
+        val file = FileHelper.createFileWithContent(notesDir.absolutePath, fileName, content)
+        assertTrue(file.exists())
+        assertEquals(content, file.readText())
+        file.delete()
+        notesDir.delete()
+        tempDir.delete()
+    }
+
+    @Test
     fun `should return default notes directory when called`() {
         val expected = File(System.getProperty("user.home"), ".codex-notes").absolutePath
         val result = FileHelper.getDefaultNotesDir()

@@ -5,6 +5,7 @@ import com.nazarethlabs.codex.dto.Note
 import com.nazarethlabs.codex.ui.component.PopupMenuComponent
 import com.nazarethlabs.codex.ui.popup.actions.popupitem.MenuItemColorComponent
 import com.nazarethlabs.codex.ui.popup.actions.popupitem.MenuItemDeleteComponent
+import com.nazarethlabs.codex.ui.popup.actions.popupitem.MenuItemDuplicateComponent
 import com.nazarethlabs.codex.ui.popup.actions.popupitem.MenuItemFavoriteComponent
 import com.nazarethlabs.codex.ui.popup.actions.popupitem.MenuItemOpenComponent
 import com.nazarethlabs.codex.ui.popup.actions.popupitem.MenuItemOpenFileLocationComponent
@@ -27,6 +28,9 @@ class NoteActionsPopupMenuComponent {
 
         val renameItem = MenuItemRenameComponent().build(project, notes)
         menu.add(renameItem)
+
+        val duplicateItem = MenuItemDuplicateComponent().build(project, notes)
+        menu.add(duplicateItem)
 
         val favoriteItem = MenuItemFavoriteComponent().build(notes)
         menu.add(favoriteItem)

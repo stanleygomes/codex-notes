@@ -15,7 +15,24 @@ class CreateNoteService {
         val title = generateTitle()
         val extension = getExtension()
         val fileName = createFileName(title, extension)
-        val file = createTempFile(fileName)
+        val file = createNoteFile(fileName, "")
+        val virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(file)
+
+        if (virtualFile != null) {
+            addNoteAndOpen(project, title, virtualFile)
+        }
+
+        return virtualFile
+    }
+
+    fun createWithContent(
+        project: Project,
+        title: String,
+        extension: String,
+        content: String,
+    ): VirtualFile? {
+        val fileName = createFileName(title, extension)
+        val file = createNoteFile(fileName, content)
         val virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(file)
 
         if (virtualFile != null) {
@@ -37,9 +54,12 @@ class CreateNoteService {
         extension: String,
     ): String = "$title$extension"
 
-    private fun createTempFile(fileName: String): File {
+    private fun createNoteFile(
+        fileName: String,
+        content: String,
+    ): File {
         val notesDirectory = NotesSettingsService().getNotesDirectory()
-        return FileHelper.createFile(notesDirectory, fileName)
+        return FileHelper.createFileWithContent(notesDirectory, fileName, content)
     }
 
     private fun addNoteAndOpen(
