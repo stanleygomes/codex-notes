@@ -3,7 +3,7 @@ package com.nazarethlabs.codex.action
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.project.Project
 import com.nazarethlabs.codex.dto.Note
-import com.nazarethlabs.codex.editor.action.CreateNoteAction
+import com.nazarethlabs.codex.editor.action.CreateNoteActionFromSearchEverywhere
 import com.nazarethlabs.codex.helper.NoteNameHelper
 import com.nazarethlabs.codex.repository.NoteStorageRepository
 import org.junit.Assert.assertEquals
@@ -15,7 +15,7 @@ import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
 
 @RunWith(MockitoJUnitRunner::class)
-class CreateNoteActionTest {
+class CreateNoteActionFromSearchEverywhereTest {
     @Mock
     private lateinit var actionEvent: AnActionEvent
 
@@ -40,7 +40,7 @@ class CreateNoteActionTest {
     @Test
     fun `should not perform action when project is null`() {
         `when`(actionEvent.project).thenReturn(null)
-        val createNoteAction = CreateNoteAction()
-        createNoteAction.actionPerformed(actionEvent)
+        val createNoteActionFromSearchEverywhere = CreateNoteActionFromSearchEverywhere()
+        createNoteActionFromSearchEverywhere.actionPerformed(actionEvent)
     }
 }
