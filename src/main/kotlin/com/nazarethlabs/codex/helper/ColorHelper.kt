@@ -11,16 +11,16 @@ class ColorHelper {
     ): Pair<Color, Color> {
         val backgroundColor =
             if (isSelected) {
-                theList!!.selectionBackground
+                theList?.selectionBackground ?: Color.WHITE
             } else {
-                theList!!.background
+                theList?.background ?: Color.WHITE
             }
 
         val foregroundColor =
             if (isSelected) {
-                theList.selectionForeground
+                theList?.selectionForeground ?: Color.BLACK
             } else {
-                theList.foreground
+                theList?.foreground ?: Color.BLACK
             }
 
         return Pair(backgroundColor, foregroundColor)
@@ -31,9 +31,9 @@ class ColorHelper {
         isSelected: Boolean,
     ): Color =
         if (isSelected) {
-            theList!!.selectionForeground.darker()
+            (theList?.selectionForeground ?: Color.BLACK).darker()
         } else {
-            if (isBackgroundTooLight(theList!!.background)) {
+            if (isBackgroundTooLight(theList?.background ?: Color.WHITE)) {
                 Color(120, 120, 120)
             } else {
                 Color(150, 150, 150)

@@ -1,5 +1,6 @@
 package com.nazarethlabs.codex.service.note
 
+import com.intellij.openapi.diagnostic.thisLogger
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.Messages
 import com.nazarethlabs.codex.dto.Note
@@ -23,7 +24,11 @@ class DeleteNotesService {
 
         if (result == Messages.YES) {
             notes.forEach { note ->
-                FileHelper.deleteFile(note.filePath)
+                try {
+                    FileHelper.deleteFile(note.filePath)
+                } catch (e: Exception) {
+                    thisLogger().error("Failed to delete file: ${note.filePath}", e)
+                }
                 NoteStorageRepository
                     .getInstance()
                     .removeNote(note.id)

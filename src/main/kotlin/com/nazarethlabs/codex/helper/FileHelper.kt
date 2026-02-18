@@ -32,7 +32,8 @@ object FileHelper {
         newName: String,
     ): Boolean {
         val oldFile = File(oldPath)
-        val newFile = File(oldFile.parent, newName)
+        val parentDir = oldFile.parentFile ?: return false
+        val newFile = File(parentDir, newName)
         return oldFile.exists() && oldFile.renameTo(newFile)
     }
 
@@ -46,12 +47,13 @@ object FileHelper {
         newName: String,
     ): String {
         val oldFile = File(oldPath)
-        return File(oldFile.parent, newName).absolutePath
+        val parentDir = oldFile.parentFile ?: return newName
+        return File(parentDir, newName).absolutePath
     }
 
     fun getParentPath(filePath: String): String {
         val file = File(filePath)
-        return file.parent
+        return file.parent ?: filePath
     }
 
     fun getDefaultNotesDir(): String = File(System.getProperty("user.home"), ".codex-notes").absolutePath
@@ -83,6 +85,7 @@ object FileHelper {
 
     fun readText(filePath: String): String {
         val file = File(filePath)
+        if (!file.exists()) return ""
         return file.readText()
     }
 }

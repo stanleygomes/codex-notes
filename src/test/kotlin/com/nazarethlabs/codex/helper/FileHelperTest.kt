@@ -105,6 +105,13 @@ class FileHelperTest {
     }
 
     @Test
+    fun `should return fallback when file path has no parent`() {
+        val filePath = "file.txt"
+        val result = FileHelper.getParentPath(filePath)
+        assertEquals(filePath, result)
+    }
+
+    @Test
     fun `should create file with content when directory name and content provided`() {
         val tempDir = Files.createTempDirectory("test").toFile()
         val notesDir = File(tempDir, "notes")
@@ -123,5 +130,25 @@ class FileHelperTest {
         val expected = File(System.getProperty("user.home"), ".codex-notes").absolutePath
         val result = FileHelper.getDefaultNotesDir()
         assertEquals(expected, result)
+    }
+
+    @Test
+    fun `should return file content when file exists`() {
+        val tempDir = Files.createTempDirectory("test").toFile()
+        val file = File(tempDir, "test.txt")
+        file.writeText("Hello, World!")
+        val result = FileHelper.readText(file.absolutePath)
+        assertEquals("Hello, World!", result)
+        file.delete()
+        tempDir.delete()
+    }
+
+    @Test
+    fun `should return empty string when file does not exist for readText`() {
+        val tempDir = Files.createTempDirectory("test").toFile()
+        val filePath = File(tempDir, "nonexistent.txt").absolutePath
+        val result = FileHelper.readText(filePath)
+        assertEquals("", result)
+        tempDir.delete()
     }
 }

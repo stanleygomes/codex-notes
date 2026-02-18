@@ -22,9 +22,7 @@ class CreateNoteService {
         title: String,
         extension: String,
         content: String,
-    ): VirtualFile? {
-        return createNoteFileAndOpen(project, title, extension, content)
-    }
+    ): VirtualFile? = createNoteFileAndOpen(project, title, extension, content)
 
     private fun createNoteFileAndOpen(
         project: Project,

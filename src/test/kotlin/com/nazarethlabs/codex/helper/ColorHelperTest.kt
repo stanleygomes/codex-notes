@@ -71,4 +71,34 @@ class ColorHelperTest {
 
         assertEquals(Color(150, 150, 150), result)
     }
+
+    @Test
+    fun `should return default colors when list is null and selected`() {
+        val (backgroundColor, foregroundColor) = colorHelper.calculateColors(null, true)
+
+        assertEquals(Color.WHITE, backgroundColor)
+        assertEquals(Color.BLACK, foregroundColor)
+    }
+
+    @Test
+    fun `should return default colors when list is null and not selected`() {
+        val (backgroundColor, foregroundColor) = colorHelper.calculateColors(null, false)
+
+        assertEquals(Color.WHITE, backgroundColor)
+        assertEquals(Color.BLACK, foregroundColor)
+    }
+
+    @Test
+    fun `should return default secondary color when list is null and selected`() {
+        val result = colorHelper.calculateSecondaryColor(null, true)
+
+        assertEquals(Color.BLACK.darker(), result)
+    }
+
+    @Test
+    fun `should return default secondary color when list is null and not selected`() {
+        val result = colorHelper.calculateSecondaryColor(null, false)
+
+        assertEquals(Color(120, 120, 120), result)
+    }
 }
