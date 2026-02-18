@@ -306,14 +306,17 @@ jobs:
           RELEASE_NOTE="./build/tmp/release_note.txt"
           mkdir -p "$(dirname "$RELEASE_NOTE")"
 
+          # Generate release notes
+          echo "## Changes" > $RELEASE_NOTE
+          echo "" >> $RELEASE_NOTE
+          
           if [ -n "$PREVIOUS_TAG" ]; then
             COMMITS=$(git log --oneline --pretty=format:"- %s" $PREVIOUS_TAG..HEAD)
           else
             COMMITS=$(git log --oneline --pretty=format:"- %s" HEAD)
           fi
-
-          echo "## Changes" >> $RELEASE_NOTE
-          echo "$COMMITS" > $RELEASE_NOTE
+          
+          echo "$COMMITS" >> $RELEASE_NOTE
           echo "" >> $RELEASE_NOTE
           echo "## Diff" >> $RELEASE_NOTE
           echo "" >> $RELEASE_NOTE
@@ -321,7 +324,10 @@ jobs:
             echo "Compare: https://github.com/stanleygomes/codex-notes/compare/$PREVIOUS_TAG...$VERSION" >> $RELEASE_NOTE
           fi
 
+          echo "Release notes content:"
+          cat $RELEASE_NOTE
+
           gh release create $VERSION \
             --draft \
-            --title $VERSION \
+            --title "$VERSION" \
             --notes-file $RELEASE_NOTE
