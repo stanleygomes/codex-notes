@@ -4,9 +4,7 @@ import com.intellij.icons.AllIcons
 import com.intellij.openapi.ui.Messages
 import com.intellij.util.ui.JBUI
 import com.nazarethlabs.codex.helper.MessageHelper
-import com.nazarethlabs.codex.repository.NoteStorageRepository
 import com.nazarethlabs.codex.service.note.ImportNotesService
-import com.nazarethlabs.codex.service.settings.NotesSettingsService
 import javax.swing.BoxLayout
 import javax.swing.JButton
 import javax.swing.JFileChooser
@@ -15,7 +13,6 @@ import javax.swing.JPanel
 
 class NotesConfigImportNotesPanelComponent {
     private val importNotesService = ImportNotesService()
-    private val notesSettingsService = NotesSettingsService()
 
     fun createImportNotesPanel(): JPanel {
         val panel = JPanel()
@@ -52,13 +49,7 @@ class NotesConfigImportNotesPanelComponent {
             if (result == JFileChooser.APPROVE_OPTION) {
                 try {
                     val selectedFiles = fileChooser.selectedFiles.toList()
-                    val notesDirectory = notesSettingsService.getNotesDirectory()
-                    val importedFiles = importNotesService.importFiles(selectedFiles, notesDirectory)
-
-                    importedFiles.forEach { file ->
-                        val title = file.nameWithoutExtension
-                        NoteStorageRepository.getInstance().addNote(title, file.absolutePath)
-                    }
+                    val importedFiles = importNotesService.importFiles(selectedFiles)
 
                     Messages.showInfoMessage(
                         MessageHelper.getMessage("settings.import.notes.success", importedFiles.size),

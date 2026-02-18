@@ -1,119 +1,135 @@
 package com.nazarethlabs.codex.service.note
 
+import com.intellij.openapi.vfs.VirtualFile
+import com.nazarethlabs.codex.dto.Note
+import com.nazarethlabs.codex.repository.NoteStorageRepository
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.InjectMocks
+import org.mockito.Mock
+import org.mockito.Mockito.mock
+import org.mockito.Mockito.mockStatic
+import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
 import java.io.File
 import java.nio.file.Files
 
 @RunWith(MockitoJUnitRunner::class)
 class ImportNotesServiceTest {
+    @Mock
+    private lateinit var createNoteService: CreateNoteService
+
     @InjectMocks
     private lateinit var importNotesService: ImportNotesService
 
+    @Mock
+    private lateinit var virtualFile1: VirtualFile
+
+    @Mock
+    private lateinit var virtualFile2: VirtualFile
+
     @Test
     fun `should import files when valid files provided`() {
-        val sourceDir = Files.createTempDirectory("test-import-source").toFile()
-        val targetDir = Files.createTempDirectory("test-import-target").toFile()
-        val sourceFile1 = File(sourceDir, "note1.md")
-        val sourceFile2 = File(sourceDir, "note2.md")
-        sourceFile1.writeText("Note 1 content")
-        sourceFile2.writeText("Note 2 content")
+        mockStatic(NoteStorageRepository::class.java).use { mockedRepo ->
+            val mockRepo = mock(NoteStorageRepository::class.java)
+            mockedRepo.`when`<NoteStorageRepository> { NoteStorageRepository.getInstance() }.thenReturn(mockRepo)
+            `when`(mockRepo.getAllNotes()).thenReturn(emptyList())
 
-        val files = listOf(sourceFile1, sourceFile2)
-        val result = importNotesService.importFiles(files, targetDir.absolutePath)
+            val sourceDir = Files.createTempDirectory("test-import-source").toFile()
+            val sourceFile1 = File(sourceDir, "note1.md")
+            val sourceFile2 = File(sourceDir, "note2.md")
+            sourceFile1.writeText("Note 1 content")
+            sourceFile2.writeText("Note 2 content")
 
-        assertEquals(2, result.size)
-        assertTrue(File(targetDir, "note1.md").exists())
-        assertTrue(File(targetDir, "note2.md").exists())
-        assertEquals("Note 1 content", File(targetDir, "note1.md").readText())
-        assertEquals("Note 2 content", File(targetDir, "note2.md").readText())
+            `when`(createNoteService.createWithContent(null, "note1", ".md", "Note 1 content", false)).thenReturn(virtualFile1)
+            `when`(createNoteService.createWithContent(null, "note2", ".md", "Note 2 content", false)).thenReturn(virtualFile2)
 
-        sourceFile1.delete()
-        sourceFile2.delete()
-        sourceDir.delete()
-        targetDir.listFiles()?.forEach { it.delete() }
-        targetDir.delete()
+            val files = listOf(sourceFile1, sourceFile2)
+            val result = importNotesService.importFiles(files)
+
+            assertEquals(2, result.size)
+
+            sourceFile1.delete()
+            sourceFile2.delete()
+            sourceDir.delete()
+        }
     }
 
     @Test
     fun `should skip missing files when importing`() {
-        val sourceDir = Files.createTempDirectory("test-import-source").toFile()
-        val targetDir = Files.createTempDirectory("test-import-target").toFile()
-        val existingFile = File(sourceDir, "exists.md")
-        existingFile.writeText("Existing note")
-        val missingFile = File(sourceDir, "missing.md")
+        mockStatic(NoteStorageRepository::class.java).use { mockedRepo ->
+            val mockRepo = mock(NoteStorageRepository::class.java)
+            mockedRepo.`when`<NoteStorageRepository> { NoteStorageRepository.getInstance() }.thenReturn(mockRepo)
+            `when`(mockRepo.getAllNotes()).thenReturn(emptyList())
 
-        val files = listOf(existingFile, missingFile)
-        val result = importNotesService.importFiles(files, targetDir.absolutePath)
+            val sourceDir = Files.createTempDirectory("test-import-source").toFile()
+            val existingFile = File(sourceDir, "exists.md")
+            existingFile.writeText("Existing note")
+            val missingFile = File(sourceDir, "missing.md")
 
-        assertEquals(1, result.size)
-        assertTrue(File(targetDir, "exists.md").exists())
-        assertEquals("Existing note", File(targetDir, "exists.md").readText())
+            `when`(createNoteService.createWithContent(null, "exists", ".md", "Existing note", false)).thenReturn(virtualFile1)
 
-        existingFile.delete()
-        sourceDir.delete()
-        targetDir.listFiles()?.forEach { it.delete() }
-        targetDir.delete()
+            val files = listOf(existingFile, missingFile)
+            val result = importNotesService.importFiles(files)
+
+            assertEquals(1, result.size)
+
+            existingFile.delete()
+            sourceDir.delete()
+        }
     }
 
     @Test
     fun `should return empty list when no files provided`() {
-        val targetDir = Files.createTempDirectory("test-import-target").toFile()
-
-        val result = importNotesService.importFiles(emptyList(), targetDir.absolutePath)
+        val result = importNotesService.importFiles(emptyList())
 
         assertEquals(0, result.size)
-
-        targetDir.delete()
     }
 
     @Test
     fun `should resolve unique file name when duplicate exists`() {
-        val sourceDir = Files.createTempDirectory("test-import-source").toFile()
-        val targetDir = Files.createTempDirectory("test-import-target").toFile()
-        File(targetDir, "note.md").writeText("Existing content")
+        mockStatic(NoteStorageRepository::class.java).use { mockedRepo ->
+            val mockRepo = mock(NoteStorageRepository::class.java)
+            mockedRepo.`when`<NoteStorageRepository> { NoteStorageRepository.getInstance() }.thenReturn(mockRepo)
+            `when`(mockRepo.getAllNotes()).thenReturn(listOf(Note(id = "1", title = "note")))
 
-        val sourceFile = File(sourceDir, "note.md")
-        sourceFile.writeText("New content")
+            val sourceDir = Files.createTempDirectory("test-import-source").toFile()
+            val sourceFile = File(sourceDir, "note.md")
+            sourceFile.writeText("New content")
 
-        val files = listOf(sourceFile)
-        val result = importNotesService.importFiles(files, targetDir.absolutePath)
+            `when`(createNoteService.createWithContent(null, "note (1)", ".md", "New content", false)).thenReturn(virtualFile1)
 
-        assertEquals(1, result.size)
-        assertTrue(File(targetDir, "note.md").exists())
-        assertTrue(File(targetDir, "note (1).md").exists())
-        assertEquals("Existing content", File(targetDir, "note.md").readText())
-        assertEquals("New content", File(targetDir, "note (1).md").readText())
+            val files = listOf(sourceFile)
+            val result = importNotesService.importFiles(files)
 
-        sourceFile.delete()
-        sourceDir.delete()
-        targetDir.listFiles()?.forEach { it.delete() }
-        targetDir.delete()
+            assertEquals(1, result.size)
+
+            sourceFile.delete()
+            sourceDir.delete()
+        }
     }
 
     @Test
-    fun `should create target directory when it does not exist`() {
-        val sourceDir = Files.createTempDirectory("test-import-source").toFile()
-        val targetDir = File(Files.createTempDirectory("test-import-parent").toFile(), "new-dir")
-        val sourceFile = File(sourceDir, "note.md")
-        sourceFile.writeText("Note content")
+    fun `should handle files without extension`() {
+        mockStatic(NoteStorageRepository::class.java).use { mockedRepo ->
+            val mockRepo = mock(NoteStorageRepository::class.java)
+            mockedRepo.`when`<NoteStorageRepository> { NoteStorageRepository.getInstance() }.thenReturn(mockRepo)
+            `when`(mockRepo.getAllNotes()).thenReturn(emptyList())
 
-        val files = listOf(sourceFile)
-        val result = importNotesService.importFiles(files, targetDir.absolutePath)
+            val sourceDir = Files.createTempDirectory("test-import-source").toFile()
+            val sourceFile = File(sourceDir, "note")
+            sourceFile.writeText("Note content")
 
-        assertEquals(1, result.size)
-        assertTrue(targetDir.exists())
-        assertTrue(File(targetDir, "note.md").exists())
-        assertEquals("Note content", File(targetDir, "note.md").readText())
+            `when`(createNoteService.createWithContent(null, "note", ".md", "Note content", false)).thenReturn(virtualFile1)
 
-        sourceFile.delete()
-        sourceDir.delete()
-        targetDir.listFiles()?.forEach { it.delete() }
-        targetDir.delete()
-        targetDir.parentFile.delete()
+            val files = listOf(sourceFile)
+            val result = importNotesService.importFiles(files)
+
+            assertEquals(1, result.size)
+
+            sourceFile.delete()
+            sourceDir.delete()
+        }
     }
 }

@@ -1,46 +1,50 @@
 package com.nazarethlabs.codex.service.note
 
-import com.nazarethlabs.codex.helper.FileHelper
+import com.intellij.openapi.vfs.VirtualFile
+import com.nazarethlabs.codex.repository.NoteStorageRepository
+import com.nazarethlabs.codex.service.settings.NotesSettingsService
 import java.io.File
 
 class ImportNotesService {
-    fun importFiles(
-        files: List<File>,
-        notesDirectory: String,
-    ): List<File> {
-        FileHelper.ensureDirectoryExists(notesDirectory)
+    private val createNoteService = CreateNoteService()
 
-        val importedFiles = mutableListOf<File>()
+    fun importFiles(files: List<File>): List<VirtualFile> {
+        val importedFiles = mutableListOf<VirtualFile>()
         for (file in files) {
             if (file.exists() && file.isFile) {
                 val content = file.readText()
-                val fileName = resolveUniqueFileName(notesDirectory, file.name)
-                val createdFile = FileHelper.createFileWithContent(notesDirectory, fileName, content)
-                importedFiles.add(createdFile)
+                val title = resolveUniqueTitle(file.name)
+                val extension = getExtension(file)
+                val virtualFile = createNoteService.createWithContent(null, title, extension, content, false)
+                if (virtualFile != null) {
+                    importedFiles.add(virtualFile)
+                }
             }
         }
 
         return importedFiles
     }
 
-    private fun resolveUniqueFileName(
-        directory: String,
-        originalName: String,
-    ): String {
-        if (!FileHelper.fileExists(directory, originalName)) {
-            return originalName
-        }
+    private fun resolveUniqueTitle(originalName: String): String {
+        val notes = NoteStorageRepository.getInstance().getAllNotes()
+        val title = originalName.substringBeforeLast(".")
 
-        val nameWithoutExtension = originalName.substringBeforeLast(".")
-        val extension = if (originalName.contains(".")) ".${originalName.substringAfterLast(".")}" else ""
+        if (notes.none { it.title == title }) {
+            return title
+        }
 
         var counter = 1
         var candidate: String
         do {
-            candidate = "$nameWithoutExtension ($counter)$extension"
+            candidate = "$title ($counter)"
             counter++
-        } while (FileHelper.fileExists(directory, candidate))
+        } while (notes.any { it.title == candidate })
 
         return candidate
+    }
+
+    private fun getExtension(file: File): String {
+        val extension = file.extension
+        return if (extension.isNotEmpty()) ".$extension" else NotesSettingsService().getDefaultFileExtension()
     }
 }
