@@ -9,6 +9,7 @@ import com.nazarethlabs.codex.enum.SortTypeEnum.DATE
 import com.nazarethlabs.codex.listener.NoteEventListener
 import com.nazarethlabs.codex.listener.NoteListener
 import com.nazarethlabs.codex.listener.NotesStateListener
+import com.nazarethlabs.codex.service.note.NoteFilterService
 import com.nazarethlabs.codex.service.note.NotesSortService
 import com.nazarethlabs.codex.service.note.SearchNoteService
 import com.nazarethlabs.codex.service.settings.NotesSettingsService
@@ -18,6 +19,7 @@ class NotesStateManager : NoteListener {
     private val listeners = mutableListOf<NotesStateListener>()
     private val notesSortService = NotesSortService()
     private val searchNoteService = SearchNoteService()
+    private val noteFilterService = NoteFilterService()
 
     private var currentNotes: List<Note> = emptyList()
     private var currentSortType: SortTypeEnum = DATE
@@ -54,9 +56,9 @@ class NotesStateManager : NoteListener {
 
         currentNotes =
             if (isSearchActive) {
-                applyFavoritesFilter(searchNoteService.filterNotes(searchText))
+                applySearchFilters(applyFavoritesFilter(searchNoteService.filterNotes(searchText)))
             } else {
-                applyFavoritesFilter(notesSortService.refreshList(currentSortType))
+                applySearchFilters(applyFavoritesFilter(notesSortService.refreshList(currentSortType)))
             }
 
         notifyListeners()
@@ -87,9 +89,9 @@ class NotesStateManager : NoteListener {
     private fun refreshNotes() {
         currentNotes =
             if (isSearchActive) {
-                applyFavoritesFilter(searchNoteService.filterNotes(currentSearchText))
+                applySearchFilters(applyFavoritesFilter(searchNoteService.filterNotes(currentSearchText)))
             } else {
-                applyFavoritesFilter(notesSortService.refreshList(currentSortType))
+                applySearchFilters(applyFavoritesFilter(notesSortService.refreshList(currentSortType)))
             }
         notifyListeners()
     }
@@ -101,6 +103,16 @@ class NotesStateManager : NoteListener {
         } else {
             notes
         }
+    }
+
+    private fun applySearchFilters(notes: List<Note>): List<Note> {
+        val filterStateManager = SearchFilterStateManager.getInstance()
+        return noteFilterService.applyFilters(
+            notes,
+            filterStateManager.getActiveDateFilter(),
+            filterStateManager.isFavoriteFilterActive(),
+            filterStateManager.getActiveColorFilters(),
+        )
     }
 
     private fun notifyListeners() {

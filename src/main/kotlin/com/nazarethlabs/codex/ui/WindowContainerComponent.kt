@@ -7,7 +7,6 @@ import java.awt.BorderLayout.NORTH
 import javax.swing.BoxLayout
 import javax.swing.BoxLayout.Y_AXIS
 import javax.swing.JComponent
-import javax.swing.JPanel
 
 class WindowContainerComponent {
     fun build(
@@ -16,7 +15,7 @@ class WindowContainerComponent {
         notesList: JComponent,
     ): JBPanel<JBPanel<*>> {
         val topPanel =
-            JPanel().apply {
+            JBPanel<JBPanel<*>>().apply {
                 layout = BoxLayout(this, Y_AXIS)
                 add(toolbar)
                 add(searchPanel)

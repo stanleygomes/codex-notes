@@ -1,15 +1,15 @@
 package com.nazarethlabs.codex.ui.search
 
+import com.intellij.ui.components.JBPanel
 import com.intellij.util.ui.JBUI
 import com.nazarethlabs.codex.MyBundle
 import com.nazarethlabs.codex.state.NotesStateManager
 import com.nazarethlabs.codex.ui.component.TextFieldComponent
-import java.awt.BorderLayout
-import java.awt.BorderLayout.CENTER
-import javax.swing.JPanel
+import javax.swing.BoxLayout
+import javax.swing.BoxLayout.Y_AXIS
 
 class SearchComponent {
-    fun build(): JPanel {
+    fun build(): JBPanel<JBPanel<*>> {
         val stateManager = NotesStateManager.getInstance()
         val placeholder = MyBundle.message("search.placeholder")
 
@@ -19,9 +19,19 @@ class SearchComponent {
                     stateManager.search(filterText)
                 }
 
-        return JPanel(BorderLayout()).apply {
-            border = JBUI.Borders.empty(5)
-            add(searchField, CENTER)
+        val searchFieldPanel =
+            JBPanel<JBPanel<*>>().apply {
+                layout = BoxLayout(this, Y_AXIS)
+                border = JBUI.Borders.empty(5)
+                add(searchField)
+            }
+
+        val filterPanel = SearchFilterComponent().build()
+
+        return JBPanel<JBPanel<*>>().apply {
+            layout = BoxLayout(this, Y_AXIS)
+            add(searchFieldPanel)
+            add(filterPanel)
         }
     }
 }

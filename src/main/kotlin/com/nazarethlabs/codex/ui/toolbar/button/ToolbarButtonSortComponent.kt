@@ -13,9 +13,7 @@ class ToolbarButtonSortComponent {
                 .build(Sorted, getMessage("toolbar.note.sort"))
 
         sortButton.addActionListener { event ->
-            val menu =
-                NoteSortPopupComponent()
-                    .createPopupMenu()
+            val menu = NoteSortPopupComponent().createPopupMenu()
             val component = event.source as JButton
 
             menu.show(component, 0, component.height)

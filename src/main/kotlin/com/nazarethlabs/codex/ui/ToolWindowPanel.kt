@@ -8,27 +8,19 @@ import com.nazarethlabs.codex.state.SearchStateManager
 import com.nazarethlabs.codex.ui.noteslist.NotesListComponent
 import com.nazarethlabs.codex.ui.search.SearchComponent
 import com.nazarethlabs.codex.ui.toolbar.ToolbarComponent
-import javax.swing.JPanel
 import javax.swing.SwingUtilities
 
 class ToolWindowPanel : SearchStateListener {
-    private lateinit var searchPanel: JPanel
+    private lateinit var searchPanel: JBPanel<JBPanel<*>>
     private val searchStateManager = SearchStateManager.getInstance()
 
     fun build(project: Project): JBPanel<JBPanel<*>> {
         val notesListComponent = NotesListComponent()
-        val toolbar =
-            ToolbarComponent()
-                .build(project)
-
+        val toolbar = ToolbarComponent().build(project)
         searchPanel = SearchComponent().build()
         searchPanel.isVisible = false
-
         searchStateManager.addListener(this)
-
-        val notesList =
-            notesListComponent
-                .build(project)
+        val notesList = notesListComponent.build(project)
 
         return WindowContainerComponent()
             .build(toolbar, searchPanel, notesList)
@@ -36,6 +28,7 @@ class ToolWindowPanel : SearchStateListener {
 
     override fun onSearchVisibilityChanged(isVisible: Boolean) {
         searchPanel.isVisible = isVisible
+
         if (isVisible) {
             SwingUtilities.invokeLater {
                 UiFieldHelper.focusField(searchPanel)
