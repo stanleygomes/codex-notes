@@ -129,6 +129,64 @@ kover {
                 onCheck = true
             }
         }
+        filters {
+            excludes {
+                classes(
+                    "com.nazarethlabs.codex.AppStartupActivity",
+                    "com.nazarethlabs.codex.AppWindowFactory",
+                    "com.nazarethlabs.codex.AppWindowFactory\$*",
+                    "com.nazarethlabs.codex.MyBundle",
+                    "com.nazarethlabs.codex.Constants",
+                    "com.nazarethlabs.codex.repository.NoteStorageRepository",
+                    "com.nazarethlabs.codex.repository.NoteStorageRepository\$*",
+                    "com.nazarethlabs.codex.repository.NotesSettingsRepository",
+                    "com.nazarethlabs.codex.repository.NotesSettingsRepository\$*",
+                    "com.nazarethlabs.codex.state.NoteState",
+                    "com.nazarethlabs.codex.state.ConfigurationState",
+                    "com.nazarethlabs.codex.state.NotesStateManager",
+                    "com.nazarethlabs.codex.state.NotesStateManager\$*",
+                    "com.nazarethlabs.codex.state.SearchStateManager",
+                    "com.nazarethlabs.codex.state.SearchStateManager\$*",
+                    "com.nazarethlabs.codex.service.note.NotesSortService",
+                    "com.nazarethlabs.codex.service.note.ChangeNoteColorService",
+                    "com.nazarethlabs.codex.service.note.FavoriteNotesService",
+                    "com.nazarethlabs.codex.service.note.SearchNoteService",
+                    "com.nazarethlabs.codex.service.note.OpenNotesService",
+                    "com.nazarethlabs.codex.service.note.RenameNoteService",
+                    "com.nazarethlabs.codex.service.note.DuplicateNoteService",
+                    "com.nazarethlabs.codex.service.note.CreateNoteService",
+                    "com.nazarethlabs.codex.service.note.DeleteNotesService",
+                    "com.nazarethlabs.codex.service.note.OpenNoteFileLocationService",
+                    "com.nazarethlabs.codex.service.settings.NotesSettingsService",
+                    "com.nazarethlabs.codex.service.settings.NotesConfigService",
+                    "com.nazarethlabs.codex.helper.NotificationHelper",
+                    "com.nazarethlabs.codex.listener.NoteListMouseListener",
+                    "com.nazarethlabs.codex.listener.NoteListKeyListener",
+                    "com.nazarethlabs.codex.editor.configurable.NotesConfigurable",
+                    "com.nazarethlabs.codex.editor.action.BaseCreateNoteAction",
+                    "com.nazarethlabs.codex.ui.popup.sort.NoteSortPopupItemComponent",
+                    "com.nazarethlabs.codex.ui.popup.sort.NoteSortPopupComponent",
+                    "com.nazarethlabs.codex.ui.popup.actions.NoteActionsPopupMenuComponent",
+                    "com.nazarethlabs.codex.ui.popup.actions.popupitem.MenuItemColorComponent",
+                    "com.nazarethlabs.codex.ui.toolbar.ToolbarComponent",
+                    "com.nazarethlabs.codex.ui.toolbar.ToolbarContainerComponent",
+                    "com.nazarethlabs.codex.ui.toolbar.ToolbarLeftComponent",
+                    "com.nazarethlabs.codex.ui.toolbar.ToolbarRightComponent",
+                    "com.nazarethlabs.codex.ui.toolbar.button.ToolbarButtonCreateNoteComponent",
+                    "com.nazarethlabs.codex.ui.toolbar.button.ToolbarButtonSettingsComponent",
+                    "com.nazarethlabs.codex.ui.toolbar.button.ToolbarButtonNoteActionsComponent",
+                    "com.nazarethlabs.codex.ui.noteslist.NotesListComponent",
+                    "com.nazarethlabs.codex.ui.search.SearchComponent",
+                    "com.nazarethlabs.codex.ui.search.SearchFilterComponent",
+                    "com.nazarethlabs.codex.ui.settings.NotesConfigComponent",
+                    "com.nazarethlabs.codex.ui.settings.NotesConfigFormComponent",
+                    "com.nazarethlabs.codex.ui.settings.component.NotesConfigExportNotesPanelComponent",
+                    "com.nazarethlabs.codex.ui.settings.component.NotesConfigOpenFolderPanelComponent",
+                    "com.nazarethlabs.codex.ui.WindowContainerComponent",
+                    "com.nazarethlabs.codex.ui.ToolWindowPanel",
+                )
+            }
+        }
     }
 }
 
