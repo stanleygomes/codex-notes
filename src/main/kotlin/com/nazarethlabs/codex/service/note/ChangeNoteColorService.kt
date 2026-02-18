@@ -4,6 +4,7 @@ import com.nazarethlabs.codex.dto.Note
 import com.nazarethlabs.codex.enum.NoteColorEnum
 import com.nazarethlabs.codex.helper.TimeHelper
 import com.nazarethlabs.codex.repository.NoteStorageRepository
+import com.nazarethlabs.codex.service.sentry.SentryEventHelper
 
 class ChangeNoteColorService {
     private val noteStorage = NoteStorageRepository.getInstance()
@@ -15,5 +16,6 @@ class ChangeNoteColorService {
         note.color = color
         note.updatedAt = TimeHelper.getCurrentTimeMillis()
         noteStorage.updateNote(note.id)
+        SentryEventHelper.captureEvent("note.color_changed")
     }
 }

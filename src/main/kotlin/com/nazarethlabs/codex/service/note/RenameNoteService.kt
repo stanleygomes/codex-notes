@@ -6,6 +6,7 @@ import com.nazarethlabs.codex.helper.DialogHelper
 import com.nazarethlabs.codex.helper.FileHelper
 import com.nazarethlabs.codex.helper.MessageHelper
 import com.nazarethlabs.codex.repository.NoteStorageRepository
+import com.nazarethlabs.codex.service.sentry.SentryEventHelper
 
 class RenameNoteService {
     fun rename(
@@ -80,12 +81,14 @@ class RenameNoteService {
                 NoteStorageRepository
                     .getInstance()
                     .updateNote(note.id, newTitle)
+                SentryEventHelper.captureEvent("note.renamed")
             } else {
                 throw RuntimeException(
                     MessageHelper.getMessage("dialog.rename.error.failed"),
                 )
             }
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            SentryEventHelper.captureException(e)
             DialogHelper.showErrorDialog(
                 project,
                 MessageHelper.getMessage("dialog.rename.error.failed"),

@@ -7,6 +7,7 @@ import com.nazarethlabs.codex.helper.DialogHelper
 import com.nazarethlabs.codex.helper.FileHelper
 import com.nazarethlabs.codex.helper.MessageHelper
 import com.nazarethlabs.codex.repository.NoteStorageRepository
+import com.nazarethlabs.codex.service.sentry.SentryEventHelper
 
 class DeleteNotesService {
     fun confirmAndDelete(
@@ -28,6 +29,7 @@ class DeleteNotesService {
                     .getInstance()
                     .removeNote(note.id)
             }
+            SentryEventHelper.captureEvent("note.deleted")
         }
     }
 

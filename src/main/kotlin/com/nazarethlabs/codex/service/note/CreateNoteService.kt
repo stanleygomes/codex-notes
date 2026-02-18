@@ -7,6 +7,7 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.nazarethlabs.codex.helper.FileHelper
 import com.nazarethlabs.codex.helper.NoteNameHelper
 import com.nazarethlabs.codex.repository.NoteStorageRepository
+import com.nazarethlabs.codex.service.sentry.SentryEventHelper
 import com.nazarethlabs.codex.service.settings.NotesSettingsService
 import java.io.File
 
@@ -68,5 +69,6 @@ class CreateNoteService {
     ) {
         NoteStorageRepository.getInstance().addNote(title, virtualFile.path)
         FileEditorManager.getInstance(project).openFile(virtualFile, true)
+        SentryEventHelper.captureEvent("note.created")
     }
 }

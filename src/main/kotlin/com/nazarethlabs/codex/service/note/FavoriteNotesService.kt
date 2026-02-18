@@ -2,6 +2,7 @@ package com.nazarethlabs.codex.service.note
 
 import com.nazarethlabs.codex.dto.Note
 import com.nazarethlabs.codex.repository.NoteStorageRepository
+import com.nazarethlabs.codex.service.sentry.SentryEventHelper
 
 class FavoriteNotesService {
     fun favoriteAll(notes: List<Note>) {
@@ -26,5 +27,6 @@ class FavoriteNotesService {
         NoteStorageRepository
             .getInstance()
             .toggleFavorite(note.id)
+        SentryEventHelper.captureEvent("note.favorited")
     }
 }
