@@ -69,6 +69,8 @@ jobs:
       # Check out the current repository
       - name: Fetch Sources
         uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
       # Update version for release builds
       - name: Update Version for Release
@@ -78,14 +80,38 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           CURRENT_VERSION=$(grep 'pluginVersion' gradle.properties | cut -d'=' -f2 | tr -d ' ')
+          
+          # Try to get latest published release tag
           LAST_TAG=$(gh api repos/{owner}/{repo}/releases/latest --jq '.tag_name' 2>/dev/null || echo "")
-          COMMITS=$(git log --oneline $LAST_TAG..HEAD 2>/dev/null || echo "")
+          
+          # If no published release, try git tags
+          if [ -z "$LAST_TAG" ]; then
+            LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          fi
+          
+          echo "Last tag: '$LAST_TAG'"
+          echo "Current version: $CURRENT_VERSION"
+          
+          # Get commits to analyze
+          if [ -n "$LAST_TAG" ]; then
+            COMMITS=$(git log --oneline $LAST_TAG..HEAD 2>/dev/null || echo "")
+          else
+            # No tags, check recent commits (last 20)
+            COMMITS=$(git log --oneline -20 2>/dev/null || echo "")
+          fi
+          
+          echo "Commits to analyze:"
+          echo "$COMMITS"
 
           INCREMENT="patch"
-          if echo "$COMMITS" | grep -qE "BREAKING CHANGE|!:|[a-z]+!:"; then
+          if echo "$COMMITS" | grep -qE "BREAKING CHANGE|![:]"; then
             INCREMENT="major"
-          elif echo "$COMMITS" | grep -q "^feat"; then
+            echo "Detected: BREAKING CHANGE - incrementing MAJOR"
+          elif echo "$COMMITS" | grep -qE " feat[:(]"; then
             INCREMENT="minor"
+            echo "Detected: feat - incrementing MINOR"
+          else
+            echo "Detected: patch changes - incrementing PATCH"
           fi
 
           IFS='.' read -r major minor patch <<< "$CURRENT_VERSION"
