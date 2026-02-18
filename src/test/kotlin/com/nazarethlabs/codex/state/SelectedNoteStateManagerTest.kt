@@ -52,10 +52,11 @@ class SelectedNoteStateManagerTest {
 
     @Test
     fun `should set and get selected notes`() {
-        val notes = listOf(
-            Note(id = "1", title = "Note 1"),
-            Note(id = "2", title = "Note 2"),
-        )
+        val notes =
+            listOf(
+                Note(id = "1", title = "Note 1"),
+                Note(id = "2", title = "Note 2"),
+            )
 
         selectedNoteStateManager.setSelectedNotes(notes)
 
@@ -75,10 +76,11 @@ class SelectedNoteStateManagerTest {
 
     @Test
     fun `should return first note when multiple notes selected`() {
-        val notes = listOf(
-            Note(id = "1", title = "Note 1"),
-            Note(id = "2", title = "Note 2"),
-        )
+        val notes =
+            listOf(
+                Note(id = "1", title = "Note 1"),
+                Note(id = "2", title = "Note 2"),
+            )
 
         selectedNoteStateManager.setSelectedNotes(notes)
 
@@ -96,10 +98,11 @@ class SelectedNoteStateManagerTest {
 
     @Test
     fun `should return true for multiple selection when two notes selected`() {
-        val notes = listOf(
-            Note(id = "1", title = "Note 1"),
-            Note(id = "2", title = "Note 2"),
-        )
+        val notes =
+            listOf(
+                Note(id = "1", title = "Note 1"),
+                Note(id = "2", title = "Note 2"),
+            )
 
         selectedNoteStateManager.setSelectedNotes(notes)
 

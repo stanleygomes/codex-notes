@@ -38,10 +38,11 @@ class MenuItemOpenComponentTest {
 
     @Test
     fun `should show open all text for multiple notes`() {
-        val notes = listOf(
-            Note(id = "1", title = "Note 1"),
-            Note(id = "2", title = "Note 2"),
-        )
+        val notes =
+            listOf(
+                Note(id = "1", title = "Note 1"),
+                Note(id = "2", title = "Note 2"),
+            )
         val component = MenuItemOpenComponent()
 
         val menuItem = component.build(project, notes)

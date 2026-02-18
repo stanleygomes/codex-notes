@@ -39,10 +39,11 @@ class MenuItemDuplicateComponentTest {
 
     @Test
     fun `should disable duplicate for multiple note selection`() {
-        val notes = listOf(
-            Note(id = "1", title = "Note 1"),
-            Note(id = "2", title = "Note 2"),
-        )
+        val notes =
+            listOf(
+                Note(id = "1", title = "Note 1"),
+                Note(id = "2", title = "Note 2"),
+            )
         val component = MenuItemDuplicateComponent()
 
         val menuItem = component.build(project, notes)

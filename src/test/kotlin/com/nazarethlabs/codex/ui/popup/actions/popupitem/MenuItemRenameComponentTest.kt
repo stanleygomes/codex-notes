@@ -40,10 +40,11 @@ class MenuItemRenameComponentTest {
 
     @Test
     fun `should disable rename for multiple note selection`() {
-        val notes = listOf(
-            Note(id = "1", title = "Note 1"),
-            Note(id = "2", title = "Note 2"),
-        )
+        val notes =
+            listOf(
+                Note(id = "1", title = "Note 1"),
+                Note(id = "2", title = "Note 2"),
+            )
         val component = MenuItemRenameComponent()
 
         val menuItem = component.build(project, notes)
