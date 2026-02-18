@@ -6,7 +6,8 @@ import java.awt.Cursor
 import java.awt.Dimension
 import java.awt.Graphics
 import java.awt.Graphics2D
-import java.awt.RenderingHints
+import java.awt.RenderingHints.KEY_ANTIALIASING
+import java.awt.RenderingHints.VALUE_ANTIALIAS_ON
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import javax.swing.JToggleButton
@@ -36,17 +37,16 @@ class ChipButtonComponent {
             object : JToggleButton(text ?: "") {
                 override fun paintComponent(g: Graphics) {
                     val g2 = g as Graphics2D
-                    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+                    g2.setRenderingHint(KEY_ANTIALIASING, VALUE_ANTIALIAS_ON)
 
                     val arc = JBUI.scale(12)
                     val bgColor = resolveBackgroundColor(chipColor)
                     g2.color = bgColor
                     g2.fillRoundRect(0, 0, width, height, arc, arc)
 
-                    if (isSelected) {
-                        g2.color = resolveBorderColor()
-                        g2.drawRoundRect(0, 0, width - 1, height - 1, arc, arc)
-                    }
+                    val borderColor = resolveBorderColor()
+                    g2.color = borderColor
+                    g2.drawRoundRect(0, 0, width - 1, height - 1, arc, arc)
 
                     if (text != null && getText().isNotEmpty()) {
                         g2.color = resolveForegroundColor()
@@ -87,10 +87,9 @@ class ChipButtonComponent {
             isFocusPainted = false
             isOpaque = false
             cursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)
-            font = JBUI.Fonts.smallFont()
 
             if (chipColor != null && text == null) {
-                preferredSize = Dimension(JBUI.scale(24), JBUI.scale(22))
+                preferredSize = Dimension(JBUI.scale(48), JBUI.scale(22))
             } else {
                 val fm = getFontMetrics(font)
                 val textWidth = fm.stringWidth(getText())
