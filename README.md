@@ -10,11 +10,17 @@
 <!-- Plugin description -->
 **Codex Notes** is a powerful IntelliJ IDEA plugin for managing notes directly within your IDE. Keep your thoughts, code snippets, and documentation organized without leaving your development environment.
 
-- **Create, manage and search notes** with markdown support
-- **Favorite and color notes** for quick access
-- **Sort notes** by title, date, or favorite status
-- **Customizable settings** for file extension and sorting preferences
-- **Persistent storage** - your notes are saved automatically
+- **Create, edit, delete, rename, and search notes** with full markdown support
+- **Favorite and assign colors to notes** for quick identification and access
+- **Sort notes** by title, creation date, or favorite status
+- **Duplicate notes** for easy replication
+- **Import notes** from external files
+- **Export notes** to external files
+- **Open note file locations** in the file system
+- **Filter notes** by favorites
+- **Create notes from selected text** in the editor
+- **Integrated search** via IntelliJ's Search Everywhere
+- **Customizable settings** for file extension, notes directory, export options, import options, and folder access
 <!-- Plugin description end -->
 
 ## 📋 Table of Contents
@@ -52,29 +58,6 @@
 - Click on the **Codex Notes** icon in the right sidebar
 - Or use the menu: `View` → `Tool Windows` → `Codex Notes`
 
-### Creating a Note
-1. Click the `+` (Create new note) button in the toolbar
-2. A new note file will be created with a timestamp
-3. The note will open automatically in the editor
-
-### Searching Notes
-1. Click the 🔍 (Search) button in the toolbar
-2. Type your search query in the search field
-3. Notes will be filtered in real-time
-
-### Managing Notes
-- **Favorite**: Right-click a note → `Favorite` (or press `F`)
-- **Rename**: Right-click a note → `Rename` (or press `F2`)
-- **Delete**: Right-click a note → `Delete` (or press `Delete`)
-- **Open**: Double-click a note (or press `Enter`)
-
-### Sorting Notes
-1. Click the sort icon in the toolbar
-2. Choose sorting method:
-   - **By Title**: Alphabetical order
-   - **By Date**: Most recently modified first
-   - **By Favorite**: Favorites first, then by date
-
 ## ⌨️ Keyboard Shortcuts
 
 | Action          | Shortcut                  |
@@ -83,6 +66,9 @@
 | Rename note     | `F2`                      |
 | Toggle favorite | `F`                       |
 | Delete note     | `Delete`                  |
+| Duplicate note  | `Ctrl+D`                  |
+| Export note     | `Ctrl+E`                  |
+| Open location   | `Ctrl+Shift+E`            |
 
 ## ⚙️ Configuration
 
@@ -91,11 +77,15 @@ Access settings via `Settings/Preferences` → `Tools` → `Notes Plugin`
 ### Available Settings
 - **Default File Extension**: Set the default extension for new notes (e.g., `.md`, `.txt`)
 - **Default Sort Type**: Choose the default sorting method for notes
+- **Notes Directory**: Specify the directory where notes are stored
+- **Export Options**: Configure settings for exporting notes
+- **Folder Access**: Set permissions for accessing note folders
+- **Import Options**: Configure settings for importing notes
 
 ## 🛠️ Development
 
 ### Requirements
-- Java 21+
+- Java 17+
 - IntelliJ IDEA 2025.2.5+
 - Gradle 9.3.1+
 
