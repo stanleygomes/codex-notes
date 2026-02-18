@@ -5,6 +5,7 @@ import com.nazarethlabs.codex.dto.Note
 import com.nazarethlabs.codex.helper.DialogHelper
 import com.nazarethlabs.codex.helper.FileHelper
 import com.nazarethlabs.codex.helper.MessageHelper
+import com.nazarethlabs.codex.helper.SentryHelper
 import com.nazarethlabs.codex.repository.NoteStorageRepository
 
 class RenameNoteService {
@@ -85,7 +86,8 @@ class RenameNoteService {
                     MessageHelper.getMessage("dialog.rename.error.failed"),
                 )
             }
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            SentryHelper.captureException(e)
             DialogHelper.showErrorDialog(
                 project,
                 MessageHelper.getMessage("dialog.rename.error.failed"),
