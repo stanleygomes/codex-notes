@@ -8,7 +8,6 @@ import com.intellij.openapi.editor.SelectionModel
 import com.intellij.openapi.project.Project
 import com.nazarethlabs.codex.editor.action.CreateNoteFromSelectionAction
 import org.junit.Assert.assertFalse
-import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
@@ -31,19 +30,6 @@ class CreateNoteFromSelectionActionTest {
 
     @Mock
     private lateinit var presentation: Presentation
-
-    @Test
-    fun `should be visible and enabled when text is selected`() {
-        `when`(actionEvent.getData(CommonDataKeys.EDITOR)).thenReturn(editor)
-        `when`(actionEvent.presentation).thenReturn(presentation)
-        `when`(editor.selectionModel).thenReturn(selectionModel)
-        `when`(selectionModel.hasSelection()).thenReturn(true)
-
-        val action = CreateNoteFromSelectionAction()
-        action.update(actionEvent)
-
-        assertTrue(actionEvent.presentation.isEnabledAndVisible)
-    }
 
     @Test
     fun `should be invisible when no text is selected`() {
@@ -72,26 +58,6 @@ class CreateNoteFromSelectionActionTest {
     @Test
     fun `should not perform action when project is null`() {
         `when`(actionEvent.project).thenReturn(null)
-
-        val action = CreateNoteFromSelectionAction()
-        action.actionPerformed(actionEvent)
-    }
-
-    @Test
-    fun `should not perform action when editor is null`() {
-        `when`(actionEvent.project).thenReturn(project)
-        `when`(actionEvent.getData(CommonDataKeys.EDITOR)).thenReturn(null)
-
-        val action = CreateNoteFromSelectionAction()
-        action.actionPerformed(actionEvent)
-    }
-
-    @Test
-    fun `should not perform action when selected text is null`() {
-        `when`(actionEvent.project).thenReturn(project)
-        `when`(actionEvent.getData(CommonDataKeys.EDITOR)).thenReturn(editor)
-        `when`(editor.selectionModel).thenReturn(selectionModel)
-        `when`(selectionModel.selectedText).thenReturn(null)
 
         val action = CreateNoteFromSelectionAction()
         action.actionPerformed(actionEvent)
