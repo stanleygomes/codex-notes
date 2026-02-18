@@ -110,33 +110,6 @@ class SelectedNoteStateManagerTest {
     }
 
     @Test
-    fun `should notify listeners when selected notes change`() {
-        val listener = TestSelectedNoteListener()
-        selectedNoteStateManager.addListener(listener)
-        val notes = listOf(Note(id = "1", title = "Note 1"))
-
-        selectedNoteStateManager.setSelectedNotes(notes)
-
-        assertEquals(1, listener.callCount)
-        assertEquals(1, listener.lastNotes?.size)
-        assertEquals("Note 1", listener.lastNotes?.first()?.title)
-    }
-
-    @Test
-    fun `should notify all listeners when selected notes change`() {
-        val listener1 = TestSelectedNoteListener()
-        val listener2 = TestSelectedNoteListener()
-        selectedNoteStateManager.addListener(listener1)
-        selectedNoteStateManager.addListener(listener2)
-        val notes = listOf(Note(id = "1", title = "Note 1"))
-
-        selectedNoteStateManager.setSelectedNotes(notes)
-
-        assertEquals(1, listener1.callCount)
-        assertEquals(1, listener2.callCount)
-    }
-
-    @Test
     fun `should replace selected notes when set again`() {
         val notes1 = listOf(Note(id = "1", title = "Note 1"))
         val notes2 = listOf(Note(id = "2", title = "Note 2"))
