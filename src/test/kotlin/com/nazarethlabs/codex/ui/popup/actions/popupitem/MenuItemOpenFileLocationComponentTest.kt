@@ -14,7 +14,7 @@ class MenuItemOpenFileLocationComponentTest {
         val note = Note(id = "1", title = "Test Note", filePath = "/path/to/notes/test.md")
         val component = MenuItemOpenFileLocationComponent()
 
-        val menuItem = component.build(note)
+        val menuItem = component.build(listOf(note))
 
         assertNotNull(menuItem)
         assertNotNull(menuItem.text)
@@ -25,7 +25,7 @@ class MenuItemOpenFileLocationComponentTest {
         val note = Note(id = "1", title = "Test Note", filePath = "/path/to/notes/test.md")
         val component = MenuItemOpenFileLocationComponent()
 
-        val menuItem = component.build(note)
+        val menuItem = component.build(listOf(note))
 
         assertNotNull(menuItem.border)
     }
@@ -35,7 +35,7 @@ class MenuItemOpenFileLocationComponentTest {
         val note = Note(id = "1", title = "Test Note", filePath = "/path/to/notes/test.md")
         val component = MenuItemOpenFileLocationComponent()
 
-        val menuItem = component.build(note)
+        val menuItem = component.build(listOf(note))
 
         assertEquals(1, menuItem.actionListeners.size)
     }

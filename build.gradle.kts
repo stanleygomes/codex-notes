@@ -130,6 +130,14 @@ kover {
                 onCheck = true
             }
         }
+        filters {
+            excludes {
+                classes(
+                    "com.nazarethlabs.codex.MyBundle",
+                    "com.nazarethlabs.codex.Constants",
+                )
+            }
+        }
     }
 }
 
