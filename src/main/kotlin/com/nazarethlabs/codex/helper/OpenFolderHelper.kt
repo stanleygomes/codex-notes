@@ -26,7 +26,8 @@ object OpenFolderHelper {
                 }
                 else -> false
             }
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            SentryHelper.captureException(e)
             false
         }
     }

@@ -10,6 +10,7 @@ import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.util.Processor
 import com.nazarethlabs.codex.dto.Note
 import com.nazarethlabs.codex.helper.FileHelper
+import com.nazarethlabs.codex.helper.SentryHelper
 import com.nazarethlabs.codex.repository.NoteStorageRepository
 import javax.swing.ListCellRenderer
 
@@ -67,6 +68,7 @@ class NotesSearchEverywhereContributor(
             val content = FileHelper.readText(note.filePath).lowercase()
             content.contains(pattern)
         } catch (e: Exception) {
+            SentryHelper.captureException(e)
             false
         }
     }

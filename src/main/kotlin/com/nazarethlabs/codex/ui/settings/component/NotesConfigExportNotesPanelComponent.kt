@@ -4,6 +4,7 @@ import com.intellij.icons.AllIcons
 import com.intellij.openapi.ui.Messages
 import com.intellij.util.ui.JBUI
 import com.nazarethlabs.codex.helper.MessageHelper
+import com.nazarethlabs.codex.helper.SentryHelper
 import com.nazarethlabs.codex.repository.NoteStorageRepository
 import com.nazarethlabs.codex.service.note.ExportNotesService
 import java.io.File
@@ -66,6 +67,7 @@ class NotesConfigExportNotesPanelComponent {
                         MessageHelper.getMessage("settings.display.name"),
                     )
                 } catch (e: Exception) {
+                    SentryHelper.captureException(e)
                     Messages.showErrorDialog(
                         "${MessageHelper.getMessage("settings.export.notes.error")}: ${e.message}",
                         MessageHelper.getMessage("settings.display.name"),

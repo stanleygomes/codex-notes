@@ -8,6 +8,7 @@ import com.intellij.openapi.wm.ToolWindowManager
 import com.nazarethlabs.codex.Constants
 import com.nazarethlabs.codex.MyBundle
 import com.nazarethlabs.codex.helper.NotificationHelper
+import com.nazarethlabs.codex.helper.SentryHelper
 
 abstract class BaseCreateNoteAction : AnAction() {
     protected abstract fun createNote(e: AnActionEvent): VirtualFile?
@@ -41,6 +42,7 @@ abstract class BaseCreateNoteAction : AnAction() {
                     )
                 }
             } catch (ex: Exception) {
+                SentryHelper.captureException(ex)
                 NotificationHelper.showError(
                     project,
                     MyBundle.message(getErrorTitleKey()),

@@ -3,6 +3,7 @@
 junit = "4.13.2"
 mockito = "5.21.0"
 opentest4j = "1.3.0"
+sentry = "8.33.0"
 
 # plugins
 changelog = "2.5.0"
@@ -16,6 +17,7 @@ ktlint = "14.0.1"
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 mockito = { group = "org.mockito", name = "mockito-core", version.ref = "mockito" }
 opentest4j = { group = "org.opentest4j", name = "opentest4j", version.ref = "opentest4j" }
+sentry = { group = "io.sentry", name = "sentry", version.ref = "sentry" }
 
 [plugins]
 changelog = { id = "org.jetbrains.changelog", version.ref = "changelog" }

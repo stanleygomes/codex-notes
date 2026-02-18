@@ -4,6 +4,7 @@ import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.Service
 import com.nazarethlabs.codex.dto.Note
 import com.nazarethlabs.codex.helper.FileHelper
+import com.nazarethlabs.codex.helper.SentryHelper
 import java.util.concurrent.ConcurrentHashMap
 
 @Service(Service.Level.APP)
@@ -48,7 +49,8 @@ class NoteContentIndexService {
             val content = FileHelper.readText(filePath)
             contentCache[noteId] = CachedContent(content, lastModified)
             content
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            SentryHelper.captureException(e)
             contentCache.remove(noteId)
             null
         }
