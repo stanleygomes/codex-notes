@@ -82,7 +82,7 @@ jobs:
           COMMITS=$(git log --oneline $LAST_TAG..HEAD 2>/dev/null || echo "")
 
           INCREMENT="patch"
-          if echo "$COMMITS" | grep -q "BREAKING CHANGE\|!:"; then
+          if echo "$COMMITS" | grep -qE "BREAKING CHANGE|!:|[a-z]+!:"; then
             INCREMENT="major"
           elif echo "$COMMITS" | grep -q "^feat"; then
             INCREMENT="minor"
