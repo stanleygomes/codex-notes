@@ -8,6 +8,7 @@ help:
 	@echo "  make codecov       - Upload coverage report to Codecov"
 	@echo "  make inspections   - Run Qodana code inspections"
 	@echo "  make run           - Launch IntelliJ with the plugin for testing"
+	@echo "  make update-version - Update version based on conventional commits"
 
 build:
 	./gradlew build
@@ -59,3 +60,7 @@ check:
 
 format:
 	./gradlew ktlintFormat --console=plain
+
+update-version:
+	./scripts/update-version.sh
+
