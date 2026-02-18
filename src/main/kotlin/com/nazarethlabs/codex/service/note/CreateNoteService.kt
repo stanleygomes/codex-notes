@@ -22,9 +22,7 @@ class CreateNoteService {
         title: String,
         extension: String,
         content: String,
-    ): VirtualFile? {
-        return createNoteFileAndOpen(project, title, extension, content)
-    }
+    ): VirtualFile? = createNoteFileAndOpen(project, title, extension, content)
 
     private fun createNoteFileAndOpen(
         project: Project,
@@ -43,7 +41,7 @@ class CreateNoteService {
         return virtualFile
     }
 
-    private fun generateTitle(): String {
+    fun generateTitle(): String {
         val notes = NoteStorageRepository.getInstance().getAllNotes()
         return NoteNameHelper.generateUntitledName(notes)
     }

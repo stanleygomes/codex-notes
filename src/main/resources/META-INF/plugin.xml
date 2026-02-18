@@ -24,7 +24,7 @@
 
     <actions>
         <action id="codex.CreateNote"
-                class="com.nazarethlabs.codex.editor.action.CreateNoteAction"
+                class="com.nazarethlabs.codex.editor.action.CreateNoteActionFromSearchEverywhere"
                 text="New Codex Note"
                 description="Create a new note in Codex Notes"
                 icon="/icons/tab-icon.svg">
@@ -35,8 +35,7 @@
         <action id="codex.CreateNoteFromSelection"
                 class="com.nazarethlabs.codex.editor.action.CreateNoteFromSelectionAction"
                 text="Create Codex Note from Selection"
-                description="Create a new note in Codex Notes with selected text"
-                icon="/icons/tab-icon.svg">
+                description="Create a new note in Codex Notes with selected text">
             <add-to-group group-id="EditorPopupMenu" anchor="last"/>
         </action>
     </actions>
