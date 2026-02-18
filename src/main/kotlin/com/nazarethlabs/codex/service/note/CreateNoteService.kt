@@ -18,24 +18,26 @@ class CreateNoteService {
     }
 
     fun createWithContent(
-        project: Project,
+        project: Project?,
         title: String,
         extension: String,
         content: String,
-    ): VirtualFile? = createNoteFileAndOpen(project, title, extension, content)
+        openNote: Boolean = true,
+    ): VirtualFile? = createNoteFileAndOpen(project, title, extension, content, openNote)
 
     private fun createNoteFileAndOpen(
-        project: Project,
+        project: Project?,
         title: String,
         extension: String,
         content: String,
+        openNote: Boolean = true,
     ): VirtualFile? {
         val fileName = createFileName(title, extension)
         val file = createNoteFile(fileName, content)
         val virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(file)
 
         if (virtualFile != null) {
-            addNoteAndOpen(project, title, virtualFile)
+            addNote(title, virtualFile, project, openNote)
         }
 
         return virtualFile
@@ -61,12 +63,17 @@ class CreateNoteService {
         return FileHelper.createFileWithContent(notesDirectory, fileName, content)
     }
 
-    private fun addNoteAndOpen(
-        project: Project,
+    private fun addNote(
         title: String,
         virtualFile: VirtualFile,
+        project: Project?,
+        openNote: Boolean,
     ) {
         NoteStorageRepository.getInstance().addNote(title, virtualFile.path)
-        FileEditorManager.getInstance(project).openFile(virtualFile, true)
+        if (openNote) {
+            project?.let { proj ->
+                FileEditorManager.getInstance(proj).openFile(virtualFile, true)
+            }
+        }
     }
 }

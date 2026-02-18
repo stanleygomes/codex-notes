@@ -5,6 +5,7 @@ import com.intellij.ui.components.JBTextField
 import com.intellij.util.ui.FormBuilder
 import com.nazarethlabs.codex.helper.MessageHelper
 import com.nazarethlabs.codex.ui.settings.component.NotesConfigExportNotesPanelComponent
+import com.nazarethlabs.codex.ui.settings.component.NotesConfigImportNotesPanelComponent
 import com.nazarethlabs.codex.ui.settings.component.NotesConfigOpenFolderPanelComponent
 import javax.swing.JPanel
 
@@ -12,6 +13,7 @@ class NotesConfigFormComponent {
     private var fileExtensionField: JBTextField? = null
     private var notesDirectoryField: JBTextField? = null
     private val openFolderPanelComponent = NotesConfigOpenFolderPanelComponent()
+    private val importNotesPanelComponent = NotesConfigImportNotesPanelComponent()
     private val exportNotesPanelComponent = NotesConfigExportNotesPanelComponent()
 
     fun build(): JPanel {
@@ -38,6 +40,8 @@ class NotesConfigFormComponent {
             ).addComponentToRightColumn(notesDirectoryDescriptionLabel, 1)
             .addComponent(JPanel().apply { preferredSize = java.awt.Dimension(0, 10) })
             .addLabeledComponent("", openFolderPanelComponent.createOpenFolderPanel(), 1, false)
+            .addComponent(JPanel().apply { preferredSize = java.awt.Dimension(0, 10) })
+            .addLabeledComponent("", importNotesPanelComponent.createImportNotesPanel(), 1, false)
             .addComponent(JPanel().apply { preferredSize = java.awt.Dimension(0, 10) })
             .addLabeledComponent("", exportNotesPanelComponent.createExportNotesPanel(), 1, false)
             .addComponentFillVertically(JPanel(), 0)
