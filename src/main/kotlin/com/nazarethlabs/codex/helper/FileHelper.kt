@@ -7,10 +7,16 @@ object FileHelper {
     fun createFile(
         dir: String,
         fileName: String,
+    ): File = createFileWithContent(dir, fileName, "")
+
+    fun createFileWithContent(
+        dir: String,
+        fileName: String,
+        content: String,
     ): File {
         val file = File(dir, fileName)
         file.parentFile?.mkdirs()
-        file.writeText("")
+        file.writeText(content)
         return file
     }
 
