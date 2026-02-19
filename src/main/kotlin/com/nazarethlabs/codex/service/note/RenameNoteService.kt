@@ -8,7 +8,9 @@ import com.nazarethlabs.codex.helper.MessageHelper
 import com.nazarethlabs.codex.helper.SentryHelper
 import com.nazarethlabs.codex.repository.NoteStorageRepository
 
-class RenameNoteService {
+class RenameNoteService(
+    private val openNotesService: OpenNotesService = OpenNotesService(),
+) {
     fun rename(
         project: Project,
         note: Note,
@@ -81,6 +83,7 @@ class RenameNoteService {
                 NoteStorageRepository
                     .getInstance()
                     .updateNote(note.id, newTitle)
+                openNotesService.openAll(project, listOf(note))
             } else {
                 throw RuntimeException(
                     MessageHelper.getMessage("dialog.rename.error.failed"),
