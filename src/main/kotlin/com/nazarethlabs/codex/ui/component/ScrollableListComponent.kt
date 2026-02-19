@@ -9,6 +9,7 @@ class ScrollableListComponent<T>(
     fun build(): JScrollPane {
         val scrollPane = JScrollPane(list)
         scrollPane.border = null
+        scrollPane.horizontalScrollBarPolicy = JScrollPane.HORIZONTAL_SCROLLBAR_NEVER
         return scrollPane
     }
 }

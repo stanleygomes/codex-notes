@@ -1,7 +1,7 @@
 package com.nazarethlabs.codex.helper
 
 object ContentPreviewHelper {
-    private const val MAX_PREVIEW_LENGTH = 80
+    private const val MAX_PREVIEW_LENGTH = 50
 
     fun generatePreview(
         content: String?,

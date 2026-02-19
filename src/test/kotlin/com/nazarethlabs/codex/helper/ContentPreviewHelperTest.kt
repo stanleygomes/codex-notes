@@ -29,8 +29,8 @@ class ContentPreviewHelperTest {
     @Test
     fun `should truncate with ellipsis when content exceeds max length`() {
         val content = "A".repeat(100)
-        val result = ContentPreviewHelper.generatePreview(content, 80)
-        assertEquals("A".repeat(80) + "...", result)
+        val result = ContentPreviewHelper.generatePreview(content)
+        assertEquals("A".repeat(50) + "...", result)
     }
 
     @Test
@@ -42,9 +42,9 @@ class ContentPreviewHelperTest {
 
     @Test
     fun `should return content at exact max length without ellipsis`() {
-        val content = "A".repeat(80)
-        val result = ContentPreviewHelper.generatePreview(content, 80)
-        assertEquals("A".repeat(80), result)
+        val content = "A".repeat(50)
+        val result = ContentPreviewHelper.generatePreview(content)
+        assertEquals("A".repeat(50), result)
     }
 
     @Test

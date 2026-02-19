@@ -1,5 +1,6 @@
 package com.nazarethlabs.codex.ui.component
 
+import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
@@ -40,5 +41,15 @@ class ScrollableListComponentTest {
         val scrollPane = component.build()
 
         assertNotNull(scrollPane.viewport.view)
+    }
+
+    @Test
+    fun `should disable horizontal scroll bar`() {
+        val list = JList<String>()
+        val component = ScrollableListComponent(list)
+
+        val scrollPane = component.build()
+
+        assertEquals(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER, scrollPane.horizontalScrollBarPolicy)
     }
 }
