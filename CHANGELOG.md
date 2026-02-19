@@ -4,9 +4,21 @@
 
 ## [Unreleased]
 
-### Added
+## [2.0.0] - 2026-02-19
 
-- Create note from selected text: New context menu action in the editor that allows creating notes directly from selected text
+- feat: import notes
+- feat: export notes
+- feat: multi notes support (delete, favorite, change color)
+- feat: open notes folder and change folder to save notes
+- feat: search notes combining filters by date, favorite and color
+- feat: duplicate note
+- feat: search inside notes content e and new search algoritm
+- feat: search notes in editor search everywhere
+- feat: favorites filter toggle button
+- feat: create note from selection in editor
+- feat: integrate Sentry SDK for error tracking on deployment
+- chore: refact all the codebase and add unity tests
+- fix: bug fixes
 
 ## [1.1.4] - 2026-02-16
 
@@ -32,7 +44,8 @@
 
 - Initial scaffold created from [IntelliJ Platform Plugin Template](https://github.com/JetBrains/intellij-platform-plugin-template)
 
-[Unreleased]: https://github.com/stanleygomes/codex-notes/compare/1.1.4...HEAD
+[Unreleased]: https://github.com/stanleygomes/codex-notes/compare/2.0.0...HEAD
+[2.0.0]: https://github.com/stanleygomes/codex-notes/compare/1.1.4...2.0.0
 [1.1.4]: https://github.com/stanleygomes/codex-notes/compare/1.1.3...1.1.4
 [1.1.3]: https://github.com/stanleygomes/codex-notes/compare/1.1.0...1.1.3
 [1.1.0]: https://github.com/stanleygomes/codex-notes/commits/1.1.0
