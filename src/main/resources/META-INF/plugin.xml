@@ -21,6 +21,7 @@
                              displayName="Notes Plugin"/>
         <notificationGroup id="Codex Notes" displayType="BALLOON"/>
         <searchEverywhereContributor implementation="com.nazarethlabs.codex.editor.search.NotesSearchEverywhereContributorFactory"/>
+        <nonProjectFileWritingAccessExtension implementation="com.nazarethlabs.codex.editor.extension.NoteFileWritingAccessExtension"/>
     </extensions>
 
     <actions>
