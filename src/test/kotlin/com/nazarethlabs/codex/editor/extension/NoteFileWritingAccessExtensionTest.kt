@@ -62,4 +62,17 @@ class NoteFileWritingAccessExtensionTest {
             assertTrue(result)
         }
     }
+
+    @Test
+    fun `should return false when file is in directory with similar name prefix`() {
+        mockConstruction(NotesSettingsService::class.java) { mock, _ ->
+            `when`(mock.getNotesDirectory()).thenReturn("/home/user/.codex-notes")
+        }.use {
+            `when`(virtualFile.path).thenReturn("/home/user/.codex-notes-backup/note.md")
+
+            val result = extension.isWritable(virtualFile)
+
+            assertFalse(result)
+        }
+    }
 }

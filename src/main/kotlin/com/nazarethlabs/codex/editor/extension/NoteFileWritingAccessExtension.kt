@@ -8,7 +8,7 @@ class NoteFileWritingAccessExtension : NonProjectFileWritingAccessExtension {
     override fun isWritable(file: VirtualFile): Boolean = isNoteFile(file)
 
     private fun isNoteFile(file: VirtualFile): Boolean {
-        val notesDirectory = NotesSettingsService().getNotesDirectory()
+        val notesDirectory = NotesSettingsService().getNotesDirectory().trimEnd('/') + '/'
         return file.path.startsWith(notesDirectory)
     }
 }
