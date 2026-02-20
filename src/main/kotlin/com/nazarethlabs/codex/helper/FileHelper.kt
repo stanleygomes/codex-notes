@@ -85,4 +85,13 @@ object FileHelper {
         val file = File(filePath)
         return file.readText()
     }
+
+    fun sanitizeFileName(title: String): String {
+        val sanitized =
+            title
+                .replace(Regex("[/\\\\:*?\"<>|]|[^\\x20-\\x7E]"), "")
+                .trim()
+                .replace(Regex("\\s+"), " ")
+        return sanitized.ifEmpty { "untitled" }
+    }
 }

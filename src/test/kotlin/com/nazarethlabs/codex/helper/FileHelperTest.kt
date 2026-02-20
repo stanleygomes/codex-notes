@@ -124,4 +124,70 @@ class FileHelperTest {
         val result = FileHelper.getDefaultNotesDir()
         assertEquals(expected, result)
     }
+
+    @Test
+    fun `should return unchanged title when filename is already valid`() {
+        val result = FileHelper.sanitizeFileName("My Note")
+        assertEquals("My Note", result)
+    }
+
+    @Test
+    fun `should remove emoji from filename`() {
+        val result = FileHelper.sanitizeFileName("My Note 🎉")
+        assertEquals("My Note", result)
+    }
+
+    @Test
+    fun `should remove slashes from filename`() {
+        val result = FileHelper.sanitizeFileName("path/to/note")
+        assertEquals("pathtonote", result)
+    }
+
+    @Test
+    fun `should preserve spaces when removing slashes from filename`() {
+        val result = FileHelper.sanitizeFileName("path / to / note")
+        assertEquals("path to note", result)
+    }
+
+    @Test
+    fun `should remove backslashes from filename`() {
+        val result = FileHelper.sanitizeFileName("path\\note")
+        assertEquals("pathnote", result)
+    }
+
+    @Test
+    fun `should remove colon from filename`() {
+        val result = FileHelper.sanitizeFileName("note: title")
+        assertEquals("note title", result)
+    }
+
+    @Test
+    fun `should remove invalid special characters from filename`() {
+        val result = FileHelper.sanitizeFileName("note*?\"<>|")
+        assertEquals("note", result)
+    }
+
+    @Test
+    fun `should normalize multiple spaces to single space`() {
+        val result = FileHelper.sanitizeFileName("my   note")
+        assertEquals("my note", result)
+    }
+
+    @Test
+    fun `should trim leading and trailing spaces`() {
+        val result = FileHelper.sanitizeFileName("  my note  ")
+        assertEquals("my note", result)
+    }
+
+    @Test
+    fun `should return untitled when title results in empty string after sanitization`() {
+        val result = FileHelper.sanitizeFileName("🎉🚀")
+        assertEquals("untitled", result)
+    }
+
+    @Test
+    fun `should return untitled when title is empty`() {
+        val result = FileHelper.sanitizeFileName("")
+        assertEquals("untitled", result)
+    }
 }

@@ -53,7 +53,7 @@ class CreateNoteService {
     private fun createFileName(
         title: String,
         extension: String,
-    ): String = "$title$extension"
+    ): String = "${FileHelper.sanitizeFileName(title)}$extension"
 
     private fun createNoteFile(
         fileName: String,
