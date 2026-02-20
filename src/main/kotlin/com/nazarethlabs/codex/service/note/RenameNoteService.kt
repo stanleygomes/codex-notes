@@ -8,7 +8,10 @@ import com.nazarethlabs.codex.helper.MessageHelper
 import com.nazarethlabs.codex.helper.SentryHelper
 import com.nazarethlabs.codex.repository.NoteStorageRepository
 
-class RenameNoteService {
+class RenameNoteService(
+    private val openNotesService: OpenNotesService = OpenNotesService(),
+    private val fileEditorLifecycleService: FileEditorLifecycleService = FileEditorLifecycleService(),
+) {
     fun rename(
         project: Project,
         note: Note,
@@ -75,17 +78,27 @@ class RenameNoteService {
     ) {
         val newFileName = createNewFileName(newTitle, fileExtension)
         try {
-            if (FileHelper.renameFile(note.filePath, newFileName)) {
-                note.title = newTitle
-                note.filePath = FileHelper.getNewFilePath(note.filePath, newFileName)
-                NoteStorageRepository
-                    .getInstance()
-                    .updateNote(note.id, newTitle)
-            } else {
+            val virtualFile =
+                fileEditorLifecycleService.closeAndRenameFile(
+                    project,
+                    note.filePath,
+                    newFileName,
+                )
+
+            if (virtualFile == null) {
                 throw RuntimeException(
                     MessageHelper.getMessage("dialog.rename.error.failed"),
                 )
             }
+
+            note.title = newTitle
+            note.filePath = FileHelper.getNewFilePath(note.filePath, newFileName)
+
+            NoteStorageRepository
+                .getInstance()
+                .updateNote(note.id, newTitle)
+
+            openNotesService.openAll(project, listOf(note))
         } catch (e: Exception) {
             SentryHelper.captureException(e)
             DialogHelper.showErrorDialog(
