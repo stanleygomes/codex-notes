@@ -4,6 +4,7 @@ import com.nazarethlabs.codex.dto.Note
 import com.nazarethlabs.codex.enum.NoteColorEnum
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -66,7 +67,8 @@ class NoteListItemComponentTest {
         val panel = component.build(theList = theList, note = note, isSelected = false, contentPreview = "")
 
         val previewLabel = findLabelByText(panel, "")
-        assertTrue(previewLabel == null)
+        assertNotNull(previewLabel)
+        assertEquals("", previewLabel?.text)
     }
 
     @Test

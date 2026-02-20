@@ -2,6 +2,9 @@ package com.nazarethlabs.codex.helper
 
 import com.nazarethlabs.codex.dto.Note
 import java.awt.Color
+import java.awt.Component
+import java.awt.Graphics
+import javax.swing.Icon
 import javax.swing.JList
 
 class ColorHelper {
@@ -44,4 +47,21 @@ class ColorHelper {
         val brightness = (color.red * 0.299 + color.green * 0.587 + color.blue * 0.114)
         return brightness > 186
     }
+
+    fun createColorIcon(color: Color): Icon =
+        object : Icon {
+            override fun paintIcon(
+                c: Component?,
+                g: Graphics?,
+                x: Int,
+                y: Int,
+            ) {
+                g?.color = color
+                g?.fillRect(x, y, iconWidth, iconHeight)
+            }
+
+            override fun getIconWidth(): Int = 16
+
+            override fun getIconHeight(): Int = 16
+        }
 }

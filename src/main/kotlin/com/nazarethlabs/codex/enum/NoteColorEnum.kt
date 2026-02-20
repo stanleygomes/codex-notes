@@ -12,4 +12,6 @@ enum class NoteColorEnum(
     YELLOW("note.color.yellow", Color(255, 255, 153)),
     ORANGE("note.color.orange", Color(255, 218, 185)),
     PINK("note.color.pink", Color(255, 182, 193)),
+    RED("note.color.red", Color(255, 102, 102)),
+    PURPLE("note.color.purple", Color(204, 153, 255)),
 }
