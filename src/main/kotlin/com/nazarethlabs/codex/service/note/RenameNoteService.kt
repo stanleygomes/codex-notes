@@ -63,7 +63,10 @@ class RenameNoteService(
     private fun createNewFileName(
         newTitle: String,
         fileExtension: String,
-    ): String = if (fileExtension.isNotEmpty()) "$newTitle.$fileExtension" else newTitle
+    ): String {
+        val sanitized = FileHelper.sanitizeFileName(newTitle)
+        return if (fileExtension.isNotEmpty()) "$sanitized.$fileExtension" else sanitized
+    }
 
     private fun fileExists(
         parentPath: String,
