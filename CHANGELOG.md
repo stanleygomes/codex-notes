@@ -4,6 +4,11 @@
 
 ## [Unreleased]
 
+## [2.0.1] - 2026-02-20
+
+- fix: limiting size of note preview
+- fix: re-open note after rename to prevent it from closing
+
 ## [2.0.0] - 2026-02-19
 
 - feat: import notes
@@ -44,7 +49,8 @@
 
 - Initial scaffold created from [IntelliJ Platform Plugin Template](https://github.com/JetBrains/intellij-platform-plugin-template)
 
-[Unreleased]: https://github.com/stanleygomes/codex-notes/compare/2.0.0...HEAD
+[Unreleased]: https://github.com/stanleygomes/codex-notes/compare/2.0.1...HEAD
+[2.0.1]: https://github.com/stanleygomes/codex-notes/compare/2.0.0...2.0.1
 [2.0.0]: https://github.com/stanleygomes/codex-notes/compare/1.1.4...2.0.0
 [1.1.4]: https://github.com/stanleygomes/codex-notes/compare/1.1.3...1.1.4
 [1.1.3]: https://github.com/stanleygomes/codex-notes/compare/1.1.0...1.1.3
