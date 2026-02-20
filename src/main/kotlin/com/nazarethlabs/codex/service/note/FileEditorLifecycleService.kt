@@ -43,4 +43,3 @@ class FileEditorLifecycleService {
         virtualFile.refresh(false, false)
     }
 }
-

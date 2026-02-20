@@ -94,7 +94,6 @@ class RenameNoteService(
             note.title = newTitle
             note.filePath = FileHelper.getNewFilePath(note.filePath, newFileName)
 
-
             NoteStorageRepository
                 .getInstance()
                 .updateNote(note.id, newTitle)
