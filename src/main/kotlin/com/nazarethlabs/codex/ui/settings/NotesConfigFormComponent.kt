@@ -18,8 +18,10 @@ class NotesConfigFormComponent {
 
     fun build(): JPanel {
         fileExtensionField = JBTextField()
-        notesDirectoryField = JBTextField()
-        notesDirectoryField!!.isEnabled = false
+        notesDirectoryField =
+            JBTextField().apply {
+                isEnabled = false
+            }
 
         val descriptionLabel = JBLabel(MessageHelper.getMessage("settings.file.extension.description"))
         val notesDirectoryDescriptionLabel = JBLabel(MessageHelper.getMessage("settings.notes.directory.description"))
