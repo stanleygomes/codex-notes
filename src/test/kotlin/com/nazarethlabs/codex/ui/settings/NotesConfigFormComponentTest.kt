@@ -1,7 +1,6 @@
 package com.nazarethlabs.codex.ui.settings
 
 import org.junit.Assert.assertFalse
-import org.junit.Assert.assertNotNull
 import org.junit.Test
 
 class NotesConfigFormComponentTest {
@@ -11,8 +10,7 @@ class NotesConfigFormComponentTest {
 
         component.build()
 
-        val notesDirectoryField = component.getNotesDirectoryField()
-        assertNotNull(notesDirectoryField)
-        assertFalse(notesDirectoryField!!.isEnabled)
+        val notesDirectoryField = requireNotNull(component.getNotesDirectoryField())
+        assertFalse(notesDirectoryField.isEnabled)
     }
 }
