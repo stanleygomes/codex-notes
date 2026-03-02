@@ -99,7 +99,7 @@ class RenameNoteService(
 
             NoteStorageRepository
                 .getInstance()
-                .updateNote(note.id, newTitle)
+                .updateNote(note.id, title = newTitle, filePath = note.filePath)
 
             openNotesService.openAll(project, listOf(note))
         } catch (e: Exception) {
