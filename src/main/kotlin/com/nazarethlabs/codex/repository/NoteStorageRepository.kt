@@ -1,29 +1,29 @@
 package com.nazarethlabs.codex.repository
 
 import com.intellij.openapi.application.ApplicationManager
-import com.intellij.openapi.components.PersistentStateComponent
 import com.intellij.openapi.components.Service
-import com.intellij.openapi.components.State
-import com.intellij.openapi.components.Storage
 import com.intellij.openapi.project.ProjectManager
 import com.nazarethlabs.codex.dto.Note
+import com.nazarethlabs.codex.enum.NoteColorEnum
+import com.nazarethlabs.codex.helper.FileHelper
 import com.nazarethlabs.codex.listener.NoteEventListener
-import com.nazarethlabs.codex.state.NoteState
+import com.nazarethlabs.codex.service.settings.NotesSettingsService
+import java.io.File
 import java.util.UUID
 
 @Service(Service.Level.APP)
-@State(
-    name = "NoteStorage",
-    storages = [Storage("notes.xml")],
-)
-class NoteStorageRepository : PersistentStateComponent<NoteState> {
-    private var state = NoteState()
-
-    override fun getState(): NoteState = state
-
-    override fun loadState(state: NoteState) {
-        this.state = state
+class NoteStorageRepository {
+    private val databaseManager: NoteDatabaseManager by lazy {
+        val notesDir = resolveNotesDirectory()
+        NoteDatabaseManager(File(notesDir, "data").absolutePath)
     }
+
+    private fun resolveNotesDirectory(): String =
+        try {
+            NotesSettingsService().getNotesDirectory()
+        } catch (_: Exception) {
+            FileHelper.getDefaultNotesDir()
+        }
 
     fun addNote(
         title: String,
@@ -38,7 +38,7 @@ class NoteStorageRepository : PersistentStateComponent<NoteState> {
                 updatedAt = System.currentTimeMillis(),
             )
 
-        state.notes.add(note)
+        databaseManager.insertNote(note)
 
         notifyAllProjects { it.notifyNoteCreated() }
 
@@ -48,31 +48,41 @@ class NoteStorageRepository : PersistentStateComponent<NoteState> {
     fun updateNote(
         id: String,
         title: String? = null,
+        filePath: String? = null,
     ) {
-        state.notes.find { it.id == id }?.apply {
-            title?.let { this.title = it }
-            updatedAt = System.currentTimeMillis()
-        }
+        databaseManager.updateNote(id, title, filePath)
 
         notifyAllProjects { it.notifyNoteUpdated() }
     }
 
     fun toggleFavorite(id: String) {
-        state.notes.find { it.id == id }?.apply {
-            isFavorite = !isFavorite
-            updatedAt = System.currentTimeMillis()
-        }
+        databaseManager.toggleFavorite(id)
+
+        notifyAllProjects { it.notifyNoteUpdated() }
+    }
+
+    fun changeColor(
+        id: String,
+        color: NoteColorEnum,
+    ) {
+        databaseManager.changeColor(id, color)
 
         notifyAllProjects { it.notifyNoteUpdated() }
     }
 
     fun removeNote(id: String) {
-        state.notes.removeIf { it.id == id }
+        databaseManager.deleteNote(id)
 
         notifyAllProjects { it.notifyNoteDeleted() }
     }
 
-    fun getAllNotes(): List<Note> = state.notes.toList()
+    fun getAllNotes(): List<Note> = databaseManager.getAllNotes()
+
+    fun importNote(note: Note) {
+        if (!databaseManager.noteExists(note.id)) {
+            databaseManager.insertNote(note)
+        }
+    }
 
     private fun notifyAllProjects(action: (NoteEventListener) -> Unit) {
         ProjectManager.getInstance().openProjects.forEach { project ->
