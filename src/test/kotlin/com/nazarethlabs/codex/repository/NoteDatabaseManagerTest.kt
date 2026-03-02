@@ -182,6 +182,7 @@ class NoteDatabaseManagerTest {
         val notes = databaseManager.getAllNotes()
         assertEquals(1, notes.size)
         assertTrue(notes[0].isFavorite)
+        assertTrue(notes[0].updatedAt > 2000L)
     }
 
     @Test
@@ -202,6 +203,7 @@ class NoteDatabaseManagerTest {
         val notes = databaseManager.getAllNotes()
         assertEquals(1, notes.size)
         assertFalse(notes[0].isFavorite)
+        assertTrue(notes[0].updatedAt > 2000L)
     }
 
     @Test
