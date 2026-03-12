@@ -1,26 +1,91 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
+import { NoteRepository } from './repository/NoteRepository';
+import { CreateNoteService } from './service/CreateNoteService';
+import { DeleteNoteService } from './service/DeleteNoteService';
+import { RenameNoteService } from './service/RenameNoteService';
+import { SearchNoteService } from './service/SearchNoteService';
+import { DuplicateNoteService } from './service/DuplicateNoteService';
+import { ExportNotesService } from './service/ExportNotesService';
+import { ImportNotesService } from './service/ImportNotesService';
+import { FavoriteNoteService } from './service/FavoriteNoteService';
+import { ChangeNoteColorService } from './service/ChangeNoteColorService';
+import { SortNotesService } from './service/SortNotesService';
+import { FilterNotesService } from './service/FilterNotesService';
+import { OpenNoteLocationService } from './service/OpenNoteLocationService';
+import { NotesViewProvider } from './ui/NotesViewProvider';
+import { Note } from './dto/Note';
+import {
+  openNote,
+  createHandleCreate,
+  createHandleDelete,
+  createHandleRename,
+  createHandleDuplicate,
+  createHandleChangeColor,
+  createHandleImport,
+  createHandleCreateFromSelection,
+} from './editor/view';
 
-// This method is called when your extension is activated
-// Your extension is activated the very first time the command is executed
-export function activate(context: vscode.ExtensionContext) {
+export async function activate(context: vscode.ExtensionContext): Promise<void> {
+  console.log('Activating Codex Notes extension...');
+  const repository = await NoteRepository.initialize();
 
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "stanleygomes-codex-notes" is now active!');
+  console.log('Codex Notes extension activated successfully');
+  const createService = new CreateNoteService(repository);
+  const deleteService = new DeleteNoteService(repository);
+  const renameService = new RenameNoteService(repository);
+  const searchService = new SearchNoteService(repository);
+  const duplicateService = new DuplicateNoteService(repository, createService);
+  const exportService = new ExportNotesService(repository);
+  const importService = new ImportNotesService(repository, createService);
+  const favoriteService = new FavoriteNoteService(repository);
+  const colorService = new ChangeNoteColorService(repository);
+  const sortService = new SortNotesService();
+  const filterService = new FilterNotesService();
+  const locationService = new OpenNoteLocationService();
 
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	const disposable = vscode.commands.registerCommand('stanleygomes-codex-notes.helloWorld', () => {
-		// The code you place here will be executed every time your command is executed
-		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World from codex-notes!');
-	});
+  console.log('Services initialized successfully');
 
-	context.subscriptions.push(disposable);
+  let provider: NotesViewProvider;
+
+  const handleCreate = () => createHandleCreate(createService, provider)();
+  const handleDelete = (note: Note) => createHandleDelete(deleteService, provider)(note);
+  const handleRename = (note: Note) => createHandleRename(renameService, provider)(note);
+  const handleDuplicate = (note: Note) => createHandleDuplicate(duplicateService, provider)(note);
+  const handleChangeColor = (note: Note) => createHandleChangeColor(colorService, provider)(note);
+  const handleImport = () => createHandleImport(importService, provider)();
+
+  console.log('Handlers created successfully');
+
+  provider = new NotesViewProvider(
+    context.extensionUri,
+    repository,
+    searchService,
+    sortService,
+    filterService,
+    openNote,
+    handleCreate,
+    handleDelete,
+    handleRename,
+    handleDuplicate,
+    (note) => { favoriteService.toggleFavorite(note); provider.refresh(); },
+    handleChangeColor,
+    () => exportService.exportAll(),
+    handleImport,
+    (note) => locationService.openLocation(note),
+  );
+
+  context.subscriptions.push(
+    vscode.window.registerWebviewViewProvider(NotesViewProvider.viewType, provider),
+  );
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand('codexNotes.createNote', handleCreate),
+    vscode.commands.registerCommand('codexNotes.createNoteFromSelection', () => createHandleCreateFromSelection(createService, provider)()),
+    vscode.commands.registerCommand('codexNotes.refreshNotes', () => provider.refresh()),
+    vscode.commands.registerCommand('codexNotes.exportNotes', () => exportService.exportAll()),
+    vscode.commands.registerCommand('codexNotes.importNotes', handleImport),
+  );
 }
 
-// This method is called when your extension is deactivated
-export function deactivate() {}
+export function deactivate(): void {}
+
