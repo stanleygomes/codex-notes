@@ -3,8 +3,10 @@
   "displayName": "Codex Notes",
   "description": "A powerful plugin for managing notes directly within your IDE. Keep your thoughts, code snippets, and documentation organized without leaving your development environment",
   "version": "0.0.1",
+  "publisher": "stanleygomes",
   "engines": {
-    "vscode": "^1.110.0"
+    "vscode": "^1.85.0",
+    "node": "22.x"
   },
   "categories": [
     "Other"
@@ -17,7 +19,7 @@
         {
           "id": "codexNotesContainer",
           "title": "Codex Notes",
-          "icon": "src/icons/codex-notes.svg"
+          "icon": "resources/icons/tab-icon.svg"
         }
       ]
     },
@@ -127,16 +129,20 @@
     "watch-tests": "tsc -p . -w --outDir out",
     "pretest": "npm run compile-tests && npm run compile && npm run lint",
     "lint": "eslint src",
-    "test": "vscode-test"
+    "test": "vscode-test",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "postinstall": "electron-rebuild -f -w better-sqlite3 -v 25.9.0"
   },
   "dependencies": {
     "archiver": "^7.0.1",
-    "better-sqlite3": "^11.9.1",
+    "better-sqlite3": "^11.10.0",
     "date-fns": "^4.1.0",
     "drizzle-orm": "^0.45.1",
     "zod": "^4.3.6"
   },
   "devDependencies": {
+    "@electron/rebuild": "^3.7.1",
     "@types/archiver": "^6.0.3",
     "@types/better-sqlite3": "^7.6.12",
     "@types/mocha": "^10.0.10",
@@ -144,6 +150,8 @@
     "@types/vscode": "^1.110.0",
     "@vscode/test-cli": "^0.0.12",
     "@vscode/test-electron": "^2.5.2",
+    "copy-webpack-plugin": "^14.0.0",
+    "drizzle-kit": "^0.30.3",
     "eslint": "^9.39.3",
     "ts-loader": "^9.5.4",
     "typescript": "^5.9.3",

@@ -3,6 +3,7 @@
 'use strict';
 
 const path = require('path');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 //@ts-check
 /** @typedef {import('webpack').Configuration} WebpackConfig **/
@@ -41,6 +42,24 @@ const extensionConfig = {
       }
     ]
   },
+  plugins: [
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: 'src/database/migrations',
+          to: 'database/migrations',
+          noErrorOnMissing: false
+        },
+        {
+          from: 'node_modules/better-sqlite3',
+          to: 'node_modules/better-sqlite3',
+          globOptions: {
+            ignore: ['**/*.md', '**/docs/**', '**/test/**']
+          }
+        }
+      ]
+    })
+  ],
   devtool: 'nosources-source-map',
   infrastructureLogging: {
     level: "log", // enables logging required for problem matchers
