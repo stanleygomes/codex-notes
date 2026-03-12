@@ -85,7 +85,7 @@ function DownloadButtonItem({ btn }: { btn: DownloadButton }): JSX.Element {
 export default function Home(): JSX.Element {
   return (
     <div className="min-h-screen flex flex-col bg-secondary-background bg-[linear-gradient(to_right,#80808033_1px,transparent_1px),linear-gradient(to_bottom,#80808033_1px,transparent_1px)] bg-[size:70px_70px] z-0">
-      <main className="flex-1 flex flex-col items-center justify-center py-16 gap-10">
+      <main className="flex-1 flex flex-col items-center justify-center py-16 gap-10 px-6 mx-2">
         <div className="border-4 border-black bg-white shadow-[10px_10px_0px_#000] rounded-xl py-16 w-full max-w-3xl flex flex-col items-center gap-10">
           <Logo />
 
