@@ -3,7 +3,7 @@ package com.nazarethlabs.codex.action
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.project.Project
 import com.nazarethlabs.codex.editor.action.CreateNoteActionFromSearchEverywhere
-import com.nazarethlabs.codex.repository.NoteStorageRepository
+import com.nazarethlabs.codex.repository.NoteRepository
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
@@ -19,7 +19,7 @@ class CreateNoteActionFromSearchEverywhereTest {
     private lateinit var project: Project
 
     @Mock
-    private lateinit var noteStorageRepository: NoteStorageRepository
+    private lateinit var noteRepository: NoteRepository
 
     @Test
     fun `should not perform action when project is null`() {

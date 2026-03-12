@@ -6,7 +6,7 @@ import com.nazarethlabs.codex.helper.DialogHelper
 import com.nazarethlabs.codex.helper.FileHelper
 import com.nazarethlabs.codex.helper.MessageHelper
 import com.nazarethlabs.codex.helper.SentryHelper
-import com.nazarethlabs.codex.repository.NoteStorageRepository
+import com.nazarethlabs.codex.repository.NoteRepository
 
 class RenameNoteService(
     private val openNotesService: OpenNotesService = OpenNotesService(),
@@ -97,7 +97,7 @@ class RenameNoteService(
             note.title = newTitle
             note.filePath = FileHelper.getNewFilePath(note.filePath, newFileName)
 
-            NoteStorageRepository
+            NoteRepository
                 .getInstance()
                 .updateNote(note.id, title = newTitle, filePath = note.filePath)
 

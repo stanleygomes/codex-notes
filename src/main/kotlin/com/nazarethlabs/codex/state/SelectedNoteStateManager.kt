@@ -6,7 +6,7 @@ import com.nazarethlabs.codex.dto.Note
 
 @Service(Service.Level.APP)
 class SelectedNoteStateManager {
-    private val listeners = mutableListOf<SelectedNoteListener>()
+    private val listeners = mutableListOf<(List<Note>) -> Unit>()
     private var selectedNotes: List<Note> = emptyList()
 
     fun setSelectedNotes(notes: List<Note>) {
@@ -20,17 +20,21 @@ class SelectedNoteStateManager {
 
     fun hasMultipleSelection(): Boolean = selectedNotes.size > 1
 
+    fun addListener(listener: (List<Note>) -> Unit) {
+        listeners.add(listener)
+    }
+
+    fun removeListener(listener: (List<Note>) -> Unit) {
+        listeners.remove(listener)
+    }
+
     private fun notifyListeners() {
         listeners.forEach { listener ->
-            listener.onSelectedNotesChanged(selectedNotes)
+            listener(selectedNotes)
         }
     }
 
     companion object {
         fun getInstance(): SelectedNoteStateManager = service()
     }
-}
-
-interface SelectedNoteListener {
-    fun onSelectedNotesChanged(notes: List<Note>)
 }

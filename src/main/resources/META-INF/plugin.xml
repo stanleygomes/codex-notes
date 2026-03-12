@@ -11,7 +11,7 @@
     <extensions defaultExtensionNs="com.intellij">
         <toolWindow factoryClass="com.nazarethlabs.codex.AppWindowFactory" id="Codex Notes" icon="/icons/tab-icon.svg"/>
         <postStartupActivity implementation="com.nazarethlabs.codex.AppStartupActivity" />
-        <applicationService serviceImplementation="com.nazarethlabs.codex.repository.NoteStorageRepository"/>
+        <applicationService serviceImplementation="com.nazarethlabs.codex.repository.NoteRepository"/>
         <applicationService serviceImplementation="com.nazarethlabs.codex.repository.NoteLegacyStorageRepository"/>
         <projectService serviceImplementation="com.nazarethlabs.codex.listener.NoteEventListener"/>
         <applicationService serviceImplementation="com.nazarethlabs.codex.repository.NotesSettingsRepository"/>

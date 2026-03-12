@@ -5,7 +5,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.vfs.VirtualFile
 import com.nazarethlabs.codex.dto.Note
-import com.nazarethlabs.codex.repository.NoteStorageRepository
+import com.nazarethlabs.codex.repository.NoteRepository
 
 class OpenNotesService {
     fun openAll(
@@ -39,6 +39,6 @@ class OpenNotesService {
     }
 
     private fun updateNote(note: Note) {
-        NoteStorageRepository.getInstance().updateNote(note.id)
+        NoteRepository.getInstance().updateNote(note.id)
     }
 }

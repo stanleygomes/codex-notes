@@ -2,10 +2,10 @@ package com.nazarethlabs.codex.service.note
 
 import com.nazarethlabs.codex.dto.Note
 import com.nazarethlabs.codex.enum.SortTypeEnum
-import com.nazarethlabs.codex.repository.NoteStorageRepository
+import com.nazarethlabs.codex.repository.NoteRepository
 
 class NotesSortService {
-    private val noteStorage = NoteStorageRepository.getInstance()
+    private val noteStorage = NoteRepository.getInstance()
 
     fun refreshList(currentSortTypeEnum: SortTypeEnum): List<Note> {
         val allNotes = noteStorage.getAllNotes()

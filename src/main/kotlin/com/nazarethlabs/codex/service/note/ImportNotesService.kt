@@ -1,7 +1,7 @@
 package com.nazarethlabs.codex.service.note
 
 import com.intellij.openapi.vfs.VirtualFile
-import com.nazarethlabs.codex.repository.NoteStorageRepository
+import com.nazarethlabs.codex.repository.NoteRepository
 import com.nazarethlabs.codex.service.settings.NotesSettingsService
 import java.io.File
 
@@ -26,7 +26,7 @@ class ImportNotesService {
     }
 
     private fun resolveUniqueTitle(originalName: String): String {
-        val notes = NoteStorageRepository.getInstance().getAllNotes()
+        val notes = NoteRepository.getInstance().getAllNotes()
         val title = originalName.substringBeforeLast(".")
 
         if (notes.none { it.title == title }) {

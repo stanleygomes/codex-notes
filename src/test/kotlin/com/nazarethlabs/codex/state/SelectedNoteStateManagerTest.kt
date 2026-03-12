@@ -19,16 +19,6 @@ class SelectedNoteStateManagerTest {
         selectedNoteStateManager = SelectedNoteStateManager()
     }
 
-    private class TestSelectedNoteListener : SelectedNoteListener {
-        var lastNotes: List<Note>? = null
-        var callCount = 0
-
-        override fun onSelectedNotesChanged(notes: List<Note>) {
-            lastNotes = notes
-            callCount++
-        }
-    }
-
     @Test
     fun `should start with empty selected notes`() {
         val result = selectedNoteStateManager.getSelectedNotes()
@@ -119,5 +109,52 @@ class SelectedNoteStateManagerTest {
 
         assertEquals(1, selectedNoteStateManager.getSelectedNotes().size)
         assertEquals("Note 2", selectedNoteStateManager.getSelectedNote()?.title)
+    }
+
+    @Test
+    fun `should notify listener when notes are selected`() {
+        var lastNotes: List<Note>? = null
+        var callCount = 0
+
+        selectedNoteStateManager.addListener { notes ->
+            lastNotes = notes
+            callCount++
+        }
+
+        val notes = listOf(Note(id = "1", title = "Note 1"))
+        selectedNoteStateManager.setSelectedNotes(notes)
+
+        assertEquals(1, callCount)
+        assertEquals(1, lastNotes?.size)
+        assertEquals("Note 1", lastNotes?.first()?.title)
+    }
+
+    @Test
+    fun `should notify all listeners when notes are selected`() {
+        var callCount1 = 0
+        var callCount2 = 0
+
+        selectedNoteStateManager.addListener { callCount1++ }
+        selectedNoteStateManager.addListener { callCount2++ }
+
+        val notes = listOf(Note(id = "1", title = "Note 1"))
+        selectedNoteStateManager.setSelectedNotes(notes)
+
+        assertEquals(1, callCount1)
+        assertEquals(1, callCount2)
+    }
+
+    @Test
+    fun `should remove listener`() {
+        var callCount = 0
+        val listener: (List<Note>) -> Unit = { callCount++ }
+
+        selectedNoteStateManager.addListener(listener)
+        selectedNoteStateManager.setSelectedNotes(listOf(Note(id = "1", title = "Note 1")))
+        assertEquals(1, callCount)
+
+        selectedNoteStateManager.removeListener(listener)
+        selectedNoteStateManager.setSelectedNotes(listOf(Note(id = "2", title = "Note 2")))
+        assertEquals(1, callCount)
     }
 }

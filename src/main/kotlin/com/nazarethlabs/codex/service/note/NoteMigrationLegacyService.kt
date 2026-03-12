@@ -2,15 +2,15 @@ package com.nazarethlabs.codex.service.note
 
 import com.intellij.openapi.diagnostic.logger
 import com.nazarethlabs.codex.repository.NoteLegacyStorageRepository
-import com.nazarethlabs.codex.repository.NoteStorageRepository
+import com.nazarethlabs.codex.repository.NoteRepository
 
-class NoteMigrationService {
-    private val log = logger<NoteMigrationService>()
+class NoteMigrationLegacyService {
+    private val log = logger<NoteMigrationLegacyService>()
 
     fun migrateIfNeeded() {
         try {
             val legacyRepository = NoteLegacyStorageRepository.getInstance()
-            val storageRepository = NoteStorageRepository.getInstance()
+            val storageRepository = NoteRepository.getInstance()
 
             val legacyNotes = legacyRepository.getAllNotes()
             if (legacyNotes.isEmpty()) return

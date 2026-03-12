@@ -4,7 +4,7 @@ import com.intellij.openapi.project.Project
 import com.nazarethlabs.codex.dto.Note
 import com.nazarethlabs.codex.helper.FileHelper
 import com.nazarethlabs.codex.helper.NoteNameHelper
-import com.nazarethlabs.codex.repository.NoteStorageRepository
+import com.nazarethlabs.codex.repository.NoteRepository
 
 class DuplicateNoteService {
     private val createNoteService = CreateNoteService()
@@ -25,7 +25,7 @@ class DuplicateNoteService {
     }
 
     private fun generateDuplicateTitle(baseTitle: String): String {
-        val notes = NoteStorageRepository.getInstance().getAllNotes()
+        val notes = NoteRepository.getInstance().getAllNotes()
         return NoteNameHelper.generateDuplicateName(baseTitle, notes)
     }
 }

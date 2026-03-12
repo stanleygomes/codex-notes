@@ -6,7 +6,7 @@ import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.vfs.VirtualFile
 import com.nazarethlabs.codex.helper.FileHelper
 import com.nazarethlabs.codex.helper.NoteNameHelper
-import com.nazarethlabs.codex.repository.NoteStorageRepository
+import com.nazarethlabs.codex.repository.NoteRepository
 import com.nazarethlabs.codex.service.settings.NotesSettingsService
 import java.io.File
 
@@ -44,7 +44,7 @@ class CreateNoteService {
     }
 
     fun generateTitle(): String {
-        val notes = NoteStorageRepository.getInstance().getAllNotes()
+        val notes = NoteRepository.getInstance().getAllNotes()
         return NoteNameHelper.generateUntitledName(notes)
     }
 
@@ -69,7 +69,7 @@ class CreateNoteService {
         project: Project?,
         openNote: Boolean,
     ) {
-        NoteStorageRepository.getInstance().addNote(title, virtualFile.path)
+        NoteRepository.getInstance().addNote(title, virtualFile.path)
         if (openNote) {
             project?.let { proj ->
                 FileEditorManager.getInstance(proj).openFile(virtualFile, true)

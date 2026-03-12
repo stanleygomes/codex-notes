@@ -6,7 +6,7 @@ import com.nazarethlabs.codex.dto.Note
 import com.nazarethlabs.codex.helper.DialogHelper
 import com.nazarethlabs.codex.helper.FileHelper
 import com.nazarethlabs.codex.helper.MessageHelper
-import com.nazarethlabs.codex.repository.NoteStorageRepository
+import com.nazarethlabs.codex.repository.NoteRepository
 
 class DeleteNotesService {
     fun confirmAndDelete(
@@ -24,7 +24,7 @@ class DeleteNotesService {
         if (result == Messages.YES) {
             notes.forEach { note ->
                 FileHelper.deleteFile(note.filePath)
-                NoteStorageRepository
+                NoteRepository
                     .getInstance()
                     .removeNote(note.id)
             }

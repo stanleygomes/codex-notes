@@ -94,4 +94,15 @@ object FileHelper {
                 .replace(Regex("\\s+"), " ")
         return sanitized.ifEmpty { "untitled" }
     }
+
+    fun buildPath(
+        baseDir: String,
+        vararg parts: String,
+    ): String {
+        var path = baseDir
+        for (part in parts) {
+            path = File(path, part).absolutePath
+        }
+        return path
+    }
 }

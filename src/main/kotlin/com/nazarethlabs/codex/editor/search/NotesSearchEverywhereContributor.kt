@@ -11,7 +11,7 @@ import com.intellij.util.Processor
 import com.nazarethlabs.codex.dto.Note
 import com.nazarethlabs.codex.helper.FileHelper
 import com.nazarethlabs.codex.helper.SentryHelper
-import com.nazarethlabs.codex.repository.NoteStorageRepository
+import com.nazarethlabs.codex.repository.NoteRepository
 import javax.swing.ListCellRenderer
 
 class NotesSearchEverywhereContributorFactory : SearchEverywhereContributorFactory<Note> {
@@ -25,7 +25,7 @@ class NotesSearchEverywhereContributor(
     private val noteStorage =
         ApplicationManager
             .getApplication()
-            .getService(NoteStorageRepository::class.java)
+            .getService(NoteRepository::class.java)
 
     override fun getSearchProviderId(): String = "NotesSearchEverywhereContributor"
 

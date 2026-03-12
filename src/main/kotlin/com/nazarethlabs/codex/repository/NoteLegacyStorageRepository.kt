@@ -6,7 +6,7 @@ import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.State
 import com.intellij.openapi.components.Storage
 import com.nazarethlabs.codex.dto.Note
-import com.nazarethlabs.codex.state.NoteState
+import com.nazarethlabs.codex.state.entity.NoteState
 
 @Service(Service.Level.APP)
 @State(

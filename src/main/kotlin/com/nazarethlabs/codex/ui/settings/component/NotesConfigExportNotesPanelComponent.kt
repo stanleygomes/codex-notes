@@ -5,7 +5,7 @@ import com.intellij.openapi.ui.Messages
 import com.intellij.util.ui.JBUI
 import com.nazarethlabs.codex.helper.MessageHelper
 import com.nazarethlabs.codex.helper.SentryHelper
-import com.nazarethlabs.codex.repository.NoteStorageRepository
+import com.nazarethlabs.codex.repository.NoteRepository
 import com.nazarethlabs.codex.service.note.ExportNotesService
 import java.io.File
 import javax.swing.BoxLayout
@@ -43,7 +43,7 @@ class NotesConfigExportNotesPanelComponent {
         button.toolTipText = MessageHelper.getMessage("settings.export.notes.tooltip")
 
         button.addActionListener {
-            val notes = NoteStorageRepository.getInstance().getAllNotes()
+            val notes = NoteRepository.getInstance().getAllNotes()
 
             if (notes.isEmpty()) {
                 Messages.showInfoMessage(

@@ -6,7 +6,7 @@ import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.State
 import com.intellij.openapi.components.Storage
 import com.nazarethlabs.codex.enum.SortTypeEnum
-import com.nazarethlabs.codex.state.ConfigurationState
+import com.nazarethlabs.codex.state.entity.ConfigurationState
 
 @Service(Service.Level.APP)
 @State(

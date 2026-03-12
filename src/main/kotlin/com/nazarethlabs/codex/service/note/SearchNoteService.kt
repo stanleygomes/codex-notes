@@ -2,11 +2,11 @@ package com.nazarethlabs.codex.service.note
 
 import com.nazarethlabs.codex.dto.Note
 import com.nazarethlabs.codex.helper.SearchHelper
-import com.nazarethlabs.codex.repository.NoteStorageRepository
+import com.nazarethlabs.codex.repository.NoteRepository
 
 class SearchNoteService {
     fun filterNotes(filterText: String): List<Note> {
-        val noteStorage = NoteStorageRepository.getInstance()
+        val noteStorage = NoteRepository.getInstance()
         val allNotes = noteStorage.getAllNotes()
         val contentIndexService = NoteContentIndexService.getInstance()
         val contentMap = contentIndexService.getContentForSearch(allNotes)
