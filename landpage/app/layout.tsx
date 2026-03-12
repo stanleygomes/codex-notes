@@ -15,6 +15,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <link rel="icon" href="/app/img/favicon.png" type="image/png" />
+      </head>
       <body className={`${GeistSans.className} antialiased`}>{children}</body>
     </html>
   );
