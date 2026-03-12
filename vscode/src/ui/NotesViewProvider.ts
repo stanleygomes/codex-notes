@@ -293,6 +293,30 @@ export class NotesViewProvider implements vscode.WebviewViewProvider {
       width: 4px;
       flex-shrink: 0;
     }
+    .note-color-none {
+      background: transparent;
+    }
+    .note-color-blue {
+      background: #ADE8E6;
+    }
+    .note-color-green {
+      background: #90EE90;
+    }
+    .note-color-yellow {
+      background: #FFFF99;
+    }
+    .note-color-orange {
+      background: #FFDAB9;
+    }
+    .note-color-pink {
+      background: #FFB6C1;
+    }
+    .note-color-red {
+      background: #FF6666;
+    }
+    .note-color-purple {
+      background: #CC99FF;
+    }
     .note-body {
       flex: 1;
       padding: 8px 8px 8px 6px;
@@ -463,10 +487,9 @@ export class NotesViewProvider implements vscode.WebviewViewProvider {
         return;
       }
       notesList.innerHTML = notes.map(note => {
-        const colorBar = note.colorHex
-          ? \`<div class="note-color-bar" style="background:\${note.colorHex}"></div>\`
-          : \`<div class="note-color-bar"></div>\`;
-        const favIcon = note.isFavorite ? '<span class="note-favorite">🔖</span>' : '';
+        const colorClass = \`note-color-\${String(note.color || 'NONE').toLowerCase()}\`;
+        const colorBar = \`<div class="note-color-bar \${escapeHtml(colorClass)}"></div>\`;
+        const favIcon = note.isFavorite ? '<span class="note-favorite" title="Favorite">★</span>' : '';
         return \`
           <div class="note-item" data-id="\${note.id}">
             \${colorBar}
