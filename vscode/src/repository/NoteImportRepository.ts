@@ -1,5 +1,4 @@
 import { Note } from '../dto/Note';
-import { notesTable } from '../database/schema';
 import { BaseNoteRepository } from './BaseNoteRepository';
 import { NoteQueryRepository } from './NoteQueryRepository';
 
@@ -16,14 +15,10 @@ export class NoteImportRepository extends BaseNoteRepository {
     if (existing) {
       return;
     }
-    this.db.insert(notesTable).values({
-      id: note.id,
-      title: note.title,
-      filePath: note.filePath,
-      createdAt: note.createdAt,
-      updatedAt: note.updatedAt,
-      isFavorite: note.isFavorite ? 1 : 0,
-      color: note.color,
-    }).run();
+    this.db.run(
+      'INSERT INTO notes (id, title, filePath, createdAt, updatedAt, isFavorite, color) VALUES (?, ?, ?, ?, ?, ?, ?)',
+      [note.id, note.title, note.filePath, note.createdAt, note.updatedAt, note.isFavorite ? 1 : 0, note.color]
+    );
+    this.persist();
   }
 }

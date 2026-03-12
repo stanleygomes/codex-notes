@@ -1,45 +1,76 @@
-import Database from 'better-sqlite3';
-import { drizzle, BetterSQLite3Database } from 'drizzle-orm/better-sqlite3';
-import { migrate } from 'drizzle-orm/better-sqlite3/migrator';
+import initSqlJs, { Database as SqlJsDatabase } from 'sql.js';
+import * as fs from 'fs';
+import * as path from 'path';
 import * as vscode from 'vscode';
 import { FileHelper } from '../helper/FileHelper';
-import * as path from 'path';
 
 export class DatabaseConnection {
   private static instance: DatabaseConnection;
-  private db: BetterSQLite3Database;
-  private sqlite: Database.Database;
+  private database: SqlJsDatabase;
+  private readonly dbPath: string;
 
-  private constructor() {
-    FileHelper.ensureDirectoryExists(FileHelper.getDataDir());
-    this.sqlite = new Database(FileHelper.getDatabasePath());
-    this.db = drizzle(this.sqlite);
+  private constructor(database: SqlJsDatabase, dbPath: string) {
+    this.database = database;
+    this.dbPath = dbPath;
     this.runMigrations();
   }
 
-  static getInstance(): DatabaseConnection {
+  static async initialize(): Promise<DatabaseConnection> {
     if (!DatabaseConnection.instance) {
-      DatabaseConnection.instance = new DatabaseConnection();
+      FileHelper.ensureDirectoryExists(FileHelper.getDataDir());
+      const dbPath = FileHelper.getDatabasePath();
+
+      const wasmBinary = fs.readFileSync(
+        path.join(__dirname, 'sql-wasm.wasm')
+      );
+      const SQL = await initSqlJs({ wasmBinary });
+
+      let database: SqlJsDatabase;
+      if (fs.existsSync(dbPath)) {
+        const buffer = fs.readFileSync(dbPath);
+        database = new SQL.Database(buffer);
+      } else {
+        database = new SQL.Database();
+      }
+
+      DatabaseConnection.instance = new DatabaseConnection(database, dbPath);
     }
     return DatabaseConnection.instance;
   }
 
-  getDb(): BetterSQLite3Database {
-    return this.db;
+  static getInstance(): DatabaseConnection {
+    if (!DatabaseConnection.instance) {
+      throw new Error('DatabaseConnection not initialized. Call initialize() first.');
+    }
+    return DatabaseConnection.instance;
   }
 
-  getSqlite(): Database.Database {
-    return this.sqlite;
+  getDatabase(): SqlJsDatabase {
+    return this.database;
+  }
+
+  persist(): void {
+    const data = this.database.export();
+    const buffer = Buffer.from(data);
+    fs.writeFileSync(this.dbPath, buffer);
   }
 
   private runMigrations(): void {
     try {
-      console.log('🔄 Running database migrations...');
-      const migrationsFolder = path.join(__dirname, 'database/migrations');
-      migrate(this.db, { migrationsFolder });
-      console.log('✅ Database migrations completed successfully');
+      this.database.run(`
+        CREATE TABLE IF NOT EXISTS notes (
+          id TEXT PRIMARY KEY NOT NULL,
+          title TEXT NOT NULL,
+          filePath TEXT NOT NULL,
+          createdAt INTEGER NOT NULL,
+          updatedAt INTEGER NOT NULL,
+          isFavorite INTEGER NOT NULL DEFAULT 0,
+          color TEXT NOT NULL DEFAULT 'NONE'
+        )
+      `);
+      this.persist();
     } catch (error) {
-      console.error('❌ Migration error:', error);
+      console.error('Database migration error:', error);
       vscode.window.showErrorMessage(
         'Codex Notes: Failed to run database migrations. Please check the logs.'
       );

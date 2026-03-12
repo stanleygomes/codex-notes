@@ -1,8 +1,6 @@
-import { eq } from 'drizzle-orm';
 import { Note } from '../dto/Note';
 import { NoteColorEnum } from '../enum/NoteColorEnum';
 import { DateHelper } from '../helper/DateHelper';
-import { notesTable } from '../database/schema';
 import { BaseNoteRepository } from './BaseNoteRepository';
 
 export class NoteWriteRepository extends BaseNoteRepository {
@@ -18,34 +16,35 @@ export class NoteWriteRepository extends BaseNoteRepository {
       color: NoteColorEnum.NONE,
     };
 
-    this.db.insert(notesTable).values({
-      id: note.id,
-      title: note.title,
-      filePath: note.filePath,
-      createdAt: note.createdAt,
-      updatedAt: note.updatedAt,
-      isFavorite: 0,
-      color: NoteColorEnum.NONE,
-    }).run();
+    this.db.run(
+      'INSERT INTO notes (id, title, filePath, createdAt, updatedAt, isFavorite, color) VALUES (?, ?, ?, ?, ?, ?, ?)',
+      [note.id, note.title, note.filePath, note.createdAt, note.updatedAt, note.isFavorite ? 1 : 0, note.color]
+    );
+    this.persist();
 
     return note;
   }
 
   updateNote(id: string, title?: string, filePath?: string): void {
-    const updates: Partial<typeof notesTable.$inferInsert> = {
-      updatedAt: DateHelper.nowMs(),
-    };
+    const sets: string[] = ['updatedAt = ?'];
+    const params: unknown[] = [DateHelper.nowMs()];
+
     if (title !== undefined) {
-      updates.title = title;
+      sets.push('title = ?');
+      params.push(title);
     }
     if (filePath !== undefined) {
-      updates.filePath = filePath;
+      sets.push('filePath = ?');
+      params.push(filePath);
     }
 
-    this.db.update(notesTable).set(updates).where(eq(notesTable.id, id)).run();
+    params.push(id);
+    this.db.run(`UPDATE notes SET ${sets.join(', ')} WHERE id = ?`, params);
+    this.persist();
   }
 
   removeNote(id: string): void {
-    this.db.delete(notesTable).where(eq(notesTable.id, id)).run();
+    this.db.run('DELETE FROM notes WHERE id = ?', [id]);
+    this.persist();
   }
 }

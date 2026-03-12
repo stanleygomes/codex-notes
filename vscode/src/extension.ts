@@ -25,9 +25,8 @@ import {
   createHandleCreateFromSelection,
 } from './editor/view';
 
-export function activate(context: vscode.ExtensionContext): void {
-  // Initialize repository and run database migrations automatically on startup
-  const repository = NoteRepository.getInstance();
+export async function activate(context: vscode.ExtensionContext): Promise<void> {
+  const repository = await NoteRepository.initialize();
 
   const createService = new CreateNoteService(repository);
   const deleteService = new DeleteNoteService(repository);

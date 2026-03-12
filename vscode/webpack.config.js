@@ -21,9 +21,7 @@ const extensionConfig = {
     libraryTarget: 'commonjs2'
   },
   externals: {
-    vscode: 'commonjs vscode',
-    'better-sqlite3': 'commonjs better-sqlite3'
-    // modules added here also need to be added in the .vscodeignore file
+    vscode: 'commonjs vscode'
   },
   resolve: {
     // support reading TypeScript and JavaScript files, 📖 -> https://github.com/TypeStrong/ts-loader
@@ -39,6 +37,13 @@ const extensionConfig = {
             loader: 'ts-loader'
           }
         ]
+      },
+      {
+        test: /\.wasm$/,
+        type: 'asset/resource',
+        generator: {
+          filename: '[name][ext]'
+        }
       }
     ]
   },
@@ -46,16 +51,8 @@ const extensionConfig = {
     new CopyWebpackPlugin({
       patterns: [
         {
-          from: 'src/database/migrations',
-          to: 'database/migrations',
-          noErrorOnMissing: false
-        },
-        {
-          from: 'node_modules/better-sqlite3',
-          to: 'node_modules/better-sqlite3',
-          globOptions: {
-            ignore: ['**/*.md', '**/docs/**', '**/test/**']
-          }
+          from: 'node_modules/sql.js/dist/sql-wasm.wasm',
+          to: 'sql-wasm.wasm'
         }
       ]
     })

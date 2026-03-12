@@ -16,7 +16,6 @@ export class NoteRepository {
   private importRepository: NoteImportRepository;
 
   private constructor() {
-    DatabaseConnection.getInstance();
     this.queryRepository = new NoteQueryRepository();
     this.writeRepository = new NoteWriteRepository();
     this.favoriteRepository = new NoteFavoriteRepository();
@@ -24,9 +23,17 @@ export class NoteRepository {
     this.importRepository = new NoteImportRepository();
   }
 
+  static async initialize(): Promise<NoteRepository> {
+    if (!NoteRepository.instance) {
+      await DatabaseConnection.initialize();
+      NoteRepository.instance = new NoteRepository();
+    }
+    return NoteRepository.instance;
+  }
+
   static getInstance(): NoteRepository {
     if (!NoteRepository.instance) {
-      NoteRepository.instance = new NoteRepository();
+      throw new Error('NoteRepository not initialized. Call initialize() first.');
     }
     return NoteRepository.instance;
   }
