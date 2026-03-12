@@ -12,7 +12,7 @@
     "Other"
   ],
   "activationEvents": [],
-  "main": "./dist/extension.js",
+  "main": "./out/extension.js",
   "contributes": {
     "viewsContainers": {
       "activitybar": [
@@ -121,18 +121,15 @@
     }
   },
   "scripts": {
-    "vscode:prepublish": "npm run package",
-    "compile": "webpack",
-    "watch": "webpack --watch",
-    "package": "webpack --mode production --devtool hidden-source-map",
     "compile-tests": "tsc -p . --outDir out",
     "watch-tests": "tsc -p . -w --outDir out",
     "pretest": "npm run compile-tests && npm run compile && npm run lint",
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./ && npm run copy-wasm",
+    "copy-wasm": "mkdir -p out/repository && cp node_modules/sql.js/dist/sql-wasm.wasm out/repository/sql-wasm.wasm",
+    "watch": "tsc -watch -p ./",
     "lint": "eslint src",
-    "test": "vscode-test",
-    "db:generate": "drizzle-kit generate",
-    "db:migrate": "drizzle-kit migrate",
-    "postinstall": "electron-rebuild -f -w better-sqlite3 -v 25.9.0"
+    "test": "vscode-test"
   },
   "dependencies": {
     "archiver": "^7.0.1",
@@ -142,17 +139,14 @@
   },
   "devDependencies": {
     "@types/archiver": "^6.0.3",
+    "ts-loader": "^9.5.4",
+    "@types/vscode": "^1.110.0",
     "@types/mocha": "^10.0.10",
     "@types/node": "22.x",
-    "@types/vscode": "^1.110.0",
-    "@vscode/test-cli": "^0.0.12",
-    "@vscode/test-electron": "^2.5.2",
-    "copy-webpack-plugin": "^14.0.0",
-    "eslint": "^9.39.3",
-    "ts-loader": "^9.5.4",
-    "typescript": "^5.9.3",
     "typescript-eslint": "^8.56.1",
-    "webpack": "^5.105.3",
-    "webpack-cli": "^6.0.1"
+    "eslint": "^9.39.3",
+    "typescript": "^5.9.3",
+    "@vscode/test-cli": "^0.0.12",
+    "@vscode/test-electron": "^2.5.2"
   }
 }

@@ -26,8 +26,10 @@ import {
 } from './editor/view';
 
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
+  console.log('Activating Codex Notes extension...');
   const repository = await NoteRepository.initialize();
 
+  console.log('Codex Notes extension activated successfully');
   const createService = new CreateNoteService(repository);
   const deleteService = new DeleteNoteService(repository);
   const renameService = new RenameNoteService(repository);
@@ -41,6 +43,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
   const filterService = new FilterNotesService();
   const locationService = new OpenNoteLocationService();
 
+  console.log('Services initialized successfully');
+
   let provider: NotesViewProvider;
 
   const handleCreate = () => createHandleCreate(createService, provider)();
@@ -49,6 +53,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
   const handleDuplicate = (note: Note) => createHandleDuplicate(duplicateService, provider)(note);
   const handleChangeColor = (note: Note) => createHandleChangeColor(colorService, provider)(note);
   const handleImport = () => createHandleImport(importService, provider)();
+
+  console.log('Handlers created successfully');
 
   provider = new NotesViewProvider(
     context.extensionUri,

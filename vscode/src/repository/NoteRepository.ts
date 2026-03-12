@@ -6,6 +6,7 @@ import { NoteFavoriteRepository } from './NoteFavoriteRepository';
 import { NoteColorRepository } from './NoteColorRepository';
 import { NoteImportRepository } from './NoteImportRepository';
 import { DatabaseConnection } from './DatabaseConnection';
+import { DatabaseMigration } from './DatabaseMigration';
 
 export class NoteRepository {
   private static instance: NoteRepository;
@@ -26,6 +27,7 @@ export class NoteRepository {
   static async initialize(): Promise<NoteRepository> {
     if (!NoteRepository.instance) {
       await DatabaseConnection.initialize();
+      DatabaseMigration.run();
       NoteRepository.instance = new NoteRepository();
     }
     return NoteRepository.instance;
