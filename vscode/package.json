@@ -12,12 +12,111 @@
   "activationEvents": [],
   "main": "./dist/extension.js",
   "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "codexNotesContainer",
+          "title": "Codex Notes",
+          "icon": "src/icons/codex-notes.svg"
+        }
+      ]
+    },
+    "views": {
+      "codexNotesContainer": [
+        {
+          "type": "webview",
+          "id": "codexNotes.notesView",
+          "name": "Notes"
+        }
+      ]
+    },
     "commands": [
       {
-        "command": "stanleygomes-codex-notes.helloWorld",
-        "title": "Hello World"
+        "command": "codexNotes.createNote",
+        "title": "New Note",
+        "category": "Codex Notes",
+        "icon": "$(add)"
+      },
+      {
+        "command": "codexNotes.createNoteFromSelection",
+        "title": "Create Codex Note from Selection",
+        "category": "Codex Notes"
+      },
+      {
+        "command": "codexNotes.refreshNotes",
+        "title": "Refresh Notes",
+        "category": "Codex Notes",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "codexNotes.exportNotes",
+        "title": "Export Notes",
+        "category": "Codex Notes"
+      },
+      {
+        "command": "codexNotes.importNotes",
+        "title": "Import Notes",
+        "category": "Codex Notes"
       }
-    ]
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "codexNotes.createNoteFromSelection",
+          "when": "editorHasSelection",
+          "group": "codexNotes"
+        }
+      ],
+      "view/title": [
+        {
+          "command": "codexNotes.createNote",
+          "when": "view == codexNotes.notesView",
+          "group": "navigation"
+        },
+        {
+          "command": "codexNotes.refreshNotes",
+          "when": "view == codexNotes.notesView",
+          "group": "navigation"
+        }
+      ]
+    },
+    "keybindings": [
+      {
+        "command": "codexNotes.createNote",
+        "key": "ctrl+alt+n",
+        "mac": "cmd+alt+n"
+      }
+    ],
+    "configuration": {
+      "title": "Codex Notes",
+      "properties": {
+        "codexNotes.fileExtension": {
+          "type": "string",
+          "default": "md",
+          "description": "Default file extension for new notes"
+        },
+        "codexNotes.notesDirectory": {
+          "type": "string",
+          "default": "",
+          "description": "Custom directory for storing notes. Defaults to ~/.codex-notes"
+        },
+        "codexNotes.exportDirectory": {
+          "type": "string",
+          "default": "",
+          "description": "Default directory for exporting notes"
+        },
+        "codexNotes.importDirectory": {
+          "type": "string",
+          "default": "",
+          "description": "Default directory for importing notes"
+        },
+        "codexNotes.openFolderEnabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable opening note file location in file explorer"
+        }
+      }
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run package",
@@ -30,17 +129,26 @@
     "lint": "eslint src",
     "test": "vscode-test"
   },
+  "dependencies": {
+    "archiver": "^7.0.1",
+    "better-sqlite3": "^11.9.1",
+    "date-fns": "^4.1.0",
+    "drizzle-orm": "^0.45.1",
+    "zod": "^4.3.6"
+  },
   "devDependencies": {
-    "@types/vscode": "^1.110.0",
+    "@types/archiver": "^6.0.3",
+    "@types/better-sqlite3": "^7.6.12",
     "@types/mocha": "^10.0.10",
     "@types/node": "22.x",
-    "typescript-eslint": "^8.56.1",
-    "eslint": "^9.39.3",
-    "typescript": "^5.9.3",
-    "ts-loader": "^9.5.4",
-    "webpack": "^5.105.3",
-    "webpack-cli": "^6.0.1",
+    "@types/vscode": "^1.110.0",
     "@vscode/test-cli": "^0.0.12",
-    "@vscode/test-electron": "^2.5.2"
+    "@vscode/test-electron": "^2.5.2",
+    "eslint": "^9.39.3",
+    "ts-loader": "^9.5.4",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.56.1",
+    "webpack": "^5.105.3",
+    "webpack-cli": "^6.0.1"
   }
 }
