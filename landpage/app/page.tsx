@@ -100,7 +100,7 @@ export default function Home(): JSX.Element {
             </p>
           </div>
 
-          <div className="flex flex-col items-center gap-4 w-full max-w-sm">
+          <div className="flex flex-col items-center gap-4 w-full max-w-sm px-4">
             <h2 className="text-2xl font-black text-black uppercase tracking-widest pb-1 w-full text-center">
               Download for your favorite IDE
             </h2>
