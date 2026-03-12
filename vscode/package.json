@@ -4,7 +4,7 @@
   "description": "A powerful plugin for managing notes directly within your IDE. Keep your thoughts, code snippets, and documentation organized without leaving your development environment",
   "version": "0.0.1",
   "engines": {
-    "vscode": "^1.110.0"
+    "vscode": "^1.0.0"
   },
   "categories": [
     "Other"
