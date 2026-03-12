@@ -14,8 +14,19 @@ import { FilterNotesService } from './service/FilterNotesService';
 import { OpenNoteLocationService } from './service/OpenNoteLocationService';
 import { NotesViewProvider } from './ui/NotesViewProvider';
 import { Note } from './dto/Note';
+import {
+  openNote,
+  createHandleCreate,
+  createHandleDelete,
+  createHandleRename,
+  createHandleDuplicate,
+  createHandleChangeColor,
+  createHandleImport,
+  createHandleCreateFromSelection,
+} from './editor/view';
 
 export function activate(context: vscode.ExtensionContext): void {
+  // Initialize repository and run database migrations automatically on startup
   const repository = NoteRepository.getInstance();
 
   const createService = new CreateNoteService(repository);
@@ -31,80 +42,45 @@ export function activate(context: vscode.ExtensionContext): void {
   const filterService = new FilterNotesService();
   const locationService = new OpenNoteLocationService();
 
-  const provider = new NotesViewProvider(
+  let provider: NotesViewProvider;
+
+  const handleCreate = () => createHandleCreate(createService, provider)();
+  const handleDelete = (note: Note) => createHandleDelete(deleteService, provider)(note);
+  const handleRename = (note: Note) => createHandleRename(renameService, provider)(note);
+  const handleDuplicate = (note: Note) => createHandleDuplicate(duplicateService, provider)(note);
+  const handleChangeColor = (note: Note) => createHandleChangeColor(colorService, provider)(note);
+  const handleImport = () => createHandleImport(importService, provider)();
+
+  provider = new NotesViewProvider(
     context.extensionUri,
     repository,
     searchService,
     sortService,
     filterService,
-    (note: Note) => openNote(note),
-    () => handleCreate(),
-    (note: Note) => handleDelete(note),
-    (note: Note) => handleRename(note),
-    (note: Note) => handleDuplicate(note),
-    (note: Note) => { favoriteService.toggleFavorite(note); provider.refresh(); },
-    (note: Note) => handleChangeColor(note),
+    openNote,
+    handleCreate,
+    handleDelete,
+    handleRename,
+    handleDuplicate,
+    (note) => { favoriteService.toggleFavorite(note); provider.refresh(); },
+    handleChangeColor,
     () => exportService.exportAll(),
-    () => handleImport(),
-    (note: Note) => locationService.openLocation(note),
+    handleImport,
+    (note) => locationService.openLocation(note),
   );
 
   context.subscriptions.push(
     vscode.window.registerWebviewViewProvider(NotesViewProvider.viewType, provider),
   );
 
-  async function openNote(note: Note): Promise<void> {
-    const uri = vscode.Uri.file(note.filePath);
-    const doc = await vscode.workspace.openTextDocument(uri);
-    await vscode.window.showTextDocument(doc);
-  }
-
-  async function handleCreate(): Promise<void> {
-    await createService.create();
-    provider.refresh();
-  }
-
-  async function handleDelete(note: Note): Promise<void> {
-    const deleted = await deleteService.confirmAndDelete([note]);
-    if (deleted) {
-      provider.refresh();
-    }
-  }
-
-  async function handleRename(note: Note): Promise<void> {
-    const renamed = await renameService.rename(note);
-    if (renamed) {
-      provider.refresh();
-    }
-  }
-
-  async function handleDuplicate(note: Note): Promise<void> {
-    await duplicateService.duplicate(note);
-    provider.refresh();
-  }
-
-  async function handleChangeColor(note: Note): Promise<void> {
-    await colorService.changeColor(note);
-    provider.refresh();
-  }
-
-  async function handleImport(): Promise<void> {
-    await importService.import();
-    provider.refresh();
-  }
-
   context.subscriptions.push(
-    vscode.commands.registerCommand('codexNotes.createNote', () => handleCreate()),
-    vscode.commands.registerCommand('codexNotes.createNoteFromSelection', async () => {
-      const editor = vscode.window.activeTextEditor;
-      const selection = editor?.document.getText(editor.selection) ?? '';
-      await createService.create(selection);
-      provider.refresh();
-    }),
+    vscode.commands.registerCommand('codexNotes.createNote', handleCreate),
+    vscode.commands.registerCommand('codexNotes.createNoteFromSelection', () => createHandleCreateFromSelection(createService, provider)()),
     vscode.commands.registerCommand('codexNotes.refreshNotes', () => provider.refresh()),
     vscode.commands.registerCommand('codexNotes.exportNotes', () => exportService.exportAll()),
-    vscode.commands.registerCommand('codexNotes.importNotes', () => handleImport()),
+    vscode.commands.registerCommand('codexNotes.importNotes', handleImport),
   );
 }
 
 export function deactivate(): void {}
+
