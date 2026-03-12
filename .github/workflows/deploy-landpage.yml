@@ -11,6 +11,7 @@ jobs:
   deploy:
     name: Deploy to Vercel
     runs-on: ubuntu-latest
+    environment: production
     permissions:
       contents: read
     defaults:
