@@ -1,1 +1,0 @@
-{"version":3,"file":"FavoriteNoteService.js","sourceRoot":"","sources":["../../src/service/FavoriteNoteService.ts"],"names":[],"mappings":";;;AAGA,MAAa,mBAAmB;IACb,UAAU,CAAiB;IAE5C,YAAY,UAA0B;QACpC,IAAI,CAAC,UAAU,GAAG,UAAU,CAAC;IAC/B,CAAC;IAED,cAAc,CAAC,IAAU;QACvB,IAAI,CAAC,UAAU,CAAC,cAAc,CAAC,IAAI,CAAC,EAAE,CAAC,CAAC;IAC1C,CAAC;CACF;AAVD,kDAUC"}
