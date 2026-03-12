@@ -54,7 +54,7 @@ function Logo(): JSX.Element {
 
 function DownloadButtonItem({ btn }: { btn: DownloadButton }): JSX.Element {
   const baseClasses =
-    "border-4 border-black font-black text-lg px-8 py-4 transition-all duration-100 block text-center w-full max-w-sm";
+    "border-4 border-black font-black text-lg px-8 py-4 transition-all duration-100 block text-center w-full max-w-sm rounded-xl";
 
   if (!btn.available) {
     return (
@@ -85,15 +85,15 @@ function DownloadButtonItem({ btn }: { btn: DownloadButton }): JSX.Element {
 export default function Home(): JSX.Element {
   return (
     <div className="min-h-screen flex flex-col bg-secondary-background bg-[linear-gradient(to_right,#80808033_1px,transparent_1px),linear-gradient(to_bottom,#80808033_1px,transparent_1px)] bg-[size:70px_70px] z-0">
-      <main className="flex-1 flex flex-col items-center justify-center px-6 py-16 gap-10">
-        <div className="border-4 border-black bg-white shadow-[10px_10px_0px_#000] rounded-xl p-10 w-full max-w-3xl flex flex-col items-center gap-10">
+      <main className="flex-1 flex flex-col items-center justify-center py-16 gap-10">
+        <div className="border-4 border-black bg-white shadow-[10px_10px_0px_#000] rounded-xl py-16 w-full max-w-3xl flex flex-col items-center gap-10">
           <Logo />
 
           <div className="text-center max-w-2xl">
             <h1 className="text-6xl sm:text-7xl font-black text-black tracking-tight border-b-4 border-black pb-2 mb-6 inline-block">
               Codex Notes
             </h1>
-            <p className="text-xl font-bold text-black leading-relaxed px-6 py-4">
+            <p className="text-xl text-black leading-relaxed px-6 py-4">
               A powerful plugin for managing notes within your IDE. Keep your
               thoughts, code snippets, and documentation organized without leaving
               your development environment.
@@ -102,7 +102,7 @@ export default function Home(): JSX.Element {
 
           <div className="flex flex-col items-center gap-4 w-full max-w-sm">
             <h2 className="text-2xl font-black text-black uppercase tracking-widest pb-1 w-full text-center">
-              Download
+              Download for your favorite IDE
             </h2>
             {DOWNLOAD_BUTTONS.map((btn) => (
               <DownloadButtonItem key={btn.label} btn={btn} />
