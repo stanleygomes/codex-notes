@@ -11,10 +11,6 @@ on:
           - jetbrains
           - vscode
         default: both
-      create_github_release:
-        description: "Create GitHub Release"
-        type: boolean
-        default: true
 
 concurrency:
   group: release
@@ -271,7 +267,6 @@ jobs:
     needs: [prepare_release, publish_jetbrains, publish_vscode]
     if: |
       always() &&
-      inputs.create_github_release == true &&
       needs.prepare_release.result == 'success' &&
       (needs.publish_jetbrains.result == 'success' || needs.publish_jetbrains.result == 'skipped') &&
       (needs.publish_vscode.result == 'success' || needs.publish_vscode.result == 'skipped')
