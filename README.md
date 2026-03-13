@@ -125,6 +125,20 @@ This project uses GitHub Actions for continuous integration and deployment. The 
   - Signs and publishes the plugin to JetBrains Marketplace
   - Updates changelog
 
+### VS Code Build Workflow (`build-vscode.yml`)
+- **Trigger**: Push/PR changes under `vscode/**` and manual dispatch
+- **Actions**:
+  - Installs dependencies
+  - Runs extension tests (`npm test`, including lint/compile pretest)
+  - Packages the extension as a `.vsix` artifact
+
+### VS Code Release Workflow (`release-vscode.yml`)
+- **Trigger**: GitHub release publication and manual dispatch
+- **Actions**:
+  - Builds and packages the VS Code extension
+  - Publishes to Visual Studio Marketplace using `VSCE_PAT`
+  - Publishes to OpenVSX (used by Cursor) using `OVSX_PAT`
+
 
 ## 🤝 Contributing
 

@@ -1,0 +1,71 @@
+name: Release VS Code Extension
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      release_ref:
+        description: "Git ref (tag or branch) to publish"
+        required: true
+        default: master
+
+jobs:
+  publish:
+    name: Publish to VS Code and Cursor
+    runs-on: ubuntu-latest
+    environment: production
+    permissions:
+      contents: read
+    defaults:
+      run:
+        working-directory: vscode
+    steps:
+      - name: Fetch Sources
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.release_ref || github.event.release.tag_name }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: vscode/package-lock.json
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Build
+        run: npm run compile
+
+      - name: Package VSIX
+        run: npx @vscode/vsce package --no-yarn --out codex-notes.vsix
+
+      - name: Validate Publish Tokens
+        env:
+          VSCE_PAT: ${{ secrets.VSCE_PAT }}
+          OVSX_PAT: ${{ secrets.OVSX_PAT }}
+        run: |
+          if [ -z "$VSCE_PAT" ]; then
+            echo "Error: Missing VSCE_PAT secret. Configure it in repository Settings > Secrets and variables > Actions."
+            exit 1
+          fi
+
+          if [ -z "$OVSX_PAT" ]; then
+            echo "Error: Missing OVSX_PAT secret. Configure it in repository Settings > Secrets and variables > Actions."
+            exit 1
+          fi
+
+      - name: Publish to Visual Studio Marketplace
+        env:
+          VSCE_PAT: ${{ secrets.VSCE_PAT }}
+        run: npx @vscode/vsce publish --packagePath codex-notes.vsix --no-yarn
+
+      - name: Publish to OpenVSX (Cursor)
+        env:
+          OVSX_PAT: ${{ secrets.OVSX_PAT }}
+        run: npx ovsx publish codex-notes.vsix

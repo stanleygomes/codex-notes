@@ -1,0 +1,51 @@
+name: Build VS Code Extension
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "vscode/**"
+  pull_request:
+    paths:
+      - "vscode/**"
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build VSIX
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: vscode
+    steps:
+      - name: Fetch Sources
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: vscode/package-lock.json
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Test
+        run: npm test
+
+      - name: Package VSIX
+        run: npx @vscode/vsce package --no-yarn --out codex-notes.vsix
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v6
+        with:
+          name: vscode-extension-vsix
+          path: vscode/codex-notes.vsix
