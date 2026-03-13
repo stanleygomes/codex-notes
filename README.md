@@ -139,12 +139,12 @@ This project uses GitHub Actions for continuous integration and deployment. The 
   - `publish_jetbrains` — boolean, default `true`
   - `publish_vscode` — boolean, default `true`
   - `create_github_release` — boolean, default `true`
-- **Version auto-detection**: The workflow reads commits since the last `jetbrains-v*` / `vscode-v*` tag and applies semantic versioning rules (breaking change → major, `feat:` → minor, everything else → patch).
+- **Version auto-detection**: The workflow reads commits since the last `v*` repository tag and applies semantic versioning rules (breaking change → major, `feat:` → minor, everything else → patch).
 - **Jobs**:
-  1. `prepare_release` — auto-calculates versions, bumps files, updates changelogs, commits directly to `master`, and creates `jetbrains-v<version>` / `vscode-v<version>` tags
+  1. `prepare_release` — auto-calculates one shared version, bumps JetBrains and VS Code files, updates changelogs, commits directly to `master`, and creates `v<version>` tag
   2. `publish_jetbrains` *(conditional)* — builds, signs, and publishes to JetBrains Marketplace
   3. `publish_vscode` *(conditional)* — packages and publishes to Visual Studio Marketplace and OpenVSX
-  4. `create_release` *(conditional)* — creates separate GitHub Releases per plugin and attaches built artifacts
+  4. `create_release` *(conditional)* — creates a GitHub Release for `v<version>` and attaches published artifacts
 
 ### Deploy Landpage Workflow (`deploy-landpage.yml`)
 - **Trigger**: Push to `master` affecting `landpage/**`, or manual dispatch
@@ -159,12 +159,12 @@ This project uses GitHub Actions for continuous integration and deployment. The 
    - Toggle `publish_jetbrains`, `publish_vscode`, and `create_github_release` as needed.
 3. The workflow will automatically:
    - Detect the new version from commits since the last release tag using semantic versioning.
-   - Bump versions in `jetbrains/gradle.properties` and/or `vscode/package.json`.
-   - Update the respective `CHANGELOG.md` with commit entries.
+   - Bump versions in both `jetbrains/gradle.properties` and `vscode/package.json` to the same value.
+   - Update both `CHANGELOG.md` files with commit entries.
    - Commit changes directly to `master` (no PR needed).
-   - Create `jetbrains-v<version>` and/or `vscode-v<version>` git tags.
-   - Publish to the selected marketplaces.
-   - Create separate GitHub Releases per plugin with built artifacts.
+   - Create `v<version>` git tag.
+   - Publish only the selected marketplaces.
+   - Create a GitHub Release for `v<version>` with built artifacts from the selected targets.
 
 
 ## 🤝 Contributing
