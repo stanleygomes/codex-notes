@@ -29,10 +29,6 @@ on:
         description: "Publish to VS Code / OpenVSX Marketplaces on merge"
         type: boolean
         default: true
-      create_github_release:
-        description: "Create GitHub Release on merge"
-        type: boolean
-        default: true
   push:
     branches: [master]
 
@@ -411,80 +407,3 @@ jobs:
         with:
           name: vscode-extension-vsix
           path: vscode/codex-notes.vsix
-
-  create_release:
-    name: Create GitHub Release
-    needs: [publish_jetbrains, publish_vscode]
-    if: |
-      always() &&
-      github.event_name == 'push' &&
-      startsWith(github.event.head_commit.message, 'chore(release):') &&
-      (needs.publish_jetbrains.result == 'success' || needs.publish_jetbrains.result == 'skipped') &&
-      (needs.publish_vscode.result == 'success' || needs.publish_vscode.result == 'skipped')
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-
-      - name: Fetch Sources
-        uses: actions/checkout@v4
-        with:
-          ref: master
-
-      - name: Download JetBrains Artifact
-        if: needs.publish_jetbrains.result == 'success'
-        uses: actions/download-artifact@v4
-        with:
-          name: jetbrains-plugin
-          path: artifacts/jetbrains/
-
-      - name: Download VS Code Artifact
-        if: needs.publish_vscode.result == 'success'
-        uses: actions/download-artifact@v4
-        with:
-          name: vscode-extension-vsix
-          path: artifacts/vscode/
-
-      - name: Create JetBrains GitHub Release
-        if: contains(github.event.head_commit.message, 'jetbrains-v')
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          VERSION=$(echo "${{ github.event.head_commit.message }}" | grep -oP 'jetbrains-v\K[\d.]+')
-          if [ -z "$VERSION" ]; then
-            echo "Error: could not extract JetBrains version from commit message"
-            exit 1
-          fi
-          TAG="jetbrains-v$VERSION"
-          if [ -d artifacts/jetbrains ] && [ -n "$(ls -A artifacts/jetbrains 2>/dev/null)" ]; then
-            gh release create "$TAG" \
-              --title "JetBrains Plugin v$VERSION" \
-              --notes "JetBrains Plugin release v$VERSION" \
-              artifacts/jetbrains/*
-          else
-            gh release create "$TAG" \
-              --title "JetBrains Plugin v$VERSION" \
-              --notes "JetBrains Plugin release v$VERSION"
-          fi
-
-      - name: Create VS Code GitHub Release
-        if: contains(github.event.head_commit.message, 'vscode-v')
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          VERSION=$(echo "${{ github.event.head_commit.message }}" | grep -oP 'vscode-v\K[\d.]+')
-          if [ -z "$VERSION" ]; then
-            echo "Error: could not extract VS Code version from commit message"
-            exit 1
-          fi
-          TAG="vscode-v$VERSION"
-          if [ -d artifacts/vscode ] && [ -n "$(ls -A artifacts/vscode 2>/dev/null)" ]; then
-            gh release create "$TAG" \
-              --title "VS Code Extension v$VERSION" \
-              --notes "VS Code Extension release v$VERSION" \
-              artifacts/vscode/*
-          else
-            gh release create "$TAG" \
-              --title "VS Code Extension v$VERSION" \
-              --notes "VS Code Extension release v$VERSION"
-          fi
