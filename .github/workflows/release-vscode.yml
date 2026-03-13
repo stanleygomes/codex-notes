@@ -45,8 +45,8 @@ jobs:
 
       - name: Validate Publish Tokens
         env:
-          VSCE_PAT: ${{ secrets.VSCE_PAT }}
-          OVSX_PAT: ${{ secrets.OVSX_PAT }}
+          VSCE_PAT: ${{ secrets.MARKETPLACE_VSCE_PAT }}
+          OVSX_PAT: ${{ secrets.MARKETPLACE_OVSX_PAT }}
         run: |
           if [ -z "$VSCE_PAT" ]; then
             echo "Error: Missing VSCE_PAT secret. Configure it in repository Settings > Secrets and variables > Actions."
@@ -60,10 +60,10 @@ jobs:
 
       - name: Publish to Visual Studio Marketplace
         env:
-          VSCE_PAT: ${{ secrets.VSCE_PAT }}
+          VSCE_PAT: ${{ secrets.MARKETPLACE_VSCE_PAT }}
         run: npx @vscode/vsce publish --packagePath codex-notes.vsix --no-yarn
 
       - name: Publish to OpenVSX (Cursor)
         env:
-          OVSX_PAT: ${{ secrets.OVSX_PAT }}
+          OVSX_PAT: ${{ secrets.MARKETPLACE_OVSX_PAT }}
         run: npx ovsx publish codex-notes.vsix
