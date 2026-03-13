@@ -135,16 +135,16 @@ This project uses GitHub Actions for continuous integration and deployment. The 
 ### Release Workflow (`release.yml`)
 - **Trigger**: Manual dispatch (`workflow_dispatch`)
 - **Inputs**:
-  - `version` — semver string (e.g. `1.2.3`), **required**
-  - `release_notes` — optional notes to patch the changelog
+  - `target` — which plugin to release: `both` (default), `jetbrains`, or `vscode`
   - `publish_jetbrains` — boolean, default `true`
   - `publish_vscode` — boolean, default `true`
   - `create_github_release` — boolean, default `true`
+- **Version auto-detection**: The workflow reads commits since the last `jetbrains-v*` / `vscode-v*` tag and applies semantic versioning rules (breaking change → major, `feat:` → minor, everything else → patch).
 - **Jobs**:
-  1. `prepare_release` — bumps versions (JetBrains + VS Code), optionally patches changelog, opens a PR from branch `release/<version>`
+  1. `prepare_release` — auto-calculates versions, bumps files, updates changelogs, commits directly to `master`, and creates `jetbrains-v<version>` / `vscode-v<version>` tags
   2. `publish_jetbrains` *(conditional)* — builds, signs, and publishes to JetBrains Marketplace
   3. `publish_vscode` *(conditional)* — packages and publishes to Visual Studio Marketplace and OpenVSX
-  4. `create_release` *(conditional)* — creates a GitHub Release and attaches built artifacts
+  4. `create_release` *(conditional)* — creates separate GitHub Releases per plugin and attaches built artifacts
 
 ### Deploy Landpage Workflow (`deploy-landpage.yml`)
 - **Trigger**: Push to `master` affecting `landpage/**`, or manual dispatch
@@ -154,17 +154,17 @@ This project uses GitHub Actions for continuous integration and deployment. The 
 ## 📦 How to Release
 
 1. Go to **Actions → Release** in the GitHub repository.
-2. Click **Run workflow** and fill in the inputs:
-   - **version**: the new semver version (e.g. `2.2.0`)
-   - **release_notes**: optional changelog entry
+2. Click **Run workflow** and choose:
+   - **target**: `both` to release all plugins, or `jetbrains` / `vscode` to release a single one
    - Toggle `publish_jetbrains`, `publish_vscode`, and `create_github_release` as needed.
-3. The workflow will:
-   - Validate the version format.
-   - Bump versions in `jetbrains/gradle.properties` and `vscode/package.json`.
-   - Optionally patch `CHANGELOG.md` with the provided release notes.
-   - Push a `release/<version>` branch and open a PR (`chore(release): <version>`).
+3. The workflow will automatically:
+   - Detect the new version from commits since the last release tag using semantic versioning.
+   - Bump versions in `jetbrains/gradle.properties` and/or `vscode/package.json`.
+   - Update the respective `CHANGELOG.md` with commit entries.
+   - Commit changes directly to `master` (no PR needed).
+   - Create `jetbrains-v<version>` and/or `vscode-v<version>` git tags.
    - Publish to the selected marketplaces.
-   - Create a GitHub Release and attach built artifacts.
+   - Create separate GitHub Releases per plugin with built artifacts.
 
 
 ## 🤝 Contributing

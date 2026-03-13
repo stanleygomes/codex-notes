@@ -3,13 +3,14 @@ name: Release
 on:
   workflow_dispatch:
     inputs:
-      version:
-        description: "Release version (e.g. 1.2.3)"
-        required: true
-      release_notes:
-        description: "Release notes (optional)"
-        required: false
-        default: ""
+      target:
+        description: "Release target"
+        type: choice
+        options:
+          - both
+          - jetbrains
+          - vscode
+        default: both
       publish_jetbrains:
         description: "Publish to JetBrains Marketplace"
         type: boolean
@@ -34,15 +35,10 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-      pull-requests: write
+    outputs:
+      jetbrains_version: ${{ steps.jetbrains_version.outputs.version }}
+      vscode_version: ${{ steps.vscode_version.outputs.version }}
     steps:
-
-      - name: Validate Version Format
-        run: |
-          if ! echo "${{ inputs.version }}" | grep -qE '^[0-9]+\.[0-9]+\.[0-9]+$'; then
-            echo "Error: Version '${{ inputs.version }}' does not match semver format (X.Y.Z)"
-            exit 1
-          fi
 
       - name: Fetch Sources
         uses: actions/checkout@v4
@@ -50,67 +46,185 @@ jobs:
           ref: master
           fetch-depth: 0
 
-      - name: Setup Java
-        uses: actions/setup-java@v5
-        with:
-          distribution: zulu
-          java-version: 17
-
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v5
-
       - name: Configure Git
         run: |
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git config user.name "github-actions[bot]"
 
-      - name: Update JetBrains Version
+      - name: Calculate JetBrains Version
+        if: inputs.target == 'jetbrains' || inputs.target == 'both'
+        id: jetbrains_version
         run: |
-          sed -i "s/pluginVersion = .*/pluginVersion = ${{ inputs.version }}/" jetbrains/gradle.properties
+          LAST_TAG=$(git tag -l "jetbrains-v*" | sort -V | tail -1)
+          CURRENT_VERSION=$(grep 'pluginVersion' jetbrains/gradle.properties | cut -d'=' -f2 | tr -d ' ')
+
+          if [ -n "$LAST_TAG" ]; then
+            COMMITS=$(git log --oneline "$LAST_TAG"..HEAD -- jetbrains/ || echo "")
+          else
+            COMMITS=$(git log --oneline -50 -- jetbrains/ || echo "")
+          fi
+
+          INCREMENT="patch"
+          if echo "$COMMITS" | grep -qiE "breaking.change|[a-z]+!:"; then
+            INCREMENT="major"
+          elif echo "$COMMITS" | grep -qE "feat[:(]"; then
+            INCREMENT="minor"
+          fi
+
+          IFS='.' read -r major minor patch <<< "$CURRENT_VERSION"
+          case $INCREMENT in
+            major) NEW_VERSION="$((major + 1)).0.0" ;;
+            minor) NEW_VERSION="$major.$((minor + 1)).0" ;;
+            patch) NEW_VERSION="$major.$minor.$((patch + 1))" ;;
+          esac
+
+          if git tag -l "jetbrains-v$NEW_VERSION" | grep -q "^jetbrains-v$NEW_VERSION$"; then
+            echo "Error: Tag jetbrains-v$NEW_VERSION already exists"
+            exit 1
+          fi
+
+          echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
+          echo "JetBrains version: $NEW_VERSION (from $CURRENT_VERSION, increment: $INCREMENT)"
+
+      - name: Calculate VS Code Version
+        if: inputs.target == 'vscode' || inputs.target == 'both'
+        id: vscode_version
+        run: |
+          LAST_TAG=$(git tag -l "vscode-v*" | sort -V | tail -1)
+          CURRENT_VERSION=$(node -p "require('./vscode/package.json').version")
+
+          if [ -n "$LAST_TAG" ]; then
+            COMMITS=$(git log --oneline "$LAST_TAG"..HEAD -- vscode/ || echo "")
+          else
+            COMMITS=$(git log --oneline -50 -- vscode/ || echo "")
+          fi
+
+          INCREMENT="patch"
+          if echo "$COMMITS" | grep -qiE "breaking.change|[a-z]+!:"; then
+            INCREMENT="major"
+          elif echo "$COMMITS" | grep -qE "feat[:(]"; then
+            INCREMENT="minor"
+          fi
+
+          IFS='.' read -r major minor patch <<< "$CURRENT_VERSION"
+          case $INCREMENT in
+            major) NEW_VERSION="$((major + 1)).0.0" ;;
+            minor) NEW_VERSION="$major.$((minor + 1)).0" ;;
+            patch) NEW_VERSION="$major.$minor.$((patch + 1))" ;;
+          esac
+
+          if git tag -l "vscode-v$NEW_VERSION" | grep -q "^vscode-v$NEW_VERSION$"; then
+            echo "Error: Tag vscode-v$NEW_VERSION already exists"
+            exit 1
+          fi
+
+          echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
+          echo "VS Code version: $NEW_VERSION (from $CURRENT_VERSION, increment: $INCREMENT)"
+
+      - name: Update JetBrains Version
+        if: inputs.target == 'jetbrains' || inputs.target == 'both'
+        run: |
+          VERSION="${{ steps.jetbrains_version.outputs.version }}"
+          sed -i "s/pluginVersion = .*/pluginVersion = $VERSION/" jetbrains/gradle.properties
 
       - name: Update VS Code Version
-        working-directory: vscode
+        if: inputs.target == 'vscode' || inputs.target == 'both'
         run: |
-          npm version --no-git-tag-version ${{ inputs.version }}
+          VERSION="${{ steps.vscode_version.outputs.version }}"
+          sed -i "s/\"version\": \"[^\"]*\"/\"version\": \"$VERSION\"/" vscode/package.json
 
-      - name: Patch JetBrains Changelog
-        if: ${{ inputs.release_notes != '' }}
-        working-directory: jetbrains
-        env:
-          CHANGELOG: ${{ inputs.release_notes }}
+      - name: Update JetBrains Changelog
+        if: inputs.target == 'jetbrains' || inputs.target == 'both'
         run: |
-          RELEASE_NOTE="./build/tmp/release_note.txt"
-          mkdir -p "$(dirname "$RELEASE_NOTE")"
-          echo "$CHANGELOG" > $RELEASE_NOTE
-          ./gradlew patchChangelog --release-note-file=$RELEASE_NOTE
+          VERSION="${{ steps.jetbrains_version.outputs.version }}"
+          DATE=$(date +%Y-%m-%d)
+          LAST_TAG=$(git tag -l "jetbrains-v*" | sort -V | tail -1)
 
-      - name: Create Release Branch
+          if [ -n "$LAST_TAG" ]; then
+            git log --format="- %s" "$LAST_TAG"..HEAD -- jetbrains/ > /tmp/jb_entries.txt
+          else
+            git log --format="- %s" -50 -- jetbrains/ > /tmp/jb_entries.txt
+          fi
+
+          if [ ! -s /tmp/jb_entries.txt ]; then
+            echo "- chore: release $VERSION" > /tmp/jb_entries.txt
+          fi
+
+          printf "\n## [%s] - %s\n\n" "$VERSION" "$DATE" > /tmp/jb_section.txt
+          cat /tmp/jb_entries.txt >> /tmp/jb_section.txt
+          printf "\n" >> /tmp/jb_section.txt
+
+          sed -i "/^## \[Unreleased\]/r /tmp/jb_section.txt" jetbrains/CHANGELOG.md
+
+          REPO="stanleygomes/codex-notes"
+          if [ -n "$LAST_TAG" ]; then
+            VERSION_LINK="[$VERSION]: https://github.com/$REPO/compare/$LAST_TAG...jetbrains-v$VERSION"
+          else
+            VERSION_LINK="[$VERSION]: https://github.com/$REPO/commits/jetbrains-v$VERSION"
+          fi
+
+          sed -i "s|^\[Unreleased\]:.*|\[Unreleased\]: https://github.com/$REPO/compare/jetbrains-v$VERSION...HEAD\n$VERSION_LINK|" jetbrains/CHANGELOG.md
+
+      - name: Update VS Code Changelog
+        if: inputs.target == 'vscode' || inputs.target == 'both'
         run: |
-          git checkout -b release/${{ inputs.version }}
+          VERSION="${{ steps.vscode_version.outputs.version }}"
+          DATE=$(date +%Y-%m-%d)
+          LAST_TAG=$(git tag -l "vscode-v*" | sort -V | tail -1)
 
-      - name: Commit Version Changes
+          if [ -n "$LAST_TAG" ]; then
+            git log --format="- %s" "$LAST_TAG"..HEAD -- vscode/ > /tmp/vs_entries.txt
+          else
+            git log --format="- %s" -50 -- vscode/ > /tmp/vs_entries.txt
+          fi
+
+          if [ ! -s /tmp/vs_entries.txt ]; then
+            echo "- chore: release $VERSION" > /tmp/vs_entries.txt
+          fi
+
+          printf "\n## [%s] - %s\n\n" "$VERSION" "$DATE" > /tmp/vs_section.txt
+          cat /tmp/vs_entries.txt >> /tmp/vs_section.txt
+          printf "\n" >> /tmp/vs_section.txt
+
+          sed -i "/^## \[Unreleased\]/r /tmp/vs_section.txt" vscode/CHANGELOG.md
+
+      - name: Commit and push to master
         run: |
           git add .
-          git commit -m "chore(release): ${{ inputs.version }}"
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            MSG="chore(release):"
+            if [ "${{ inputs.target }}" = "jetbrains" ] || [ "${{ inputs.target }}" = "both" ]; then
+              MSG="$MSG jetbrains-v${{ steps.jetbrains_version.outputs.version }}"
+            fi
+            if [ "${{ inputs.target }}" = "vscode" ] || [ "${{ inputs.target }}" = "both" ]; then
+              MSG="$MSG vscode-v${{ steps.vscode_version.outputs.version }}"
+            fi
+            git commit -m "$MSG"
+            git push origin master
+          fi
 
-      - name: Push Release Branch
+      - name: Create JetBrains Tag
+        if: inputs.target == 'jetbrains' || inputs.target == 'both'
         run: |
-          git push --set-upstream origin release/${{ inputs.version }}
+          VERSION="${{ steps.jetbrains_version.outputs.version }}"
+          git tag "jetbrains-v$VERSION"
+          git push origin "jetbrains-v$VERSION"
 
-      - name: Create Pull Request
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create VS Code Tag
+        if: inputs.target == 'vscode' || inputs.target == 'both'
         run: |
-          gh pr create \
-            --title "chore(release): ${{ inputs.version }}" \
-            --body "Automated version bump and changelog update for release \`${{ inputs.version }}\`." \
-            --head release/${{ inputs.version }} \
-            --base master
+          VERSION="${{ steps.vscode_version.outputs.version }}"
+          git tag "vscode-v$VERSION"
+          git push origin "vscode-v$VERSION"
 
   publish_jetbrains:
     name: Publish JetBrains Plugin
     needs: prepare_release
-    if: ${{ inputs.publish_jetbrains == true }}
+    if: |
+      inputs.publish_jetbrains == true &&
+      (inputs.target == 'jetbrains' || inputs.target == 'both')
     runs-on: ubuntu-latest
     environment: production
     permissions:
@@ -129,7 +243,7 @@ jobs:
       - name: Fetch Sources
         uses: actions/checkout@v4
         with:
-          ref: release/${{ inputs.version }}
+          ref: master
 
       - name: Setup Java
         uses: actions/setup-java@v5
@@ -157,7 +271,9 @@ jobs:
   publish_vscode:
     name: Publish VS Code Extension
     needs: prepare_release
-    if: ${{ inputs.publish_vscode == true }}
+    if: |
+      inputs.publish_vscode == true &&
+      (inputs.target == 'vscode' || inputs.target == 'both')
     runs-on: ubuntu-latest
     environment: production
     permissions:
@@ -170,7 +286,7 @@ jobs:
       - name: Fetch Sources
         uses: actions/checkout@v4
         with:
-          ref: release/${{ inputs.version }}
+          ref: master
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -218,40 +334,54 @@ jobs:
       - name: Fetch Sources
         uses: actions/checkout@v4
         with:
-          ref: release/${{ inputs.version }}
+          ref: master
 
       - name: Download JetBrains Artifact
         if: needs.publish_jetbrains.result == 'success'
         uses: actions/download-artifact@v4
         with:
           name: jetbrains-plugin
-          path: artifacts/
+          path: artifacts/jetbrains/
 
       - name: Download VS Code Artifact
         if: needs.publish_vscode.result == 'success'
         uses: actions/download-artifact@v4
         with:
           name: vscode-extension-vsix
-          path: artifacts/
+          path: artifacts/vscode/
 
-      - name: Create GitHub Release
+      - name: Create JetBrains GitHub Release
+        if: inputs.target == 'jetbrains' || inputs.target == 'both'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          RELEASE_NOTES: ${{ inputs.release_notes }}
-          VERSION: ${{ inputs.version }}
         run: |
-          NOTES="$RELEASE_NOTES"
-          if [ -z "$NOTES" ]; then
-            NOTES="Release v$VERSION"
+          VERSION="${{ needs.prepare_release.outputs.jetbrains_version }}"
+          TAG="jetbrains-v$VERSION"
+          if [ -d artifacts/jetbrains ] && [ -n "$(ls -A artifacts/jetbrains 2>/dev/null)" ]; then
+            gh release create "$TAG" \
+              --title "JetBrains Plugin v$VERSION" \
+              --notes "JetBrains Plugin release v$VERSION" \
+              artifacts/jetbrains/*
+          else
+            gh release create "$TAG" \
+              --title "JetBrains Plugin v$VERSION" \
+              --notes "JetBrains Plugin release v$VERSION"
           fi
 
-          if [ -d artifacts ] && [ -n "$(ls -A artifacts 2>/dev/null)" ]; then
-            gh release create "v$VERSION" \
-              --title "v$VERSION" \
-              --notes "$NOTES" \
-              artifacts/*
+      - name: Create VS Code GitHub Release
+        if: inputs.target == 'vscode' || inputs.target == 'both'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          VERSION="${{ needs.prepare_release.outputs.vscode_version }}"
+          TAG="vscode-v$VERSION"
+          if [ -d artifacts/vscode ] && [ -n "$(ls -A artifacts/vscode 2>/dev/null)" ]; then
+            gh release create "$TAG" \
+              --title "VS Code Extension v$VERSION" \
+              --notes "VS Code Extension release v$VERSION" \
+              artifacts/vscode/*
           else
-            gh release create "v$VERSION" \
-              --title "v$VERSION" \
-              --notes "$NOTES"
+            gh release create "$TAG" \
+              --title "VS Code Extension v$VERSION" \
+              --notes "VS Code Extension release v$VERSION"
           fi
