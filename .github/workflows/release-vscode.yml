@@ -1,4 +1,4 @@
-name: Release VS Code/Cursor Extension
+name: Release VS Code/Open VSX Extension
 
 on:
   workflow_dispatch:
@@ -10,7 +10,7 @@ on:
 
 jobs:
   publish:
-    name: Publish to VS Code and Cursor
+    name: Publish to VS Code and Open VSX Marketplaces
     runs-on: ubuntu-latest
     environment: production
     permissions:
@@ -33,9 +33,11 @@ jobs:
 
       - name: Install Dependencies
         run: npm ci
+        working-directory: vscode
 
       - name: Lint
         run: npm run lint
+        working-directory: vscode
 
       - name: Build
         run: npm run compile
@@ -47,6 +49,7 @@ jobs:
 
       - name: Package VSIX
         run: npx @vscode/vsce package --no-yarn --out codex-notes.vsix
+        working-directory: vscode
 
       - name: Validate Publish Tokens
         env:
@@ -62,13 +65,16 @@ jobs:
             echo "Error: Missing OVSX_PAT secret. Configure it in repository Settings > Secrets and variables > Actions."
             exit 1
           fi
+        working-directory: vscode
 
       - name: Publish to Visual Studio Marketplace
         env:
           VSCE_PAT: ${{ secrets.MARKETPLACE_VSCE_PAT }}
         run: npx @vscode/vsce publish --packagePath codex-notes.vsix --no-yarn
+        working-directory: vscode
 
-      - name: Publish to OpenVSX (Cursor)
+      - name: Publish to OpenVSX Marketplace
         env:
           OVSX_PAT: ${{ secrets.MARKETPLACE_OVSX_PAT }}
         run: npx ovsx publish codex-notes.vsix
+        working-directory: vscode
