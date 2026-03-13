@@ -1,7 +1,14 @@
 name: Release
 on:
-  release:
-    types: [ prereleased, released ]
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: "Release tag to publish (example: 1.2.3)"
+        required: true
+      release_note:
+        description: "Optional release notes to patch changelog"
+        required: false
+        default: ""
 
 jobs:
 
@@ -26,12 +33,12 @@ jobs:
       - name: Fetch Sources
         uses: actions/checkout@v6
         with:
-          ref: ${{ github.event.release.tag_name }}
+          ref: ${{ inputs.release_tag }}
 
       # Update version to match the release tag
       - name: Update Version
         run: |
-          sed -i "s/pluginVersion = .*/pluginVersion = ${{ github.event.release.tag_name }}/" gradle.properties
+          sed -i "s/pluginVersion = .*/pluginVersion = ${{ inputs.release_tag }}/" gradle.properties
 
       # Set up the Java environment for the next steps
       - name: Setup Java
@@ -48,9 +55,9 @@ jobs:
 
       # Update the Unreleased section with the current release note
       - name: Patch Changelog
-        if: ${{ github.event.release.body != '' }}
+        if: ${{ inputs.release_note != '' }}
         env:
-          CHANGELOG: ${{ github.event.release.body }}
+          CHANGELOG: ${{ inputs.release_note }}
         run: |
           RELEASE_NOTE="./build/tmp/release_note.txt"
           mkdir -p "$(dirname "$RELEASE_NOTE")"
@@ -71,14 +78,14 @@ jobs:
       - name: Upload Release Asset
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh release upload ${{ github.event.release.tag_name }} ./build/distributions/*
+        run: gh release upload ${{ inputs.release_tag }} ./build/distributions/*
 
       # Create a pull request for release updates
       - name: Create Release Updates Pull Request
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          VERSION="${{ github.event.release.tag_name }}"
+          VERSION="${{ inputs.release_tag }}"
           BRANCH="release-updates-$VERSION"
           LABEL="release updates"
 
