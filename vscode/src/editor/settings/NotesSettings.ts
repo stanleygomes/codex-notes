@@ -10,20 +10,7 @@ export class NotesSettings {
   }
 
   static getNotesDirectory(): string {
-    const config = vscode.workspace.getConfiguration(NotesSettings.SECTION);
-    const dir = config.get<string>('notesDirectory', '');
-    if (dir) {
-      return dir;
-    }
     return path.join(os.homedir(), '.codex-notes');
-  }
-
-  static getExportDirectory(): string {
-    return vscode.workspace.getConfiguration(NotesSettings.SECTION).get<string>('exportDirectory', '');
-  }
-
-  static getImportDirectory(): string {
-    return vscode.workspace.getConfiguration(NotesSettings.SECTION).get<string>('importDirectory', '');
   }
 
   static isOpenFolderEnabled(): boolean {
