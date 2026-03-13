@@ -107,3 +107,6 @@ temp/
 Thumbs.db
 ehthumbs.db
 Desktop.ini
+
+# extension specific files
+codex-notes.vsix

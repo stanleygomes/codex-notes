@@ -3,7 +3,9 @@
   "displayName": "Codex Notes",
   "description": "A powerful plugin for managing notes directly within your IDE. Keep your thoughts, code snippets, and documentation organized without leaving your development environment",
   "version": "0.0.1",
+  "license": "MIT",
   "publisher": "stanleygomes",
+  "repository": "https://github.com/stanleygomes/codex-notes",
   "engines": {
     "vscode": "^1.85.0",
     "node": "22.x"
