@@ -4,6 +4,8 @@ import { NoteColorEnum } from '../enum/NoteColorEnum';
 import { DatabaseConnection } from './DatabaseConnection';
 
 export abstract class BaseNoteRepository {
+  private static readonly validColors = new Set<string>(Object.values(NoteColorEnum));
+
   protected get db(): SqlJsDatabase {
     return DatabaseConnection.getInstance().getDatabase();
   }
@@ -17,11 +19,19 @@ export abstract class BaseNoteRepository {
       id: row['id'] as string,
       title: row['title'] as string,
       filePath: row['filePath'] as string,
-      createdAt: row['createdAt'] as number,
-      updatedAt: row['updatedAt'] as number,
-      isFavorite: (row['isFavorite'] as number) === 1,
-      color: (row['color'] as NoteColorEnum) ?? NoteColorEnum.NONE,
+      createdAt: Number(row['createdAt']),
+      updatedAt: Number(row['updatedAt']),
+      isFavorite: Number(row['isFavorite']) === 1,
+      color: this.normalizeColor(row['color']),
     };
+  }
+
+  private normalizeColor(value: unknown): NoteColorEnum {
+    const normalizedColor = String(value ?? NoteColorEnum.NONE).toUpperCase();
+    if (!BaseNoteRepository.validColors.has(normalizedColor)) {
+      return NoteColorEnum.NONE;
+    }
+    return normalizedColor as NoteColorEnum;
   }
 
   protected queryAll(sql: string, params: unknown[] = []): Note[] {
