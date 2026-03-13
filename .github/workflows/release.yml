@@ -11,14 +11,6 @@ on:
           - jetbrains
           - vscode
         default: both
-      publish_jetbrains:
-        description: "Publish to JetBrains Marketplace"
-        type: boolean
-        default: true
-      publish_vscode:
-        description: "Publish to VS Code / OpenVSX Marketplaces"
-        type: boolean
-        default: true
       create_github_release:
         description: "Create GitHub Release"
         type: boolean
@@ -183,9 +175,7 @@ jobs:
   publish_jetbrains:
     name: Publish JetBrains Plugin
     needs: prepare_release
-    if: |
-      inputs.publish_jetbrains == true &&
-      (inputs.target == 'jetbrains' || inputs.target == 'both')
+    if: inputs.target == 'jetbrains' || inputs.target == 'both'
     runs-on: ubuntu-latest
     environment: production
     permissions:
@@ -232,9 +222,7 @@ jobs:
   publish_vscode:
     name: Publish VS Code Extension
     needs: prepare_release
-    if: |
-      inputs.publish_vscode == true &&
-      (inputs.target == 'vscode' || inputs.target == 'both')
+    if: inputs.target == 'vscode' || inputs.target == 'both'
     runs-on: ubuntu-latest
     environment: production
     permissions:
