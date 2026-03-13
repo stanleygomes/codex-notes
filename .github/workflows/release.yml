@@ -1,15 +1,5 @@
 name: Release
 
-# Stage 1 (workflow_dispatch): calculates versions, creates a release branch,
-#   commits version/changelog bumps, and opens a PR targeting master.
-#   No direct push to master occurs.
-#
-# Stage 2 (push to master): triggered automatically when the release PR is merged.
-#   Detects a release commit by the "chore(release):" prefix, then:
-#   - creates git tags,
-#   - publishes plugins to their respective marketplaces, and
-#   - creates GitHub Releases.
-
 on:
   workflow_dispatch:
     inputs:
@@ -22,15 +12,17 @@ on:
           - vscode
         default: both
       publish_jetbrains:
-        description: "Publish to JetBrains Marketplace on merge"
+        description: "Publish to JetBrains Marketplace"
         type: boolean
         default: true
       publish_vscode:
-        description: "Publish to VS Code / OpenVSX Marketplaces on merge"
+        description: "Publish to VS Code / OpenVSX Marketplaces"
         type: boolean
         default: true
-  push:
-    branches: [master]
+      create_github_release:
+        description: "Create GitHub Release"
+        type: boolean
+        default: true
 
 concurrency:
   group: release
@@ -38,18 +30,13 @@ concurrency:
 
 jobs:
 
-  # ── Stage 1: Create a release PR (workflow_dispatch only) ───────────────────
-
   prepare_release:
-    name: Prepare Release PR
-    if: github.event_name == 'workflow_dispatch'
+    name: Prepare Release
     runs-on: ubuntu-latest
     permissions:
       contents: write
-      pull-requests: write
     outputs:
-      jetbrains_version: ${{ steps.jetbrains_version.outputs.version }}
-      vscode_version: ${{ steps.vscode_version.outputs.version }}
+      version: ${{ steps.version.outputs.version }}
     steps:
 
       - name: Fetch Sources
@@ -63,17 +50,17 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git config user.name "github-actions[bot]"
 
-      - name: Calculate JetBrains Version
-        if: inputs.target == 'jetbrains' || inputs.target == 'both'
-        id: jetbrains_version
+      - name: Calculate Version
+        id: version
         run: |
-          LAST_TAG=$(git tag -l "jetbrains-v*" | sort -V | tail -1)
-          CURRENT_VERSION=$(grep 'pluginVersion' jetbrains/gradle.properties | cut -d'=' -f2 | tr -d ' ')
+          LAST_TAG=$(git tag -l "v*" | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | sort -V | tail -1 || true)
 
           if [ -n "$LAST_TAG" ]; then
-            COMMITS=$(git log --oneline "$LAST_TAG"..HEAD -- jetbrains/ || echo "")
+            CURRENT_VERSION="${LAST_TAG#v}"
+            COMMITS=$(git log --oneline "$LAST_TAG"..HEAD || echo "")
           else
-            COMMITS=$(git log --oneline -50 -- jetbrains/ || echo "")
+            CURRENT_VERSION=$(grep 'pluginVersion' jetbrains/gradle.properties | cut -d'=' -f2 | tr -d ' ')
+            COMMITS=$(git log --oneline -50 || echo "")
           fi
 
           INCREMENT="patch"
@@ -90,96 +77,29 @@ jobs:
             patch) NEW_VERSION="$major.$minor.$((patch + 1))" ;;
           esac
 
-          if git tag -l "jetbrains-v$NEW_VERSION" | grep -q "^jetbrains-v$NEW_VERSION$"; then
-            echo "Error: Tag jetbrains-v$NEW_VERSION already exists"
+          if git tag -l "v$NEW_VERSION" | grep -q "^v$NEW_VERSION$"; then
+            echo "Error: Tag v$NEW_VERSION already exists"
             exit 1
           fi
 
           echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
-          echo "JetBrains version: $NEW_VERSION (from $CURRENT_VERSION, increment: $INCREMENT)"
-
-      - name: Calculate VS Code Version
-        if: inputs.target == 'vscode' || inputs.target == 'both'
-        id: vscode_version
-        run: |
-          LAST_TAG=$(git tag -l "vscode-v*" | sort -V | tail -1)
-          CURRENT_VERSION=$(node -p "require('./vscode/package.json').version")
-
-          if [ -n "$LAST_TAG" ]; then
-            COMMITS=$(git log --oneline "$LAST_TAG"..HEAD -- vscode/ || echo "")
-          else
-            COMMITS=$(git log --oneline -50 -- vscode/ || echo "")
-          fi
-
-          INCREMENT="patch"
-          if echo "$COMMITS" | grep -qiE "breaking.change|[a-z]+!:"; then
-            INCREMENT="major"
-          elif echo "$COMMITS" | grep -qE "feat[:(]"; then
-            INCREMENT="minor"
-          fi
-
-          IFS='.' read -r major minor patch <<< "$CURRENT_VERSION"
-          case $INCREMENT in
-            major) NEW_VERSION="$((major + 1)).0.0" ;;
-            minor) NEW_VERSION="$major.$((minor + 1)).0" ;;
-            patch) NEW_VERSION="$major.$minor.$((patch + 1))" ;;
-          esac
-
-          if git tag -l "vscode-v$NEW_VERSION" | grep -q "^vscode-v$NEW_VERSION$"; then
-            echo "Error: Tag vscode-v$NEW_VERSION already exists"
-            exit 1
-          fi
-
-          echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
-          echo "VS Code version: $NEW_VERSION (from $CURRENT_VERSION, increment: $INCREMENT)"
-
-      - name: Compute Release Branch Name
-        id: branch
-        run: |
-          BRANCH="chore/release"
-          if [ "${{ inputs.target }}" = "jetbrains" ] || [ "${{ inputs.target }}" = "both" ]; then
-            BRANCH="${BRANCH}-jetbrains-v${{ steps.jetbrains_version.outputs.version }}"
-          fi
-          if [ "${{ inputs.target }}" = "vscode" ] || [ "${{ inputs.target }}" = "both" ]; then
-            BRANCH="${BRANCH}-vscode-v${{ steps.vscode_version.outputs.version }}"
-          fi
-          echo "name=$BRANCH" >> $GITHUB_OUTPUT
-
-      - name: Check for Existing Release PR
-        id: existing_pr
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          EXISTING=$(gh pr list --base master --head "${{ steps.branch.outputs.name }}" --json number --jq '.[0].number // empty')
-          if [ -n "$EXISTING" ]; then
-            echo "PR #$EXISTING already exists for branch ${{ steps.branch.outputs.name }}, skipping."
-            echo "skip=true" >> $GITHUB_OUTPUT
-          else
-            echo "skip=false" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Create Release Branch
-        if: steps.existing_pr.outputs.skip != 'true'
-        run: git checkout -b "${{ steps.branch.outputs.name }}"
+          echo "Version: $NEW_VERSION (from $CURRENT_VERSION, increment: $INCREMENT)"
 
       - name: Update JetBrains Version
-        if: steps.existing_pr.outputs.skip != 'true' && (inputs.target == 'jetbrains' || inputs.target == 'both')
         run: |
-          VERSION="${{ steps.jetbrains_version.outputs.version }}"
+          VERSION="${{ steps.version.outputs.version }}"
           sed -i "s/pluginVersion = .*/pluginVersion = $VERSION/" jetbrains/gradle.properties
 
       - name: Update VS Code Version
-        if: steps.existing_pr.outputs.skip != 'true' && (inputs.target == 'vscode' || inputs.target == 'both')
         run: |
-          VERSION="${{ steps.vscode_version.outputs.version }}"
+          VERSION="${{ steps.version.outputs.version }}"
           sed -i "s/\"version\": \"[^\"]*\"/\"version\": \"$VERSION\"/" vscode/package.json
 
       - name: Update JetBrains Changelog
-        if: steps.existing_pr.outputs.skip != 'true' && (inputs.target == 'jetbrains' || inputs.target == 'both')
         run: |
-          VERSION="${{ steps.jetbrains_version.outputs.version }}"
+          VERSION="${{ steps.version.outputs.version }}"
           DATE=$(date +%Y-%m-%d)
-          LAST_TAG=$(git tag -l "jetbrains-v*" | sort -V | tail -1)
+          LAST_TAG=$(git tag -l "v*" | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | sort -V | tail -1 || true)
 
           if [ -n "$LAST_TAG" ]; then
             git log --format="- %s" "$LAST_TAG"..HEAD -- jetbrains/ > /tmp/jb_entries.txt
@@ -199,19 +119,18 @@ jobs:
 
           REPO="stanleygomes/codex-notes"
           if [ -n "$LAST_TAG" ]; then
-            VERSION_LINK="[$VERSION]: https://github.com/$REPO/compare/$LAST_TAG...jetbrains-v$VERSION"
+            VERSION_LINK="[$VERSION]: https://github.com/$REPO/compare/$LAST_TAG...v$VERSION"
           else
-            VERSION_LINK="[$VERSION]: https://github.com/$REPO/commits/jetbrains-v$VERSION"
+            VERSION_LINK="[$VERSION]: https://github.com/$REPO/commits/v$VERSION"
           fi
 
-          sed -i "s|^\[Unreleased\]:.*|\[Unreleased\]: https://github.com/$REPO/compare/jetbrains-v$VERSION...HEAD\n$VERSION_LINK|" jetbrains/CHANGELOG.md
+          sed -i "s|^\[Unreleased\]:.*|\[Unreleased\]: https://github.com/$REPO/compare/v$VERSION...HEAD\n$VERSION_LINK|" jetbrains/CHANGELOG.md
 
       - name: Update VS Code Changelog
-        if: steps.existing_pr.outputs.skip != 'true' && (inputs.target == 'vscode' || inputs.target == 'both')
         run: |
-          VERSION="${{ steps.vscode_version.outputs.version }}"
+          VERSION="${{ steps.version.outputs.version }}"
           DATE=$(date +%Y-%m-%d)
-          LAST_TAG=$(git tag -l "vscode-v*" | sort -V | tail -1)
+          LAST_TAG=$(git tag -l "v*" | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | sort -V | tail -1 || true)
 
           if [ -n "$LAST_TAG" ]; then
             git log --format="- %s" "$LAST_TAG"..HEAD -- vscode/ > /tmp/vs_entries.txt
@@ -229,92 +148,30 @@ jobs:
 
           sed -i "/^## \[Unreleased\]/r /tmp/vs_section.txt" vscode/CHANGELOG.md
 
-      - name: Commit and Push Release Branch
-        if: steps.existing_pr.outputs.skip != 'true'
+      - name: Commit and push to master
         run: |
           git add .
           if git diff --staged --quiet; then
             echo "No changes to commit"
           else
             MSG="chore(release):"
-            if [ "${{ inputs.target }}" = "jetbrains" ] || [ "${{ inputs.target }}" = "both" ]; then
-              MSG="$MSG jetbrains-v${{ steps.jetbrains_version.outputs.version }}"
-            fi
-            if [ "${{ inputs.target }}" = "vscode" ] || [ "${{ inputs.target }}" = "both" ]; then
-              MSG="$MSG vscode-v${{ steps.vscode_version.outputs.version }}"
-            fi
+            MSG="$MSG v${{ steps.version.outputs.version }}"
             git commit -m "$MSG"
-            git push origin "${{ steps.branch.outputs.name }}"
+            git push origin master
           fi
 
-      - name: Open Pull Request
-        if: steps.existing_pr.outputs.skip != 'true'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create Tag
         run: |
-          TITLE="chore(release):"
-          if [ "${{ inputs.target }}" = "jetbrains" ] || [ "${{ inputs.target }}" = "both" ]; then
-            TITLE="$TITLE jetbrains-v${{ steps.jetbrains_version.outputs.version }}"
-          fi
-          if [ "${{ inputs.target }}" = "vscode" ] || [ "${{ inputs.target }}" = "both" ]; then
-            TITLE="$TITLE vscode-v${{ steps.vscode_version.outputs.version }}"
-          fi
-
-          gh pr create \
-            --base master \
-            --head "${{ steps.branch.outputs.name }}" \
-            --title "$TITLE" \
-            --body "Automated release PR. Merge to trigger git tag creation, marketplace publishing, and GitHub Release creation."
-
-  # ── Stage 2: Tag, publish, and release (push to master after PR merge) ──────
-
-  create_tags:
-    name: Create Release Tags
-    if: |
-      github.event_name == 'push' &&
-      startsWith(github.event.head_commit.message, 'chore(release):')
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-
-      - name: Fetch Sources
-        uses: actions/checkout@v4
-
-      - name: Configure Git
-        run: |
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git config user.name "github-actions[bot]"
-
-      - name: Create JetBrains Tag
-        if: contains(github.event.head_commit.message, 'jetbrains-v')
-        run: |
-          VERSION=$(echo "${{ github.event.head_commit.message }}" | grep -oP 'jetbrains-v\K[\d.]+')
-          if [ -z "$VERSION" ]; then
-            echo "Error: could not extract JetBrains version from commit message"
-            exit 1
-          fi
-          git tag "jetbrains-v$VERSION"
-          git push origin "jetbrains-v$VERSION"
-
-      - name: Create VS Code Tag
-        if: contains(github.event.head_commit.message, 'vscode-v')
-        run: |
-          VERSION=$(echo "${{ github.event.head_commit.message }}" | grep -oP 'vscode-v\K[\d.]+')
-          if [ -z "$VERSION" ]; then
-            echo "Error: could not extract VS Code version from commit message"
-            exit 1
-          fi
-          git tag "vscode-v$VERSION"
-          git push origin "vscode-v$VERSION"
+          VERSION="${{ steps.version.outputs.version }}"
+          git tag "v$VERSION"
+          git push origin "v$VERSION"
 
   publish_jetbrains:
     name: Publish JetBrains Plugin
-    needs: create_tags
+    needs: prepare_release
     if: |
-      github.event_name == 'push' &&
-      startsWith(github.event.head_commit.message, 'chore(release):') &&
-      contains(github.event.head_commit.message, 'jetbrains-v')
+      inputs.publish_jetbrains == true &&
+      (inputs.target == 'jetbrains' || inputs.target == 'both')
     runs-on: ubuntu-latest
     environment: production
     permissions:
@@ -360,15 +217,14 @@ jobs:
 
   publish_vscode:
     name: Publish VS Code Extension
-    needs: create_tags
+    needs: prepare_release
     if: |
-      github.event_name == 'push' &&
-      startsWith(github.event.head_commit.message, 'chore(release):') &&
-      contains(github.event.head_commit.message, 'vscode-v')
+      inputs.publish_vscode == true &&
+      (inputs.target == 'vscode' || inputs.target == 'both')
     runs-on: ubuntu-latest
     environment: production
     permissions:
-      contents: write
+      contents: read
     defaults:
       run:
         working-directory: vscode
@@ -407,3 +263,60 @@ jobs:
         with:
           name: vscode-extension-vsix
           path: vscode/codex-notes.vsix
+
+  create_release:
+    name: Create GitHub Release
+    needs: [prepare_release, publish_jetbrains, publish_vscode]
+    if: |
+      always() &&
+      inputs.create_github_release == true &&
+      needs.prepare_release.result == 'success' &&
+      (needs.publish_jetbrains.result == 'success' || needs.publish_jetbrains.result == 'skipped') &&
+      (needs.publish_vscode.result == 'success' || needs.publish_vscode.result == 'skipped')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+
+      - name: Fetch Sources
+        uses: actions/checkout@v4
+        with:
+          ref: master
+
+      - name: Download JetBrains Artifact
+        if: needs.publish_jetbrains.result == 'success'
+        uses: actions/download-artifact@v4
+        with:
+          name: jetbrains-plugin
+          path: artifacts/jetbrains/
+
+      - name: Download VS Code Artifact
+        if: needs.publish_vscode.result == 'success'
+        uses: actions/download-artifact@v4
+        with:
+          name: vscode-extension-vsix
+          path: artifacts/vscode/
+
+      - name: Create GitHub Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          VERSION="${{ needs.prepare_release.outputs.version }}"
+          TAG="v$VERSION"
+          ASSETS=()
+          if [ -d artifacts/jetbrains ] && [ -n "$(ls -A artifacts/jetbrains 2>/dev/null)" ]; then
+            ASSETS+=(artifacts/jetbrains/*)
+          fi
+          if [ -d artifacts/vscode ] && [ -n "$(ls -A artifacts/vscode 2>/dev/null)" ]; then
+            ASSETS+=(artifacts/vscode/*)
+          fi
+          if [ "${#ASSETS[@]}" -gt 0 ]; then
+            gh release create "$TAG" \
+              --title "Codex Notes v$VERSION" \
+              --notes "Codex Notes release v$VERSION" \
+              "${ASSETS[@]}"
+          else
+            gh release create "$TAG" \
+              --title "Codex Notes v$VERSION" \
+              --notes "Codex Notes release v$VERSION"
+          fi
