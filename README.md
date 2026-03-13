@@ -125,26 +125,46 @@ This project uses GitHub Actions for continuous integration and deployment. The 
 ### Build Workflow (`build.yml`)
 - **Trigger**: Push to `master` branch or pull requests
 - **Actions**:
-  - Validates Gradle Wrapper
-  - Builds and validates the VS Code extension
-  - Runs unit tests and plugin verification
+  - Validates conventional commits
+  - Builds and validates the VS Code extension (lint, test, package)
+  - Builds the JetBrains plugin
+  - Runs JetBrains unit tests and uploads coverage to Codecov
   - Executes Qodana code inspections
-  - Builds the plugin
-  - Runs plugin verifier
-  - Creates a draft release for manual review
+  - Runs IntelliJ Plugin Verifier
 
 ### Release Workflow (`release.yml`)
 - **Trigger**: Manual dispatch (`workflow_dispatch`)
-- **Actions**:
-  - Signs and publishes the plugin to JetBrains Marketplace
-  - Updates changelog
+- **Inputs**:
+  - `version` — semver string (e.g. `1.2.3`), **required**
+  - `release_notes` — optional notes to patch the changelog
+  - `publish_jetbrains` — boolean, default `true`
+  - `publish_vscode` — boolean, default `true`
+  - `create_github_release` — boolean, default `true`
+- **Jobs**:
+  1. `prepare_release` — bumps versions (JetBrains + VS Code), optionally patches changelog, opens a PR from branch `release/<version>`
+  2. `publish_jetbrains` *(conditional)* — builds, signs, and publishes to JetBrains Marketplace
+  3. `publish_vscode` *(conditional)* — packages and publishes to Visual Studio Marketplace and OpenVSX
+  4. `create_release` *(conditional)* — creates a GitHub Release and attaches built artifacts
 
-### VS Code Release Workflow (`release-vscode.yml`)
-- **Trigger**: Manual dispatch (`workflow_dispatch`)
+### Deploy Landpage Workflow (`deploy-landpage.yml`)
+- **Trigger**: Push to `master` affecting `landpage/**`, or manual dispatch
 - **Actions**:
-  - Builds and packages the VS Code extension
-  - Publishes to Visual Studio Marketplace using `VSCE_PAT`
-  - Publishes to OpenVSX (used by Cursor) using `OVSX_PAT`
+  - Builds and deploys the landing page to Vercel
+
+## 📦 How to Release
+
+1. Go to **Actions → Release** in the GitHub repository.
+2. Click **Run workflow** and fill in the inputs:
+   - **version**: the new semver version (e.g. `2.2.0`)
+   - **release_notes**: optional changelog entry
+   - Toggle `publish_jetbrains`, `publish_vscode`, and `create_github_release` as needed.
+3. The workflow will:
+   - Validate the version format.
+   - Bump versions in `jetbrains/gradle.properties` and `vscode/package.json`.
+   - Optionally patch `CHANGELOG.md` with the provided release notes.
+   - Push a `release/<version>` branch and open a PR (`chore(release): <version>`).
+   - Publish to the selected marketplaces.
+   - Create a GitHub Release and attach built artifacts.
 
 
 ## 🤝 Contributing

@@ -1,0 +1,257 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Release version (e.g. 1.2.3)"
+        required: true
+      release_notes:
+        description: "Release notes (optional)"
+        required: false
+        default: ""
+      publish_jetbrains:
+        description: "Publish to JetBrains Marketplace"
+        type: boolean
+        default: true
+      publish_vscode:
+        description: "Publish to VS Code / OpenVSX Marketplaces"
+        type: boolean
+        default: true
+      create_github_release:
+        description: "Create GitHub Release"
+        type: boolean
+        default: true
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+
+  prepare_release:
+    name: Prepare Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+
+      - name: Validate Version Format
+        run: |
+          if ! echo "${{ inputs.version }}" | grep -qE '^[0-9]+\.[0-9]+\.[0-9]+$'; then
+            echo "Error: Version '${{ inputs.version }}' does not match semver format (X.Y.Z)"
+            exit 1
+          fi
+
+      - name: Fetch Sources
+        uses: actions/checkout@v4
+        with:
+          ref: master
+          fetch-depth: 0
+
+      - name: Setup Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: 17
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v5
+
+      - name: Configure Git
+        run: |
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+
+      - name: Update JetBrains Version
+        run: |
+          sed -i "s/pluginVersion = .*/pluginVersion = ${{ inputs.version }}/" jetbrains/gradle.properties
+
+      - name: Update VS Code Version
+        working-directory: vscode
+        run: |
+          npm version --no-git-tag-version ${{ inputs.version }}
+
+      - name: Patch JetBrains Changelog
+        if: ${{ inputs.release_notes != '' }}
+        working-directory: jetbrains
+        env:
+          CHANGELOG: ${{ inputs.release_notes }}
+        run: |
+          RELEASE_NOTE="./build/tmp/release_note.txt"
+          mkdir -p "$(dirname "$RELEASE_NOTE")"
+          echo "$CHANGELOG" > $RELEASE_NOTE
+          ./gradlew patchChangelog --release-note-file=$RELEASE_NOTE
+
+      - name: Create Release Branch
+        run: |
+          git checkout -b release/${{ inputs.version }}
+
+      - name: Commit Version Changes
+        run: |
+          git add .
+          git commit -m "chore(release): ${{ inputs.version }}"
+
+      - name: Push Release Branch
+        run: |
+          git push --set-upstream origin release/${{ inputs.version }}
+
+      - name: Create Pull Request
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr create \
+            --title "chore(release): ${{ inputs.version }}" \
+            --body "Automated version bump and changelog update for release \`${{ inputs.version }}\`." \
+            --head release/${{ inputs.version }} \
+            --base master
+
+  publish_jetbrains:
+    name: Publish JetBrains Plugin
+    needs: prepare_release
+    if: ${{ inputs.publish_jetbrains == true }}
+    runs-on: ubuntu-latest
+    environment: production
+    permissions:
+      contents: write
+    defaults:
+      run:
+        working-directory: jetbrains
+    steps:
+
+      - name: Maximize Build Space
+        uses: jlumbroso/free-disk-space@v1.3.1
+        with:
+          tool-cache: false
+          large-packages: false
+
+      - name: Fetch Sources
+        uses: actions/checkout@v4
+        with:
+          ref: release/${{ inputs.version }}
+
+      - name: Setup Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: 17
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v5
+
+      - name: Publish Plugin
+        env:
+          PUBLISH_TOKEN: ${{ secrets.PUBLISH_TOKEN }}
+          CERTIFICATE_CHAIN: ${{ secrets.CERTIFICATE_CHAIN }}
+          PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+          PRIVATE_KEY_PASSWORD: ${{ secrets.PRIVATE_KEY_PASSWORD }}
+        run: ./gradlew publishPlugin
+
+      - name: Upload Plugin Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: jetbrains-plugin
+          path: jetbrains/build/distributions/*.zip
+
+  publish_vscode:
+    name: Publish VS Code Extension
+    needs: prepare_release
+    if: ${{ inputs.publish_vscode == true }}
+    runs-on: ubuntu-latest
+    environment: production
+    permissions:
+      contents: read
+    defaults:
+      run:
+        working-directory: vscode
+    steps:
+
+      - name: Fetch Sources
+        uses: actions/checkout@v4
+        with:
+          ref: release/${{ inputs.version }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: vscode/package-lock.json
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Package VSIX
+        run: npx @vscode/vsce package --no-yarn --out codex-notes.vsix
+
+      - name: Publish to Visual Studio Marketplace
+        env:
+          VSCE_PAT: ${{ secrets.MARKETPLACE_VSCE_PAT }}
+        run: npx @vscode/vsce publish --packagePath codex-notes.vsix --no-yarn
+
+      - name: Publish to OpenVSX Marketplace
+        env:
+          OVSX_PAT: ${{ secrets.MARKETPLACE_OVSX_PAT }}
+        run: npx ovsx publish codex-notes.vsix
+
+      - name: Upload VSIX Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: vscode-extension-vsix
+          path: vscode/codex-notes.vsix
+
+  create_release:
+    name: Create GitHub Release
+    needs: [prepare_release, publish_jetbrains, publish_vscode]
+    if: |
+      always() &&
+      inputs.create_github_release == true &&
+      needs.prepare_release.result == 'success' &&
+      (needs.publish_jetbrains.result == 'success' || needs.publish_jetbrains.result == 'skipped') &&
+      (needs.publish_vscode.result == 'success' || needs.publish_vscode.result == 'skipped')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+
+      - name: Fetch Sources
+        uses: actions/checkout@v4
+        with:
+          ref: release/${{ inputs.version }}
+
+      - name: Download JetBrains Artifact
+        if: needs.publish_jetbrains.result == 'success'
+        uses: actions/download-artifact@v4
+        with:
+          name: jetbrains-plugin
+          path: artifacts/
+
+      - name: Download VS Code Artifact
+        if: needs.publish_vscode.result == 'success'
+        uses: actions/download-artifact@v4
+        with:
+          name: vscode-extension-vsix
+          path: artifacts/
+
+      - name: Create GitHub Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_NOTES: ${{ inputs.release_notes }}
+          VERSION: ${{ inputs.version }}
+        run: |
+          NOTES="$RELEASE_NOTES"
+          if [ -z "$NOTES" ]; then
+            NOTES="Release v$VERSION"
+          fi
+
+          if [ -d artifacts ] && [ -n "$(ls -A artifacts 2>/dev/null)" ]; then
+            gh release create "v$VERSION" \
+              --title "v$VERSION" \
+              --notes "$NOTES" \
+              artifacts/*
+          else
+            gh release create "v$VERSION" \
+              --title "v$VERSION" \
+              --notes "$NOTES"
+          fi

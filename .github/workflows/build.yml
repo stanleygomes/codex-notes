@@ -97,9 +97,6 @@ jobs:
     defaults:
       run:
         working-directory: jetbrains
-    outputs:
-      version: ${{ steps.update_version.outputs.version }}
-      previous_version: ${{ steps.update_version.outputs.previous_version }}
     steps:
 
       # Free GitHub Actions Environment Disk Space
@@ -114,22 +111,6 @@ jobs:
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-
-      # Update version for release builds
-      - name: Update Version for Release
-        if: github.ref == 'refs/heads/master'
-        id: update_version
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          CURRENT_VERSION=$(grep 'pluginVersion' gradle.properties | cut -d'=' -f2 | tr -d ' ')
-          
-          chmod +x ../scripts/update-version.sh
-          ../scripts/update-version.sh
-          
-          VERSION=$(grep 'pluginVersion' gradle.properties | cut -d'=' -f2 | tr -d ' ')
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
-          echo "previous_version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
 
       # Set up the Java environment for the next steps
       - name: Setup Java
@@ -305,81 +286,4 @@ jobs:
           name: pluginVerifier-result
           path: ${{ github.workspace }}/jetbrains/build/reports/pluginVerifier
 
-  # Prepare a draft release for GitHub Releases page for the manual verification
-  # If accepted and published, the release workflow would be triggered
-  releaseDraft:
-    name: Release draft
-    if: github.event_name != 'pull_request'
-    needs: [ build, buildVscode, test, inspectCode, verify ]
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    defaults:
-      run:
-        working-directory: jetbrains
-    steps:
 
-      # Check out the current repository
-      - name: Fetch Sources
-        uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
-
-      # Set up the Java environment for the next steps
-      - name: Setup Java
-        uses: actions/setup-java@v5
-        with:
-          distribution: zulu
-          java-version: 17
-
-      # Setup Gradle
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v5
-        with:
-          cache-read-only: true
-
-      # Remove old release drafts by using the curl request for the available releases with a draft flag
-      - name: Remove Old Release Drafts
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          gh api repos/{owner}/{repo}/releases \
-            --jq '.[] | select(.draft == true) | .id' \
-            | xargs -I '{}' gh api -X DELETE repos/{owner}/{repo}/releases/{}
-
-      # Create a new release draft which is not publicly visible and requires manual acceptance
-      - name: Create Release Draft
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          VERSION=${{ needs.build.outputs.version }}
-          PREVIOUS_TAG=${{ needs.build.outputs.previous_version }}
-
-          RELEASE_NOTE="./build/tmp/release_note.txt"
-          mkdir -p "$(dirname "$RELEASE_NOTE")"
-
-          # Generate release notes
-          echo "## Changes" > $RELEASE_NOTE
-          echo "" >> $RELEASE_NOTE
-          
-          if [ -n "$PREVIOUS_TAG" ]; then
-            COMMITS=$(git log --oneline --pretty=format:"- %s" $PREVIOUS_TAG..HEAD)
-          else
-            COMMITS=$(git log --oneline --pretty=format:"- %s" HEAD)
-          fi
-          
-          echo "$COMMITS" >> $RELEASE_NOTE
-          echo "" >> $RELEASE_NOTE
-          echo "## Diff" >> $RELEASE_NOTE
-          echo "" >> $RELEASE_NOTE
-          if [ -n "$PREVIOUS_TAG" ]; then
-            echo "Compare: https://github.com/stanleygomes/codex-notes/compare/$PREVIOUS_TAG...$VERSION" >> $RELEASE_NOTE
-          fi
-
-          echo "Release notes content:"
-          cat $RELEASE_NOTE
-
-          gh release create $VERSION \
-            --draft \
-            --title "$VERSION" \
-            --notes-file $RELEASE_NOTE
