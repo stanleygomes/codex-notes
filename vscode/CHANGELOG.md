@@ -6,6 +6,11 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
+## [2.2.2] - 2026-03-13
+
+- chore: release 2.2.2
+
+
 ## [2.2.0] - 2026-03-13
 
 - fix: remove problematic settings vscode
