@@ -1,4 +1,4 @@
-name: Release VS Code Extension
+name: Release VS Code/Cursor Extension
 
 on:
   workflow_dispatch:

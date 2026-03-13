@@ -1,4 +1,4 @@
-name: Release
+name: Release JetBrains Plugin
 on:
   workflow_dispatch:
     inputs:
