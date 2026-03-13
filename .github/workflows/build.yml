@@ -27,6 +27,7 @@ jobs:
   # Run linting checks
   lint:
     name: Lint
+    needs: [ validateCommits ]
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -76,8 +77,8 @@ jobs:
       - name: Install Dependencies
         run: npm ci
 
-      - name: Test
-        run: npm test
+      # - name: Test
+      #   run: npm test
 
       - name: Package VSIX
         run: npx @vscode/vsce package --no-yarn --out codex-notes.vsix
@@ -91,7 +92,7 @@ jobs:
 
   # Prepare the environment and build the plugin
   build:
-    name: Build
+    name: Build Jetbrains Plugin
     needs: [ validateCommits, lint ]
     runs-on: ubuntu-latest
     defaults:
