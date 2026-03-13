@@ -20,7 +20,6 @@
 
 ### Opening the Tool Window
 - Click on the **Codex Notes** icon in the left sidebar of your editor;
-- Or use the menu: `View` → `Tool Windows` → `Codex Notes` on jetbrains IDEs;
 
 ## ⌨️ Keyboard Shortcuts
 
