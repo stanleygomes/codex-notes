@@ -12,7 +12,7 @@
 - **Open note file locations** in the file system
 - **Filter notes** by favorites
 - **Create notes from selected text** in the editor
-- **Integrated search** via IntelliJ's Search Everywhere
+- **Integrated search** via Search Everywhere
 - **Customizable settings** for file extension, notes directory, export options, import options, and folder access
 <!-- Plugin description end -->
 
