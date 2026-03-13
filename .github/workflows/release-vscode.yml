@@ -40,6 +40,9 @@ jobs:
       - name: Build
         run: npm run compile
 
+      - name: Prune dev dependencies
+        run: npm prune --omit=dev
+
       - name: Package VSIX
         run: npx @vscode/vsce package --no-yarn --out codex-notes.vsix
 
