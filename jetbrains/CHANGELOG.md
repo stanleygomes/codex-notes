@@ -4,6 +4,13 @@
 
 ## [Unreleased]
 
+## [2.2.0] - 2026-03-13
+
+- Merge branch 'copilot/migrate-notes-storage-to-sqlite'
+- chore: movendo changelog para pasta correta
+- chore: moving plugin to a subfolder
+
+
 ## [2.1.0] - 2026-02-20
 
 - fix: sanitize note titles when creating filenames on disk
@@ -56,7 +63,8 @@
 
 - Initial scaffold created from [IntelliJ Platform Plugin Template](https://github.com/JetBrains/intellij-platform-plugin-template)
 
-[Unreleased]: https://github.com/stanleygomes/codex-notes/compare/2.1.0...HEAD
+[Unreleased]: https://github.com/stanleygomes/codex-notes/compare/v2.2.0...HEAD
+[2.2.0]: https://github.com/stanleygomes/codex-notes/commits/v2.2.0
 [2.1.0]: https://github.com/stanleygomes/codex-notes/compare/2.0.1...2.1.0
 [2.0.1]: https://github.com/stanleygomes/codex-notes/compare/2.0.0...2.0.1
 [2.0.0]: https://github.com/stanleygomes/codex-notes/compare/1.1.4...2.0.0
