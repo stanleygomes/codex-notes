@@ -100,21 +100,6 @@
           "default": "md",
           "description": "Default file extension for new notes"
         },
-        "codexNotes.notesDirectory": {
-          "type": "string",
-          "default": "",
-          "description": "Custom directory for storing notes. Defaults to ~/.codex-notes"
-        },
-        "codexNotes.exportDirectory": {
-          "type": "string",
-          "default": "",
-          "description": "Default directory for exporting notes"
-        },
-        "codexNotes.importDirectory": {
-          "type": "string",
-          "default": "",
-          "description": "Default directory for importing notes"
-        },
         "codexNotes.openFolderEnabled": {
           "type": "boolean",
           "default": true,
