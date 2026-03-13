@@ -25,8 +25,8 @@ jobs:
         uses: wagoid/commitlint-github-action@v5
 
   # Run linting checks
-  lint:
-    name: Lint
+  ktlint:
+    name: Kotlin Lint
     needs: [ validateCommits ]
     runs-on: ubuntu-latest
     defaults:
@@ -93,7 +93,7 @@ jobs:
   # Prepare the environment and build the plugin
   build:
     name: Build Jetbrains Plugin
-    needs: [ validateCommits, lint ]
+    needs: [ validateCommits, ktlint ]
     runs-on: ubuntu-latest
     defaults:
       run:
