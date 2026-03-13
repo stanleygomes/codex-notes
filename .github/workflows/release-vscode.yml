@@ -39,6 +39,7 @@ jobs:
 
       - name: Build
         run: npm run compile
+        working-directory: vscode
 
       - name: Prune dev dependencies
         run: npm prune --omit=dev
