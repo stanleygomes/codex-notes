@@ -38,10 +38,10 @@ const DOWNLOAD_BUTTONS: DownloadButton[] = [
   },
   {
     label: "Antigravity",
-    href: "#",
+    href: "https://open-vsx.org/extension/stanleygomes/codex-notes",
     bgColor: "bg-[#1a1a1a]",
     textColor: "text-white",
-    available: false,
+    available: true,
   },
 ];
 
