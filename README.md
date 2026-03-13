@@ -113,6 +113,7 @@ This project uses GitHub Actions for continuous integration and deployment. The 
 - **Trigger**: Push to `master` branch or pull requests
 - **Actions**:
   - Validates Gradle Wrapper
+  - Builds and validates the VS Code extension
   - Runs unit tests and plugin verification
   - Executes Qodana code inspections
   - Builds the plugin
@@ -120,20 +121,13 @@ This project uses GitHub Actions for continuous integration and deployment. The 
   - Creates a draft release for manual review
 
 ### Release Workflow (`release.yml`)
-- **Trigger**: GitHub release publication
+- **Trigger**: Manual dispatch (`workflow_dispatch`)
 - **Actions**:
   - Signs and publishes the plugin to JetBrains Marketplace
   - Updates changelog
 
-### VS Code Build Workflow (`build-vscode.yml`)
-- **Trigger**: Push/PR changes under `vscode/**` and manual dispatch
-- **Actions**:
-  - Installs dependencies
-  - Runs extension tests (`npm test`, including lint/compile pretest)
-  - Packages the extension as a `.vsix` artifact
-
 ### VS Code Release Workflow (`release-vscode.yml`)
-- **Trigger**: GitHub release publication and manual dispatch
+- **Trigger**: Manual dispatch (`workflow_dispatch`)
 - **Actions**:
   - Builds and packages the VS Code extension
   - Publishes to Visual Studio Marketplace using `VSCE_PAT`

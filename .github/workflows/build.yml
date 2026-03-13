@@ -52,6 +52,43 @@ jobs:
       - name: Run Ktlint Check
         run: ./gradlew ktlintCheck --console=plain
 
+  # Build and validate VS Code extension
+  buildVscode:
+    name: Build VS Code Extension
+    needs: [ validateCommits ]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    defaults:
+      run:
+        working-directory: vscode
+    steps:
+      - name: Fetch Sources
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: vscode/package-lock.json
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Test
+        run: npm test
+
+      - name: Package VSIX
+        run: npx @vscode/vsce package --no-yarn --out codex-notes.vsix
+
+      - name: Upload VSIX Artifact
+        if: github.event_name == 'push'
+        uses: actions/upload-artifact@v6
+        with:
+          name: vscode-extension-vsix
+          path: vscode/codex-notes.vsix
+
   # Prepare the environment and build the plugin
   build:
     name: Build
@@ -273,7 +310,7 @@ jobs:
   releaseDraft:
     name: Release draft
     if: github.event_name != 'pull_request'
-    needs: [ build, test, inspectCode, verify ]
+    needs: [ build, buildVscode, test, inspectCode, verify ]
     runs-on: ubuntu-latest
     permissions:
       contents: write
