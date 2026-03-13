@@ -4,13 +4,8 @@ set -e
 
 CURRENT_VERSION=$(grep 'pluginVersion' gradle.properties | cut -d'=' -f2 | tr -d ' ')
 
-# Try to get latest published release tag
-LAST_TAG=$(gh api repos/stanleygomes/codex-notes/releases/latest --jq '.tag_name' 2>/dev/null || echo "")
-
-# If no published release, try git tags
-if [ -z "$LAST_TAG" ]; then
-  LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
-fi
+# Get the latest jetbrains-v* tag
+LAST_TAG=$(git tag -l "jetbrains-v*" | sort -V | tail -1)
 
 echo "Last tag: '$LAST_TAG'"
 echo "Current version: $CURRENT_VERSION"
