@@ -35,8 +35,11 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      pull-requests: write
     outputs:
       version: ${{ steps.version.outputs.version }}
+      release_branch: ${{ steps.release_ref.outputs.release_branch }}
+      release_sha: ${{ steps.release_ref.outputs.release_sha }}
     steps:
 
       - name: Fetch Sources
@@ -148,22 +151,35 @@ jobs:
 
           sed -i "/^## \[Unreleased\]/r /tmp/vs_section.txt" vscode/CHANGELOG.md
 
-      - name: Commit and push to master
+      - name: Create Release Pull Request
+        id: release_pr
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: release/v${{ steps.version.outputs.version }}
+          base: master
+          title: "chore(release): v${{ steps.version.outputs.version }}"
+          commit-message: "chore(release): v${{ steps.version.outputs.version }}"
+          body: "Automated release preparation for version v${{ steps.version.outputs.version }}."
+
+      - name: Set release branch output
+        id: release_ref
         run: |
-          git add .
-          if git diff --staged --quiet; then
-            echo "No changes to commit"
-          else
-            MSG="chore(release):"
-            MSG="$MSG v${{ steps.version.outputs.version }}"
-            git commit -m "$MSG"
-            git push origin master
+          BRANCH="${{ steps.release_pr.outputs.pull-request-branch }}"
+          SHA="${{ steps.release_pr.outputs.pull-request-head-sha }}"
+          if [ -z "$BRANCH" ]; then
+            BRANCH="release/v${{ steps.version.outputs.version }}"
           fi
+          if [ -z "$SHA" ]; then
+            SHA=$(git rev-parse HEAD)
+          fi
+          echo "release_branch=$BRANCH" >> "$GITHUB_OUTPUT"
+          echo "release_sha=$SHA" >> "$GITHUB_OUTPUT"
 
       - name: Create Tag
         run: |
           VERSION="${{ steps.version.outputs.version }}"
-          git tag "v$VERSION"
+          git tag "v$VERSION" "${{ steps.release_ref.outputs.release_sha }}"
           git push origin "v$VERSION"
 
   publish_jetbrains:
@@ -190,7 +206,7 @@ jobs:
       - name: Fetch Sources
         uses: actions/checkout@v4
         with:
-          ref: master
+          ref: ${{ needs.prepare_release.outputs.release_branch }}
 
       - name: Setup Java
         uses: actions/setup-java@v5
@@ -233,7 +249,7 @@ jobs:
       - name: Fetch Sources
         uses: actions/checkout@v4
         with:
-          ref: master
+          ref: ${{ needs.prepare_release.outputs.release_branch }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -281,7 +297,7 @@ jobs:
       - name: Fetch Sources
         uses: actions/checkout@v4
         with:
-          ref: master
+          ref: ${{ needs.prepare_release.outputs.release_branch }}
 
       - name: Download JetBrains Artifact
         if: needs.publish_jetbrains.result == 'success'
