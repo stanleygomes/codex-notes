@@ -167,11 +167,9 @@ jobs:
         run: |
           BRANCH="${{ steps.release_pr.outputs.pull-request-branch }}"
           SHA="${{ steps.release_pr.outputs.pull-request-head-sha }}"
-          if [ -z "$BRANCH" ]; then
-            BRANCH="release/v${{ steps.version.outputs.version }}"
-          fi
-          if [ -z "$SHA" ]; then
-            SHA=$(git rev-parse HEAD)
+          if [ -z "$BRANCH" ] || [ -z "$SHA" ]; then
+            echo "Failed to create release PR branch for version v${{ steps.version.outputs.version }}"
+            exit 1
           fi
           echo "release_branch=$BRANCH" >> "$GITHUB_OUTPUT"
           echo "release_sha=$SHA" >> "$GITHUB_OUTPUT"
