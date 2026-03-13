@@ -285,5 +285,3 @@ jobs:
         with:
           name: pluginVerifier-result
           path: ${{ github.workspace }}/jetbrains/build/reports/pluginVerifier
-
-
