@@ -64,6 +64,12 @@ export class NotesViewProvider implements vscode.WebviewViewProvider {
       this.handleMessage(message);
     });
 
+    webviewView.onDidChangeVisibility(() => {
+      if (webviewView.visible) {
+        this.refresh();
+      }
+    });
+
     this.refresh();
   }
 
