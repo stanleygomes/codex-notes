@@ -299,7 +299,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           VERSION="${{ needs.prepare_release.outputs.version }}"
-          TAG="v$VERSION"
+          TAG="$VERSION"
           ASSETS=()
           if [ -d artifacts/jetbrains ] && [ -n "$(ls -A artifacts/jetbrains 2>/dev/null)" ]; then
             ASSETS+=(artifacts/jetbrains/*)
@@ -309,11 +309,11 @@ jobs:
           fi
           if [ "${#ASSETS[@]}" -gt 0 ]; then
             gh release create "$TAG" \
-              --title "Codex Notes v$VERSION" \
-              --notes "Codex Notes release v$VERSION" \
+              --title "$VERSION" \
+              --notes "Codex Notes release $VERSION" \
               "${ASSETS[@]}"
           else
             gh release create "$TAG" \
-              --title "Codex Notes v$VERSION" \
-              --notes "Codex Notes release v$VERSION"
+              --title "$VERSION" \
+              --notes "Codex Notes release $VERSION"
           fi
