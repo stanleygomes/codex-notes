@@ -1,6 +1,7 @@
 # 🗒️ Codex Notes
 
-<!-- Plugin description -->
+![screenshot](https://github.com/stanleygomes/codex-notes/raw/HEAD/vscode/resources/screenshot.png)
+
 **Codex Notes** is a powerful plugin for managing notes directly within your IDE. Keep your thoughts, code snippets, and documentation organized without leaving your development environment.
 
 - **Create, edit, delete, rename, and search notes** with full markdown support
@@ -14,7 +15,6 @@
 - **Create notes from selected text** in the editor
 - **Integrated search** via Search Everywhere
 - **Customizable settings** for file extension, notes directory, export options, import options, and folder access
-<!-- Plugin description end -->
 
 ## 🚀 Usage
 
