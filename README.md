@@ -26,6 +26,14 @@
 - **Customizable settings** for file extension, notes directory, export options, import options, and folder access
 <!-- Plugin description end -->
 
+## VSCode
+
+![screenshot](vscode/resources/screenshot.png)
+
+## Jetbrains
+
+![screenshot](jetbrains/src/main/resources/screenshot.png)
+
 ## 🌐 Plugin Marketplace Links
 
 | Platform         | Link                    |
