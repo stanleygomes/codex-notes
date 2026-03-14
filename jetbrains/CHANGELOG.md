@@ -4,6 +4,16 @@
 
 ## [Unreleased]
 
+## [2.2.0] - 2026-03-14
+
+- chore(release): v2.2.3
+- docs: add description jetbrains
+- chore(release): v2.2.0
+- Merge branch 'copilot/migrate-notes-storage-to-sqlite'
+- chore: movendo changelog para pasta correta
+- chore: moving plugin to a subfolder
+
+
 ## [2.2.3] - 2026-03-13
 
 - docs: add description jetbrains
@@ -68,7 +78,8 @@
 
 - Initial scaffold created from [IntelliJ Platform Plugin Template](https://github.com/JetBrains/intellij-platform-plugin-template)
 
-[Unreleased]: https://github.com/stanleygomes/codex-notes/compare/v2.2.3...HEAD
+[Unreleased]: https://github.com/stanleygomes/codex-notes/compare/2.2.0...HEAD
+[2.2.0]: https://github.com/stanleygomes/codex-notes/compare/2.1.0...2.2.0
 [2.2.3]: https://github.com/stanleygomes/codex-notes/compare/v2.2.2...v2.2.3
 [2.2.0]: https://github.com/stanleygomes/codex-notes/commits/v2.2.0
 [2.1.0]: https://github.com/stanleygomes/codex-notes/compare/2.0.1...2.1.0
