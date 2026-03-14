@@ -6,6 +6,12 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
+## [2.2.4] - 2026-03-14
+
+- docs: screenshot for plugin vscode
+- docs: screenshots of plugins in readme
+
+
 ## [2.2.3] - 2026-03-13
 
 - chore: release 2.2.3
