@@ -44,10 +44,10 @@ jobs:
       - name: Calculate Version
         id: version
         run: |
-          LAST_TAG=$(git tag -l "v*" | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | sort -V | tail -1 || true)
+          LAST_TAG=$(git tag -l | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' | sort -V | tail -1 || true)
 
           if [ -n "$LAST_TAG" ]; then
-            CURRENT_VERSION="${LAST_TAG#v}"
+            CURRENT_VERSION="$LAST_TAG"
             COMMITS=$(git log --oneline "$LAST_TAG"..HEAD || echo "")
           else
             CURRENT_VERSION=$(grep 'pluginVersion' jetbrains/gradle.properties | cut -d'=' -f2 | tr -d ' ')
@@ -68,8 +68,8 @@ jobs:
             patch) NEW_VERSION="$major.$minor.$((patch + 1))" ;;
           esac
 
-          if git tag -l "v$NEW_VERSION" | grep -q "^v$NEW_VERSION$"; then
-            echo "Error: Tag v$NEW_VERSION already exists"
+          if git tag -l "$NEW_VERSION" | grep -q "^$NEW_VERSION$"; then
+            echo "Error: Tag $NEW_VERSION already exists"
             exit 1
           fi
 
@@ -90,7 +90,7 @@ jobs:
         run: |
           VERSION="${{ steps.version.outputs.version }}"
           DATE=$(date +%Y-%m-%d)
-          LAST_TAG=$(git tag -l "v*" | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | sort -V | tail -1 || true)
+          LAST_TAG=$(git tag -l | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' | sort -V | tail -1 || true)
 
           if [ -n "$LAST_TAG" ]; then
             git log --format="- %s" "$LAST_TAG"..HEAD -- jetbrains/ > /tmp/jb_entries.txt
@@ -110,18 +110,18 @@ jobs:
 
           REPO="stanleygomes/codex-notes"
           if [ -n "$LAST_TAG" ]; then
-            VERSION_LINK="[$VERSION]: https://github.com/$REPO/compare/$LAST_TAG...v$VERSION"
+            VERSION_LINK="[$VERSION]: https://github.com/$REPO/compare/$LAST_TAG...$VERSION"
           else
-            VERSION_LINK="[$VERSION]: https://github.com/$REPO/commits/v$VERSION"
+            VERSION_LINK="[$VERSION]: https://github.com/$REPO/commits/$VERSION"
           fi
 
-          sed -i "s|^\[Unreleased\]:.*|\[Unreleased\]: https://github.com/$REPO/compare/v$VERSION...HEAD\n$VERSION_LINK|" jetbrains/CHANGELOG.md
+          sed -i "s|^\[Unreleased\]:.*|\[Unreleased\]: https://github.com/$REPO/compare/$VERSION...HEAD\n$VERSION_LINK|" jetbrains/CHANGELOG.md
 
       - name: Update VS Code Changelog
         run: |
           VERSION="${{ steps.version.outputs.version }}"
           DATE=$(date +%Y-%m-%d)
-          LAST_TAG=$(git tag -l "v*" | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | sort -V | tail -1 || true)
+          LAST_TAG=$(git tag -l | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' | sort -V | tail -1 || true)
 
           if [ -n "$LAST_TAG" ]; then
             git log --format="- %s" "$LAST_TAG"..HEAD -- vscode/ > /tmp/vs_entries.txt
@@ -165,8 +165,8 @@ jobs:
       - name: Create Tag
         run: |
           VERSION="${{ steps.version.outputs.version }}"
-          git tag "v$VERSION" "${{ steps.release_ref.outputs.release_sha }}"
-          git push origin "v$VERSION"
+          git tag "$VERSION" "${{ steps.release_ref.outputs.release_sha }}"
+          git push origin "$VERSION"
 
   publish_jetbrains:
     name: Publish JetBrains Plugin
@@ -284,7 +284,7 @@ jobs:
       - name: Generate Release Notes
         run: |
           VERSION="${{ needs.prepare_release.outputs.version }}"
-          LAST_TAG=$(git tag -l "v*" | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | sort -V | grep -v "^v$VERSION$" | tail -1 || true)
+          LAST_TAG=$(git tag -l | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' | sort -V | grep -v "^$VERSION$" | tail -1 || true)
 
           if [ -n "$LAST_TAG" ]; then
             git log --format="- %s" "$LAST_TAG"..HEAD > /tmp/commits.txt
