@@ -4,6 +4,11 @@
 
 ## [Unreleased]
 
+## [2.2.4] - 2026-03-14
+
+- chore: release 2.2.4
+
+
 ## [2.2.3] - 2026-03-13
 
 - docs: add description jetbrains
@@ -68,7 +73,8 @@
 
 - Initial scaffold created from [IntelliJ Platform Plugin Template](https://github.com/JetBrains/intellij-platform-plugin-template)
 
-[Unreleased]: https://github.com/stanleygomes/codex-notes/compare/v2.2.3...HEAD
+[Unreleased]: https://github.com/stanleygomes/codex-notes/compare/2.2.4...HEAD
+[2.2.4]: https://github.com/stanleygomes/codex-notes/compare/2.2.3...2.2.4
 [2.2.3]: https://github.com/stanleygomes/codex-notes/compare/v2.2.2...v2.2.3
 [2.2.0]: https://github.com/stanleygomes/codex-notes/commits/v2.2.0
 [2.1.0]: https://github.com/stanleygomes/codex-notes/compare/2.0.1...2.1.0
