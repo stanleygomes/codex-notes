@@ -31,10 +31,10 @@ const DOWNLOAD_BUTTONS: DownloadButton[] = [
   },
   {
     label: "Cursor",
-    href: "#",
+    href: "https://open-vsx.org/extension/stanleygomes/codex-notes",
     bgColor: "bg-[#E3C25F]",
     textColor: "text-white",
-    available: false,
+    available: true,
   },
   {
     label: "Antigravity",
