@@ -301,14 +301,14 @@ jobs:
 
       - name: Download JetBrains Artifact
         if: needs.publish_jetbrains.result == 'success'
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: jetbrains-plugin
           path: artifacts/jetbrains/
 
       - name: Download VS Code Artifact
         if: needs.publish_vscode.result == 'success'
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: vscode-extension-vsix
           path: artifacts/vscode/
