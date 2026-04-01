@@ -31,7 +31,7 @@ jobs:
     steps:
 
       - name: Fetch Sources
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           ref: master
           fetch-depth: 0
@@ -188,7 +188,7 @@ jobs:
           large-packages: false
 
       - name: Fetch Sources
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           ref: ${{ needs.prepare_release.outputs.release_branch }}
 
@@ -229,7 +229,7 @@ jobs:
     steps:
 
       - name: Fetch Sources
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           ref: ${{ needs.prepare_release.outputs.release_branch }}
 
@@ -276,7 +276,7 @@ jobs:
     steps:
 
       - name: Fetch Sources
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           ref: ${{ needs.prepare_release.outputs.release_branch }}
           fetch-depth: 0
