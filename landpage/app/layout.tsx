@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { GeistSans } from "geist/font/sans";
+import { GeistMono } from "geist/font/mono";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -18,7 +18,7 @@ export default function RootLayout({
       <head>
         <link rel="icon" href="/favicon.png" type="image/png" />
       </head>
-      <body className={`${GeistSans.className} antialiased`}>{children}</body>
+      <body className={`${GeistMono.className} antialiased bg-black text-[#33ff00]`}>{children}</body>
     </html>
   );
 }
