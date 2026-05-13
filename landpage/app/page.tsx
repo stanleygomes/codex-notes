@@ -16,13 +16,6 @@ interface DownloadButton {
 
 const DOWNLOAD_BUTTONS: DownloadButton[] = [
   {
-    label: "JetBrains IDEs",
-    href: "https://plugins.jetbrains.com/plugin/30177-codex-notes",
-    bgColor: "bg-[#F8025E]",
-    textColor: "text-white",
-    available: true,
-  },
-  {
     label: "Visual Studio Code",
     href: "https://marketplace.visualstudio.com/items?itemName=StanleyGomes.codex-notes",
     bgColor: "bg-[#0078D4]",
@@ -102,8 +95,8 @@ export default function Home(): JSX.Element {
             </h1>
             <p className="text-xl text-black leading-relaxed px-6 py-4">
               A powerful plugin for managing notes within your IDE. Keep your
-              thoughts, code snippets, and documentation organized without leaving
-              your development environment.
+              thoughts, code snippets, and documentation organized without
+              leaving your development environment.
             </p>
           </div>
 

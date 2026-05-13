@@ -1,7 +1,7 @@
 name: Build
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
 
 concurrency:
@@ -9,13 +9,11 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-
   # Validate Conventional Commits
   validateCommits:
     name: Validate Commits
     runs-on: ubuntu-latest
     steps:
-
       # Check out the current repository
       - name: Fetch Sources
         uses: actions/checkout@v6
@@ -24,55 +22,21 @@ jobs:
       - name: Validate Conventional Commits
         uses: wagoid/commitlint-github-action@v5
 
-  # Run linting checks
-  ktlint:
-    name: Kotlin Lint
-    needs: [ validateCommits ]
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: jetbrains
-    steps:
-
-      # Check out the current repository
-      - name: Fetch Sources
-        uses: actions/checkout@v6
-
-      # Set up the Java environment for the next steps
-      - name: Setup Java
-        uses: actions/setup-java@v5
-        with:
-          distribution: zulu
-          java-version: 17
-
-      # Setup Gradle
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v5
-
-      # Run Ktlint Check
-      - name: Run Ktlint Check
-        run: ./gradlew ktlintCheck --console=plain
-
-  # Build and validate VS Code extension
-  buildVscode:
-    name: Build VS Code Extension
-    needs: [ validateCommits ]
+  # Build and validate extension
+  buildExtension:
+    name: Build Extension
+    needs: [validateCommits]
     runs-on: ubuntu-latest
     permissions:
       contents: read
-    defaults:
-      run:
-        working-directory: vscode
     steps:
       - name: Fetch Sources
         uses: actions/checkout@v6
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
-          node-version: 22
-          cache: npm
-          cache-dependency-path: vscode/package-lock.json
+          node-version: 24
 
       - name: Install Dependencies
         run: npm ci
@@ -81,211 +45,11 @@ jobs:
       #   run: npm test
 
       - name: Package VSIX
-        run: npx @vscode/vsce package --no-yarn --out codex-notes.vsix
+        run: npx @vscode/vsce package --no-yarn --out noemi-theme.vsix
 
       - name: Upload VSIX Artifact
         if: github.event_name == 'push'
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: vscode-extension-vsix
-          path: vscode/codex-notes.vsix
-
-  # Prepare the environment and build the plugin
-  build:
-    name: Build Jetbrains Plugin
-    needs: [ validateCommits, ktlint ]
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: jetbrains
-    steps:
-
-      # Free GitHub Actions Environment Disk Space
-      - name: Maximize Build Space
-        uses: jlumbroso/free-disk-space@v1.3.1
-        with:
-          tool-cache: false
-          large-packages: false
-
-      # Check out the current repository
-      - name: Fetch Sources
-        uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
-
-      # Set up the Java environment for the next steps
-      - name: Setup Java
-        uses: actions/setup-java@v5
-        with:
-          distribution: zulu
-          java-version: 17
-
-      # Setup Gradle
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v5
-
-      # Build plugin
-      - name: Build plugin
-        run: ./gradlew buildPlugin
-
-      # Prepare plugin archive content for creating artifact
-      - name: Prepare Plugin Artifact
-        id: artifact
-        shell: bash
-        run: |
-          cd ${{ github.workspace }}/jetbrains/build/distributions
-          FILENAME=`ls *.zip`
-          unzip "$FILENAME" -d content
-
-          echo "filename=${FILENAME:0:-4}" >> $GITHUB_OUTPUT
-
-      # Store an already-built plugin as an artifact for downloading
-      - name: Upload artifact
-        if: github.event_name == 'push'
-        uses: actions/upload-artifact@v6
-        with:
-          name: ${{ steps.artifact.outputs.filename }}
-          path: ./jetbrains/build/distributions/content/*/*
-
-  # Run tests and upload a code coverage report
-  test:
-    name: Test
-    needs: [ build ]
-    runs-on: ubuntu-latest
-    environment: production
-    defaults:
-      run:
-        working-directory: jetbrains
-    steps:
-
-      # Free GitHub Actions Environment Disk Space
-      - name: Maximize Build Space
-        uses: jlumbroso/free-disk-space@v1.3.1
-        with:
-          tool-cache: false
-          large-packages: false
-
-      # Check out the current repository
-      - name: Fetch Sources
-        uses: actions/checkout@v6
-
-      # Set up the Java environment for the next steps
-      - name: Setup Java
-        uses: actions/setup-java@v5
-        with:
-          distribution: zulu
-          java-version: 17
-
-      # Setup Gradle
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v5
-        with:
-          cache-read-only: true
-
-      # Run tests
-      - name: Run Tests
-        run: ./gradlew check
-
-      # Collect Tests Result of failed tests
-      - name: Collect Tests Result
-        if: ${{ failure() }}
-        uses: actions/upload-artifact@v6
-        with:
-          name: tests-result
-          path: ${{ github.workspace }}/jetbrains/build/reports/tests
-
-      # Upload the Kover report to CodeCov
-      - name: Upload Code Coverage Report
-        uses: codecov/codecov-action@v5
-        with:
-          files: ${{ github.workspace }}/jetbrains/build/reports/kover/report.xml
-          token: ${{ secrets.CODECOV_TOKEN }}
-
-  # Run Qodana inspections and provide a report
-  inspectCode:
-    name: Inspect code
-    needs: [ build ]
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      checks: write
-      pull-requests: write
-    steps:
-
-      # Free GitHub Actions Environment Disk Space
-      - name: Maximize Build Space
-        uses: jlumbroso/free-disk-space@v1.3.1
-        with:
-          tool-cache: false
-          large-packages: false
-
-      # Check out the current repository
-      - name: Fetch Sources
-        uses: actions/checkout@v6
-        with:
-          ref: ${{ github.event.pull_request.head.sha }} # to check out the actual pull request commit, not the merge commit
-          fetch-depth: 0 # a full history is required for pull request analysis
-
-      # Set up the Java environment for the next steps
-      - name: Setup Java
-        uses: actions/setup-java@v5
-        with:
-          distribution: zulu
-          java-version: 17
-
-      # Run Qodana inspections
-      # - name: Qodana - Code Inspection
-      #   uses: JetBrains/qodana-action@v2025.1.1
-      #   with:
-      #     cache-default-branch-only: true
-      #     args: --project-dir,jetbrains
-        # env:
-        #   QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
-
-  # Run plugin structure verification along with IntelliJ Plugin Verifier
-  verify:
-    name: Verify plugin
-    needs: [ build ]
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: jetbrains
-    steps:
-
-      # Free GitHub Actions Environment Disk Space
-      - name: Maximize Build Space
-        uses: jlumbroso/free-disk-space@v1.3.1
-        with:
-          tool-cache: false
-          large-packages: false
-
-      # Check out the current repository
-      - name: Fetch Sources
-        uses: actions/checkout@v6
-
-      # Set up the Java environment for the next steps
-      - name: Setup Java
-        uses: actions/setup-java@v5
-        with:
-          distribution: zulu
-          java-version: 17
-
-      # Setup Gradle
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v5
-        with:
-          cache-read-only: true
-
-      # Run Verify Plugin task and IntelliJ Plugin Verifier tool
-      - name: Run Plugin Verification tasks
-        env:
-          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
-        run: ./gradlew verifyPlugin
-
-      # Collect Plugin Verifier Result
-      - name: Collect Plugin Verifier Result
-        if: ${{ always() }}
-        uses: actions/upload-artifact@v6
-        with:
-          name: pluginVerifier-result
-          path: ${{ github.workspace }}/jetbrains/build/reports/pluginVerifier
+          path: noemi-theme.vsix
