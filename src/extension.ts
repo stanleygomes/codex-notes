@@ -12,6 +12,7 @@ import { ChangeNoteColorService } from './service/ChangeNoteColorService';
 import { SortNotesService } from './service/SortNotesService';
 import { FilterNotesService } from './service/FilterNotesService';
 import { OpenNoteLocationService } from './service/OpenNoteLocationService';
+import { QuickSearchService } from './service/QuickSearchService';
 import { NotesViewProvider } from './ui/NotesViewProvider';
 import { Note } from './dto/Note';
 import {
@@ -45,6 +46,11 @@ export async function activate(
   const sortService = new SortNotesService();
   const filterService = new FilterNotesService();
   const locationService = new OpenNoteLocationService();
+  const quickSearchService = new QuickSearchService(
+    repository,
+    searchService,
+    openNote,
+  );
 
   console.log('Services initialized successfully');
 
@@ -110,6 +116,9 @@ export async function activate(
     ),
     vscode.commands.registerCommand('codexNotes.importNotes', handleImport),
     vscode.commands.registerCommand('codexNotes.openBackup', handleOpenBackup),
+    vscode.commands.registerCommand('codexNotes.searchNotes', () =>
+      quickSearchService.show(),
+    ),
   );
 }
 

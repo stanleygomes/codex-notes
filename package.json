@@ -69,6 +69,11 @@
         "title": "Backup & Sync",
         "category": "Codex Notes",
         "icon": "$(cloud-download)"
+      },
+      {
+        "command": "codexNotes.searchNotes",
+        "title": "Search Notes",
+        "category": "Codex Notes"
       }
     ],
     "menus": {
@@ -118,7 +123,14 @@
           "description": "Enable opening note file location in file explorer"
         }
       }
-    }
+    },
+    "quickAccess": [
+      {
+        "prefix": "n",
+        "placeholder": "Search Codex Notes...",
+        "command": "codexNotes.searchNotes"
+      }
+    ]
   },
   "scripts": {
     "compile-tests": "tsc -p . --outDir out",
