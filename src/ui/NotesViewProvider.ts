@@ -373,6 +373,7 @@ export class NotesViewProvider implements vscode.WebviewViewProvider {
       box-shadow: 0 2px 8px rgba(0,0,0,0.3);
       z-index: 1000;
       min-width: 160px;
+      display: none;
     }
     .context-menu-item {
       padding: 6px 14px;
@@ -394,6 +395,8 @@ export class NotesViewProvider implements vscode.WebviewViewProvider {
       text-align: center;
       color: var(--vscode-descriptionForeground);
       font-size: 13px;
+      border: none !important;
+      outline: none !important;
     }
     .sort-select {
       background: var(--vscode-input-background);
@@ -438,7 +441,7 @@ export class NotesViewProvider implements vscode.WebviewViewProvider {
     <button class="filter-chip" id="filterMonth" data-filter="THIS_MONTH">Month</button>
   </div>
   <div class="notes-list" id="notesList"></div>
-  <div class="context-menu" id="contextMenu" style="display:none"></div>
+  <div class="context-menu" id="contextMenu"></div>
   <script nonce="${nonce}">
     const vscode = acquireVsCodeApi();
     let currentNoteId = null;
