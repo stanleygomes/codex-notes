@@ -22,22 +22,25 @@
       />
     </div>
     <div class="filter-row">
-      <select class="sort-select" id="sortSelect">
-        <option value="DATE">Date</option>
-        <option value="TITLE">Title</option>
-        <option value="FAVORITE">Favorite</option>
-      </select>
+      <div class="filter-group">
+        <label>Sort:</label>
+        <select class="sort-select" id="sortSelect">
+          <option value="DATE">Date</option>
+          <option value="TITLE">Title</option>
+          <option value="FAVORITE">Favorite</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label>Date:</label>
+        <select class="sort-select" id="dateFilter">
+          <option value="">All</option>
+          <option value="TODAY">Today</option>
+          <option value="THIS_WEEK">Week</option>
+          <option value="THIS_MONTH">Month</option>
+        </select>
+      </div>
       <button class="filter-chip" id="filterFav" data-active="false">
         ★ Favorites
-      </button>
-      <button class="filter-chip" id="filterToday" data-filter="TODAY">
-        Today
-      </button>
-      <button class="filter-chip" id="filterWeek" data-filter="THIS_WEEK">
-        Week
-      </button>
-      <button class="filter-chip" id="filterMonth" data-filter="THIS_MONTH">
-        Month
       </button>
     </div>
     <div class="notes-list" id="notesList"></div>
@@ -68,22 +71,10 @@
         vscode.postMessage({ command: 'filterFavorites', filterFavorites });
       });
 
-      document.querySelectorAll('.filter-chip[data-filter]').forEach((btn) => {
-        btn.addEventListener('click', () => {
-          const filter = btn.getAttribute('data-filter');
-          if (activeDateFilter === filter) {
-            activeDateFilter = null;
-            btn.classList.remove('active');
-            vscode.postMessage({ command: 'filterDate', dateFilter: null });
-          } else {
-            document
-              .querySelectorAll('.filter-chip[data-filter]')
-              .forEach((b) => b.classList.remove('active'));
-            activeDateFilter = filter;
-            btn.classList.add('active');
-            vscode.postMessage({ command: 'filterDate', dateFilter: filter });
-          }
-        });
+      const dateFilter = document.getElementById('dateFilter');
+
+      dateFilter.addEventListener('change', () => {
+        vscode.postMessage({ command: 'filterDate', dateFilter: dateFilter.value || null });
       });
 
       document.addEventListener('click', (e) => {

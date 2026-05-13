@@ -52,19 +52,39 @@ body {
 }
 .filter-row {
   display: flex;
-  gap: 4px;
-  padding: 4px 8px;
+  gap: 8px;
+  padding: 6px 8px;
   border-bottom: 1px solid var(--vscode-sideBarSectionHeader-border);
-  flex-wrap: wrap;
+  overflow-x: auto;
+  flex-wrap: nowrap;
+  align-items: center;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.filter-row::-webkit-scrollbar {
+  display: none;
+}
+.filter-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+.filter-group label {
+  font-size: 11px;
+  color: var(--vscode-descriptionForeground);
+  white-space: nowrap;
 }
 .filter-chip {
   font-size: 11px;
-  padding: 2px 7px;
-  border-radius: 10px;
-  border: 1px solid var(--vscode-button-border, #aaa);
-  background: transparent;
+  padding: 2px 8px;
+  border-radius: 12px;
+  border: 1px solid var(--vscode-button-secondary-border, var(--vscode-widget-border));
+  background: var(--vscode-button-secondary-background, transparent);
   color: var(--vscode-foreground);
   cursor: pointer;
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 .filter-chip.active {
   background: var(--vscode-button-background);
@@ -197,6 +217,7 @@ body {
   font-size: 11px;
   outline: none;
   cursor: pointer;
+  flex-shrink: 0;
 }
 .primary-btn {
   background: var(--vscode-button-background);
