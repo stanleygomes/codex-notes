@@ -9,7 +9,7 @@ import { SortNotesService } from '../service/SortNotesService';
 import { FilterNotesService } from '../service/FilterNotesService';
 import { WebviewHelper } from '../helper/WebviewHelper';
 import { NoteMapper } from '../mapper/NoteMapper';
-import { WebviewMessage } from '../types/WebviewMessage';
+import { WebviewMessage } from '../type/WebviewMessage';
 
 export class NotesViewProvider implements vscode.WebviewViewProvider {
   public static readonly viewType = 'codexNotes.notesView';
