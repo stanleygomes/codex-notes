@@ -405,6 +405,19 @@ export class NotesViewProvider implements vscode.WebviewViewProvider {
       outline: none;
       cursor: pointer;
     }
+    .primary-btn {
+      background: var(--vscode-button-background);
+      color: var(--vscode-button-foreground);
+      border: none;
+      padding: 6px 14px;
+      border-radius: 2px;
+      cursor: pointer;
+      margin-top: 12px;
+      font-size: 13px;
+    }
+    .primary-btn:hover {
+      background: var(--vscode-button-hoverBackground);
+    }
   </style>
 </head>
 <body>
@@ -484,7 +497,15 @@ export class NotesViewProvider implements vscode.WebviewViewProvider {
 
     function renderNotes(notes) {
       if (notes.length === 0) {
-        notesList.innerHTML = '<div class="empty-state">No notes yet.<br>Click + to create one.</div>';
+        notesList.innerHTML = \`
+          <div class="empty-state">
+            <p>No notes yet.</p>
+            <button class="primary-btn" id="btnCreateEmpty">Create your first note</button>
+          </div>
+        \`;
+        document.getElementById('btnCreateEmpty').addEventListener('click', () => {
+          vscode.postMessage({ command: 'createNote' });
+        });
         return;
       }
       notesList.innerHTML = notes.map(note => {
