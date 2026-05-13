@@ -6,6 +6,11 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
+## [2.3.1] - 2026-05-13
+
+- chore: rename output package to codex-notes and add compilation step to CI workflows
+
+
 ## [2.2.4] - 2026-03-14
 
 - docs: screenshot for plugin vscode
