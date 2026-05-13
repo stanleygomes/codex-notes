@@ -6,6 +6,11 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
+## [2.3.2] - 2026-05-13
+
+- chore: update tsconfig.json to include source files and exclude unnecessary directories
+
+
 ## [2.2.4] - 2026-03-14
 
 - docs: screenshot for plugin vscode
