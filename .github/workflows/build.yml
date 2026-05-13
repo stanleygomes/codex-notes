@@ -41,15 +41,18 @@ jobs:
       - name: Install Dependencies
         run: npm ci
 
+      - name: Compile Extension
+        run: npm run compile
+
       # - name: Test
       #   run: npm test
 
       - name: Package VSIX
-        run: npx @vscode/vsce package --no-yarn --out noemi-theme.vsix
+        run: npx @vscode/vsce package --no-yarn --out codex-notes.vsix
 
       - name: Upload VSIX Artifact
         if: github.event_name == 'push'
         uses: actions/upload-artifact@v7
         with:
           name: vscode-extension-vsix
-          path: noemi-theme.vsix
+          path: codex-notes.vsix
