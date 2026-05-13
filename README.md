@@ -34,7 +34,6 @@
 
 ## 📋 Table of Contents
 
-- [Installation](#-installation)
 - [Usage](#-usage)
 - [Keyboard Shortcuts](#-keyboard-shortcuts)
 - [Configuration](#-configuration)
