@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'nonce-{{nonce}}'; script-src 'nonce-{{nonce}}';">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Codex Notes</title>
+  <style nonce="{{nonce}}">
+    {{style}}
+  </style>
+</head>
+<body>
+  <div class="toolbar">
+    <input class="search-box" id="searchBox" type="text" placeholder="Search notes..." />
+    <button class="btn" id="btnImport" title="Import Notes">⬆</button>
+    <button class="btn" id="btnExport" title="Export Notes">⬇</button>
+  </div>
+  <div class="filter-row">
+    <select class="sort-select" id="sortSelect">
+      <option value="DATE">Date</option>
+      <option value="TITLE">Title</option>
+      <option value="FAVORITE">Favorite</option>
+    </select>
+    <button class="filter-chip" id="filterFav" data-active="false">★ Favorites</button>
+    <button class="filter-chip" id="filterToday" data-filter="TODAY">Today</button>
+    <button class="filter-chip" id="filterWeek" data-filter="THIS_WEEK">Week</button>
+    <button class="filter-chip" id="filterMonth" data-filter="THIS_MONTH">Month</button>
+  </div>
+  <div class="notes-list" id="notesList"></div>
+  <div class="context-menu" id="contextMenu"></div>
+  <script nonce="{{nonce}}">
+    const vscode = acquireVsCodeApi();
+    let currentNoteId = null;
+    let activeDateFilter = null;
+    let filterFavorites = false;
+
+    const searchBox = document.getElementById('searchBox');
+    const notesList = document.getElementById('notesList');
+    const contextMenu = document.getElementById('contextMenu');
+    const sortSelect = document.getElementById('sortSelect');
+    const filterFavBtn = document.getElementById('filterFav');
+
+    searchBox.addEventListener('input', () => {
+      vscode.postMessage({ command: 'search', query: searchBox.value });
+    });
+
+    document.getElementById('btnImport').addEventListener('click', () => {
+      vscode.postMessage({ command: 'importNotes' });
+    });
+
+    document.getElementById('btnExport').addEventListener('click', () => {
+      vscode.postMessage({ command: 'exportNotes' });
+    });
+
+    sortSelect.addEventListener('change', () => {
+      vscode.postMessage({ command: 'sort', sortType: sortSelect.value });
+    });
+
+    filterFavBtn.addEventListener('click', () => {
+      filterFavorites = !filterFavorites;
+      filterFavBtn.classList.toggle('active', filterFavorites);
+      vscode.postMessage({ command: 'filterFavorites', filterFavorites });
+    });
+
+    document.querySelectorAll('.filter-chip[data-filter]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const filter = btn.getAttribute('data-filter');
+        if (activeDateFilter === filter) {
+          activeDateFilter = null;
+          btn.classList.remove('active');
+          vscode.postMessage({ command: 'filterDate', dateFilter: null });
+        } else {
+          document.querySelectorAll('.filter-chip[data-filter]').forEach(b => b.classList.remove('active'));
+          activeDateFilter = filter;
+          btn.classList.add('active');
+          vscode.postMessage({ command: 'filterDate', dateFilter: filter });
+        }
+      });
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!contextMenu.contains(e.target)) {
+        contextMenu.style.display = 'none';
+      }
+    });
+
+    function renderNotes(notes) {
+      if (notes.length === 0) {
+        notesList.innerHTML = `
+          <div class="empty-state">
+            <p>No notes yet.</p>
+            <button class="primary-btn" id="btnCreateEmpty">Create your first note</button>
+          </div>
+        `;
+        document.getElementById('btnCreateEmpty').addEventListener('click', () => {
+          vscode.postMessage({ command: 'createNote' });
+        });
+        return;
+      }
+      notesList.innerHTML = notes.map(note => {
+        const colorClass = `note-color-${String(note.color || 'NONE').toLowerCase()}`;
+        const colorBar = `<div class="note-color-bar ${escapeHtml(colorClass)}"></div>`;
+        const favIcon = note.isFavorite ? '<span class="note-favorite" title="Favorite">★</span>' : '';
+        return `
+          <div class="note-item" data-id="${note.id}">
+            ${colorBar}
+            <div class="note-body">
+              <div class="note-header">
+                <span class="note-title">${escapeHtml(note.title)}</span>
+                <div class="note-meta">
+                  ${favIcon}
+                  <span class="note-date">${note.dateLabel}</span>
+                </div>
+              </div>
+              ${note.preview ? `<div class="note-preview">${escapeHtml(note.preview)}</div>` : ''}
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      notesList.querySelectorAll('.note-item').forEach(item => {
+        item.addEventListener('click', (e) => {
+          vscode.postMessage({ command: 'openNote', noteId: item.dataset.id });
+        });
+        item.addEventListener('contextmenu', (e) => {
+          e.preventDefault();
+          showContextMenu(e.clientX, e.clientY, item.dataset.id);
+        });
+      });
+    }
+
+    function showContextMenu(x, y, noteId) {
+      currentNoteId = noteId;
+      contextMenu.innerHTML = `
+        <div class="context-menu-item" data-action="openNote">Open Note</div>
+        <div class="context-menu-separator"></div>
+        <div class="context-menu-item" data-action="renameNote">Rename</div>
+        <div class="context-menu-item" data-action="duplicateNote">Duplicate</div>
+        <div class="context-menu-item" data-action="toggleFavorite">Toggle Favorite</div>
+        <div class="context-menu-item" data-action="changeColor">Change Color</div>
+        <div class="context-menu-separator"></div>
+        <div class="context-menu-item" data-action="openLocation">Open File Location</div>
+        <div class="context-menu-separator"></div>
+        <div class="context-menu-item" data-action="deleteNote">Delete</div>
+      `;
+      contextMenu.style.left = x + 'px';
+      contextMenu.style.top = y + 'px';
+      contextMenu.style.display = 'block';
+
+      contextMenu.querySelectorAll('.context-menu-item').forEach(item => {
+        item.addEventListener('click', () => {
+          const action = item.getAttribute('data-action');
+          vscode.postMessage({ command: action, noteId: currentNoteId });
+          contextMenu.style.display = 'none';
+        });
+      });
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    window.addEventListener('message', event => {
+      const message = event.data;
+      if (message.command === 'updateNotes') {
+        renderNotes(message.notes);
+      }
+    });
+  </script>
+</body>
+</html>
