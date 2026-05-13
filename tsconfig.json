@@ -5,13 +5,19 @@
 		"target": "ES2022",
 		"outDir": "out",
 		"lib": [
-			"ES2022"
+			"ES2022",
+			"DOM"
 		],
 		"sourceMap": true,
 		"rootDir": "src",
 		"strict": true,   /* enable all strict type-checking options */
 		"esModuleInterop": true,
-		"skipLibCheck": true
+		"skipLibCheck": true,
+		"types": [
+			"vscode",
+			"node",
+			"mocha"
+		]
 	},
 	"include": [
 		"src/**/*"
@@ -19,7 +25,7 @@
 	"exclude": [
 		"node_modules",
 		".vscode-test",
-		"landpage",
+		"landpage*",
 		"out"
 	]
 }

@@ -69,8 +69,24 @@
 **Requirements**
 
 ```
-- Node.js 18+
+- Node.js 22.x+
 - VS Code 1.85.0+
+```
+
+**Running and Debugging**
+
+1.  Open the project in Visual Studio Code.
+2.  Install dependencies:
+    ```bash
+    npm install
+    ```
+3.  Press `F5` to start a new VS Code instance with the extension enabled.
+4.  To debug the **Webview**:
+    *   Open the Codex Notes view.
+    *   Run the command: `Developer: Open Webview Developer Tools` from the Command Palette.
+5.  To debug the **Extension Host**:
+    *   Check the `Debug Console` in the main VS Code window for logs and errors.
+    *   Set breakpoints directly in the TypeScript files.
 ```
 
 **Available Commands**

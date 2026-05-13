@@ -410,7 +410,6 @@ export class NotesViewProvider implements vscode.WebviewViewProvider {
 <body>
   <div class="toolbar">
     <input class="search-box" id="searchBox" type="text" placeholder="Search notes..." />
-    <button class="btn" id="btnCreate" title="New Note">＋</button>
     <button class="btn" id="btnImport" title="Import Notes">⬆</button>
     <button class="btn" id="btnExport" title="Export Notes">⬇</button>
   </div>
@@ -441,10 +440,6 @@ export class NotesViewProvider implements vscode.WebviewViewProvider {
 
     searchBox.addEventListener('input', () => {
       vscode.postMessage({ command: 'search', query: searchBox.value });
-    });
-
-    document.getElementById('btnCreate').addEventListener('click', () => {
-      vscode.postMessage({ command: 'createNote' });
     });
 
     document.getElementById('btnImport').addEventListener('click', () => {

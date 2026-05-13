@@ -8,7 +8,7 @@
   "repository": "https://github.com/stanleygomes/codex-notes",
   "engines": {
     "vscode": "^1.85.0",
-    "node": "22.x"
+    "node": "24.x"
   },
   "categories": [
     "Other"
@@ -31,7 +31,8 @@
         {
           "type": "webview",
           "id": "codexNotes.notesView",
-          "name": "Notes"
+          "name": "Notes",
+          "icon": "resources/icons/tab-icon.png"
         }
       ]
     },
@@ -127,14 +128,15 @@
   },
   "devDependencies": {
     "@types/archiver": "^6.0.3",
-    "ts-loader": "^9.5.4",
-    "@types/vscode": "^1.85.0",
+    "@types/jest": "^30.0.0",
     "@types/mocha": "^10.0.10",
     "@types/node": "22.x",
-    "typescript-eslint": "^8.56.1",
+    "@types/vscode": "^1.85.0",
+    "@vscode/test-cli": "^0.0.11",
+    "@vscode/test-electron": "^2.5.2",
     "eslint": "^9.39.3",
+    "ts-loader": "^9.5.4",
     "typescript": "^5.9.3",
-    "@vscode/test-cli": "^0.0.12",
-    "@vscode/test-electron": "^2.5.2"
+    "typescript-eslint": "^8.56.1"
   }
 }
