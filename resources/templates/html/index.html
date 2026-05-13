@@ -20,8 +20,6 @@
         type="text"
         placeholder="Search notes..."
       />
-      <button class="btn" id="btnImport" title="Import Notes">⬆</button>
-      <button class="btn" id="btnExport" title="Export Notes">⬇</button>
     </div>
     <div class="filter-row">
       <select class="sort-select" id="sortSelect">
@@ -58,14 +56,6 @@
 
       searchBox.addEventListener('input', () => {
         vscode.postMessage({ command: 'search', query: searchBox.value });
-      });
-
-      document.getElementById('btnImport').addEventListener('click', () => {
-        vscode.postMessage({ command: 'importNotes' });
-      });
-
-      document.getElementById('btnExport').addEventListener('click', () => {
-        vscode.postMessage({ command: 'exportNotes' });
       });
 
       sortSelect.addEventListener('change', () => {

@@ -5,6 +5,8 @@ export class WebviewHelper {
   public static getHtml(
     webview: vscode.Webview,
     extensionUri: vscode.Uri,
+    templateName: string = 'index',
+    extraVariables: Record<string, string> = {},
   ): string {
     const nonce = this.generateNonce();
 
@@ -19,10 +21,11 @@ export class WebviewHelper {
     // Render HTML with nonce and the loaded CSS
     return TemplateHelper.render(
       extensionUri,
-      ['resources', 'templates', 'html', 'index.html'],
+      ['resources', 'templates', 'html', `${templateName}.html`],
       {
         nonce: nonce,
         style: style,
+        ...extraVariables,
       },
     );
   }

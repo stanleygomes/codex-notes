@@ -23,6 +23,7 @@ import {
   createHandleChangeColor,
   createHandleImport,
   createHandleCreateFromSelection,
+  createHandleOpenBackup,
 } from './editor/view';
 
 export async function activate(
@@ -59,6 +60,12 @@ export async function activate(
   const handleChangeColor = (note: Note) =>
     createHandleChangeColor(colorService, provider)(note);
   const handleImport = () => createHandleImport(importService, provider)();
+  const handleOpenBackup = createHandleOpenBackup(
+    context.extensionUri,
+    importService,
+    exportService,
+    () => provider.refresh(),
+  );
 
   console.log('Handlers created successfully');
 
@@ -102,6 +109,7 @@ export async function activate(
       exportService.exportAll(),
     ),
     vscode.commands.registerCommand('codexNotes.importNotes', handleImport),
+    vscode.commands.registerCommand('codexNotes.openBackup', handleOpenBackup),
   );
 }
 

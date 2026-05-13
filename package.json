@@ -63,6 +63,12 @@
         "command": "codexNotes.importNotes",
         "title": "Import Notes",
         "category": "Codex Notes"
+      },
+      {
+        "command": "codexNotes.openBackup",
+        "title": "Backup & Sync",
+        "category": "Codex Notes",
+        "icon": "$(cloud-download)"
       }
     ],
     "menus": {
@@ -81,6 +87,11 @@
         },
         {
           "command": "codexNotes.refreshNotes",
+          "when": "view == codexNotes.notesView",
+          "group": "navigation"
+        },
+        {
+          "command": "codexNotes.openBackup",
           "when": "view == codexNotes.notesView",
           "group": "navigation"
         }
