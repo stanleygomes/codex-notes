@@ -6,7 +6,7 @@
 
 # 🗒️ Codex Notes
 
-![screenshot](vscode/resources/screenshot.png)
+![screenshot](https://github.com/stanleygomes/codex-notes/raw/HEAD/resources/screenshot.png)
 
 <!-- Plugin description -->
 
