@@ -6,6 +6,19 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
+## [2.3.0] - 2026-05-13
+
+- feat: redesign landing page with terminal-inspired aesthetic and command-based installation UI
+- docs: update screenshot image source path in README
+- refactor: removed jebrains plugin code
+- chore: link cursor
+- docs: update attribution from NazarethLabs to Lumen HQ
+- docs: update copyright holder in LICENSE file
+- docs: update attribution from NazarethLabs to Lumen HQ
+- docs: update copyright holder in LICENSE file
+- Merge pull request #92 from stanleygomes/release/v2.2.4
+
+
 ## [2.2.4] - 2026-03-14
 
 - docs: screenshot for plugin vscode
