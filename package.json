@@ -134,7 +134,7 @@
     "test": "vscode-test"
   },
   "dependencies": {
-    "archiver": "^7.0.1",
+    "archiver": "^8.0.0",
     "date-fns": "^4.1.0",
     "sql.js": "^1.14.1",
     "zod": "^4.3.6"
