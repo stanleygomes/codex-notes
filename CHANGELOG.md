@@ -6,6 +6,21 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
+## [2.4.0] - 2026-05-13
+
+- feat: implement QuickSearchService to enable note searching via command and quick access prefix
+- feat: replace date filter chips with a dropdown and update filter layout styling
+- feat: migrate import/export functionality to a dedicated Backup & Sync webview panel
+- fix: correct path to WebviewMessage type definition
+- refactor: encapsulate note serialization logic into a dedicated NoteMapper and extract WebviewMessage interface
+- chore: configure Prettier and enforce code style across the repository
+- feat: implement webview templating system and update Notes explorer UI
+- style: move context menu display property to CSS and clean up select styling
+- feat: add primary button to empty notes state to trigger note creation
+- refactor: streamline build configuration, update dependencies, and clean up UI elements
+- docs: remove installation section from README table of contents
+
+
 ## [2.2.4] - 2026-03-14
 
 - docs: screenshot for plugin vscode
