@@ -7,18 +7,9 @@ import { NoteRepository } from '../repository/NoteRepository';
 import { SearchNoteService } from '../service/SearchNoteService';
 import { SortNotesService } from '../service/SortNotesService';
 import { FilterNotesService } from '../service/FilterNotesService';
-import { DateHelper } from '../helper/DateHelper';
-import { FileHelper } from '../helper/FileHelper';
 import { WebviewHelper } from '../helper/WebviewHelper';
-
-interface WebviewMessage {
-  command: string;
-  noteId?: string;
-  query?: string;
-  sortType?: SortTypeEnum;
-  dateFilter?: DateFilterEnum;
-  filterFavorites?: boolean;
-}
+import { NoteMapper } from '../mapper/NoteMapper';
+import { WebviewMessage } from '../types/WebviewMessage';
 
 export class NotesViewProvider implements vscode.WebviewViewProvider {
   public static readonly viewType = 'codexNotes.notesView';
@@ -85,7 +76,7 @@ export class NotesViewProvider implements vscode.WebviewViewProvider {
     const notes = this.getFilteredAndSortedNotes();
     this.view.webview.postMessage({
       command: 'updateNotes',
-      notes: this.serializeNotes(notes),
+      notes: notes.map((n) => NoteMapper.toWebview(n)),
     });
   }
 
@@ -110,38 +101,6 @@ export class NotesViewProvider implements vscode.WebviewViewProvider {
     }
 
     return this.sortService.sort(notes, this.currentSort);
-  }
-
-  private serializeNotes(notes: Note[]): object[] {
-    return notes.map((note) => ({
-      id: note.id,
-      title: note.title,
-      preview: this.getPreview(note),
-      dateLabel: DateHelper.toHumanRelative(note.updatedAt),
-      isFavorite: note.isFavorite,
-      color: note.color,
-      colorHex: NOTE_COLOR_HEX[note.color],
-    }));
-  }
-
-  private getPreview(note: Note): string {
-    const content = FileHelper.readText(note.filePath);
-    const plainText = content
-      .replace(/```[\s\S]*?```/g, '')
-      .replace(/`[^`]*`/g, '')
-      .replace(/!\[.*?\]\(.*?\)/g, '')
-      .replace(/\[.*?\]\(.*?\)/g, '')
-      .replace(/#{1,6}\s+/g, '')
-      .replace(/(\*\*|__)(.*?)\1/g, '$2')
-      .replace(/(\*|_)(.*?)\1/g, '$2')
-      .replace(/~~(.*?)~~/g, '$1')
-      .replace(/^[-*+]\s+/gm, '')
-      .replace(/^\d+\.\s+/gm, '')
-      .replace(/^>\s+/gm, '')
-      .replace(/[-_*]{3,}/g, '')
-      .replace(/\s+/g, ' ')
-      .trim();
-    return plainText.slice(0, 80);
   }
 
   private handleMessage(message: WebviewMessage): void {
