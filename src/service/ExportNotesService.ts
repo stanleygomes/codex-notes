@@ -23,13 +23,15 @@ export class ExportNotesService {
     }
 
     const notes = this.repository.getAllNotes();
-    const filePaths = notes
-      .map((n) => n.filePath)
-      .filter((fp) => !!fp);
+    const filePaths = notes.map((n) => n.filePath).filter((fp) => !!fp);
 
-    const outputPath = saveUri.fsPath.endsWith('.zip') ? saveUri.fsPath : `${saveUri.fsPath}.zip`;
+    const outputPath = saveUri.fsPath.endsWith('.zip')
+      ? saveUri.fsPath
+      : `${saveUri.fsPath}.zip`;
 
     await ZipHelper.createZipFromFiles(filePaths, outputPath);
-    DialogHelper.showInfo(`Exported ${filePaths.length} notes to ${path.basename(outputPath)}`);
+    DialogHelper.showInfo(
+      `Exported ${filePaths.length} notes to ${path.basename(outputPath)}`,
+    );
   }
 }

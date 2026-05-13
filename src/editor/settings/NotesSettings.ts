@@ -6,7 +6,9 @@ export class NotesSettings {
   private static readonly SECTION = 'codexNotes';
 
   static getFileExtension(): string {
-    return vscode.workspace.getConfiguration(NotesSettings.SECTION).get<string>('fileExtension', 'md');
+    return vscode.workspace
+      .getConfiguration(NotesSettings.SECTION)
+      .get<string>('fileExtension', 'md');
   }
 
   static getNotesDirectory(): string {
@@ -14,6 +16,8 @@ export class NotesSettings {
   }
 
   static isOpenFolderEnabled(): boolean {
-    return vscode.workspace.getConfiguration(NotesSettings.SECTION).get<boolean>('openFolderEnabled', true);
+    return vscode.workspace
+      .getConfiguration(NotesSettings.SECTION)
+      .get<boolean>('openFolderEnabled', true);
   }
 }

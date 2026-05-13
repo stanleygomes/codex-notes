@@ -7,7 +7,10 @@ export class DuplicateNoteService {
   private readonly repository: NoteRepository;
   private readonly createNoteService: CreateNoteService;
 
-  constructor(repository: NoteRepository, createNoteService: CreateNoteService) {
+  constructor(
+    repository: NoteRepository,
+    createNoteService: CreateNoteService,
+  ) {
     this.repository = repository;
     this.createNoteService = createNoteService;
   }

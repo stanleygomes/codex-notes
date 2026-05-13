@@ -29,7 +29,11 @@ export class FileHelper {
     return filePath;
   }
 
-  static createFileWithContent(dir: string, fileName: string, content: string): string {
+  static createFileWithContent(
+    dir: string,
+    fileName: string,
+    content: string,
+  ): string {
     FileHelper.ensureDirectoryExists(dir);
     const filePath = path.join(dir, fileName);
     fs.writeFileSync(filePath, content, 'utf8');

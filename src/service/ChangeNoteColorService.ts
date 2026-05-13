@@ -28,7 +28,11 @@ export class ChangeNoteColorService {
     ];
 
     const selected = await DialogHelper.showQuickPick(
-      options.map((o) => ({ label: o.label, description: o.value, value: o.value })),
+      options.map((o) => ({
+        label: o.label,
+        description: o.value,
+        value: o.value,
+      })),
       { placeHolder: 'Select note color' },
     );
 

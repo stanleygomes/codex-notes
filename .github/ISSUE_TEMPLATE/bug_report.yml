@@ -1,8 +1,7 @@
 name: Bug report
 description: Create a report to help us improve
-labels: ["bug"]
+labels: ['bug']
 body:
-
   - type: textarea
     id: issue
     attributes:
@@ -19,7 +18,7 @@ body:
         Please copy and paste any relevant log output.
         Add the full stack trace if available.
         If possible, run the failing task with `--stacktrace` flag.
-        
+
         *This will be automatically formatted into code, so there is no need for backticks.*
       render: shell
 

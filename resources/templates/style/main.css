@@ -1,4 +1,8 @@
-* { box-sizing: border-box; margin: 0; padding: 0; }
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 body {
   font-family: var(--vscode-font-family);
   font-size: var(--vscode-font-size);
@@ -84,14 +88,30 @@ body {
   width: 4px;
   flex-shrink: 0;
 }
-.note-color-none { background: transparent; }
-.note-color-blue { background: #ADE8E6; }
-.note-color-green { background: #90EE90; }
-.note-color-yellow { background: #FFFF99; }
-.note-color-orange { background: #FFDAB9; }
-.note-color-pink { background: #FFB6C1; }
-.note-color-red { background: #FF6666; }
-.note-color-purple { background: #CC99FF; }
+.note-color-none {
+  background: transparent;
+}
+.note-color-blue {
+  background: #ade8e6;
+}
+.note-color-green {
+  background: #90ee90;
+}
+.note-color-yellow {
+  background: #ffff99;
+}
+.note-color-orange {
+  background: #ffdab9;
+}
+.note-color-pink {
+  background: #ffb6c1;
+}
+.note-color-red {
+  background: #ff6666;
+}
+.note-color-purple {
+  background: #cc99ff;
+}
 
 .note-body {
   flex: 1;
@@ -140,7 +160,7 @@ body {
   background: var(--vscode-menu-background);
   border: 1px solid var(--vscode-menu-border);
   border-radius: 4px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
   z-index: 1000;
   min-width: 160px;
   display: none;

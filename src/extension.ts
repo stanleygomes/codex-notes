@@ -25,7 +25,9 @@ import {
   createHandleCreateFromSelection,
 } from './editor/view';
 
-export async function activate(context: vscode.ExtensionContext): Promise<void> {
+export async function activate(
+  context: vscode.ExtensionContext,
+): Promise<void> {
   console.log('Activating Codex Notes extension...');
   const repository = await NoteRepository.initialize();
 
@@ -48,10 +50,14 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
   let provider: NotesViewProvider;
 
   const handleCreate = () => createHandleCreate(createService, provider)();
-  const handleDelete = (note: Note) => createHandleDelete(deleteService, provider)(note);
-  const handleRename = (note: Note) => createHandleRename(renameService, provider)(note);
-  const handleDuplicate = (note: Note) => createHandleDuplicate(duplicateService, provider)(note);
-  const handleChangeColor = (note: Note) => createHandleChangeColor(colorService, provider)(note);
+  const handleDelete = (note: Note) =>
+    createHandleDelete(deleteService, provider)(note);
+  const handleRename = (note: Note) =>
+    createHandleRename(renameService, provider)(note);
+  const handleDuplicate = (note: Note) =>
+    createHandleDuplicate(duplicateService, provider)(note);
+  const handleChangeColor = (note: Note) =>
+    createHandleChangeColor(colorService, provider)(note);
   const handleImport = () => createHandleImport(importService, provider)();
 
   console.log('Handlers created successfully');
@@ -67,7 +73,10 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     handleDelete,
     handleRename,
     handleDuplicate,
-    (note) => { favoriteService.toggleFavorite(note); provider.refresh(); },
+    (note) => {
+      favoriteService.toggleFavorite(note);
+      provider.refresh();
+    },
     handleChangeColor,
     () => exportService.exportAll(),
     handleImport,
@@ -75,17 +84,25 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
   );
 
   context.subscriptions.push(
-    vscode.window.registerWebviewViewProvider(NotesViewProvider.viewType, provider),
+    vscode.window.registerWebviewViewProvider(
+      NotesViewProvider.viewType,
+      provider,
+    ),
   );
 
   context.subscriptions.push(
     vscode.commands.registerCommand('codexNotes.createNote', handleCreate),
-    vscode.commands.registerCommand('codexNotes.createNoteFromSelection', () => createHandleCreateFromSelection(createService, provider)()),
-    vscode.commands.registerCommand('codexNotes.refreshNotes', () => provider.refresh()),
-    vscode.commands.registerCommand('codexNotes.exportNotes', () => exportService.exportAll()),
+    vscode.commands.registerCommand('codexNotes.createNoteFromSelection', () =>
+      createHandleCreateFromSelection(createService, provider)(),
+    ),
+    vscode.commands.registerCommand('codexNotes.refreshNotes', () =>
+      provider.refresh(),
+    ),
+    vscode.commands.registerCommand('codexNotes.exportNotes', () =>
+      exportService.exportAll(),
+    ),
     vscode.commands.registerCommand('codexNotes.importNotes', handleImport),
   );
 }
 
 export function deactivate(): void {}
-

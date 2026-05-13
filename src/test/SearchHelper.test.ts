@@ -23,13 +23,20 @@ suite('SearchHelper', () => {
   });
 
   test('should return exact match when query matches title exactly', () => {
-    const notes = [makeNote('1', 'Alpha'), makeNote('2', 'Beta'), makeNote('3', 'Gamma')];
+    const notes = [
+      makeNote('1', 'Alpha'),
+      makeNote('2', 'Beta'),
+      makeNote('3', 'Gamma'),
+    ];
     const result = SearchHelper.search(notes, 'Alpha');
     assert.strictEqual(result[0].title, 'Alpha');
   });
 
   test('should filter out notes that do not match query', () => {
-    const notes = [makeNote('1', 'Shopping list'), makeNote('2', 'Meeting notes')];
+    const notes = [
+      makeNote('1', 'Shopping list'),
+      makeNote('2', 'Meeting notes'),
+    ];
     const result = SearchHelper.search(notes, 'xyz');
     assert.strictEqual(result.length, 0);
   });

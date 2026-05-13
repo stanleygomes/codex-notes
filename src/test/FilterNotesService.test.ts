@@ -4,7 +4,11 @@ import { DateFilterEnum } from '../enum/DateFilterEnum';
 import { Note } from '../dto/Note';
 import { NoteColorEnum } from '../enum/NoteColorEnum';
 
-function makeNote(id: string, updatedAt: number, isFavorite: boolean = false): Note {
+function makeNote(
+  id: string,
+  updatedAt: number,
+  isFavorite: boolean = false,
+): Note {
   return {
     id,
     title: `Note ${id}`,
@@ -20,7 +24,11 @@ suite('FilterNotesService', () => {
   const service = new FilterNotesService();
 
   test('should filter only favorite notes', () => {
-    const notes = [makeNote('1', 1000, true), makeNote('2', 2000, false), makeNote('3', 3000, true)];
+    const notes = [
+      makeNote('1', 1000, true),
+      makeNote('2', 2000, false),
+      makeNote('3', 3000, true),
+    ];
     const result = service.filterByFavorite(notes);
     assert.strictEqual(result.length, 2);
     assert.ok(result.every((n: Note) => n.isFavorite));

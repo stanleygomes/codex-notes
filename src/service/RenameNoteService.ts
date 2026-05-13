@@ -35,7 +35,9 @@ export class RenameNoteService {
     const newFileName = FileHelper.buildNoteFileName(title, extension);
 
     if (FileHelper.fileExists(dir, newFileName)) {
-      DialogHelper.showError(`A note with the filename "${newFileName}" already exists.`);
+      DialogHelper.showError(
+        `A note with the filename "${newFileName}" already exists.`,
+      );
       return undefined;
     }
 
@@ -51,7 +53,9 @@ export class RenameNoteService {
     const oldUri = vscode.Uri.file(oldPath);
     for (const editor of vscode.window.visibleTextEditors) {
       if (editor.document.uri.fsPath === oldUri.fsPath) {
-        await vscode.commands.executeCommand('workbench.action.closeActiveEditor');
+        await vscode.commands.executeCommand(
+          'workbench.action.closeActiveEditor',
+        );
         break;
       }
     }

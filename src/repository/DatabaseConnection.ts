@@ -18,9 +18,7 @@ export class DatabaseConnection {
       FileHelper.ensureDirectoryExists(FileHelper.getDataDir());
       const dbPath = FileHelper.getDatabasePath();
 
-      const wasmBinary = fs.readFileSync(
-        path.join(__dirname, 'sql-wasm.wasm')
-      );
+      const wasmBinary = fs.readFileSync(path.join(__dirname, 'sql-wasm.wasm'));
       const SQL = await initSqlJs({ wasmBinary });
 
       let database: SqlJsDatabase;
@@ -38,7 +36,9 @@ export class DatabaseConnection {
 
   static getInstance(): DatabaseConnection {
     if (!DatabaseConnection.instance) {
-      throw new Error('DatabaseConnection not initialized. Call initialize() first.');
+      throw new Error(
+        'DatabaseConnection not initialized. Call initialize() first.',
+      );
     }
     return DatabaseConnection.instance;
   }

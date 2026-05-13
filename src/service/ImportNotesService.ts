@@ -8,7 +8,10 @@ export class ImportNotesService {
   private readonly repository: NoteRepository;
   private readonly createNoteService: CreateNoteService;
 
-  constructor(repository: NoteRepository, createNoteService: CreateNoteService) {
+  constructor(
+    repository: NoteRepository,
+    createNoteService: CreateNoteService,
+  ) {
     this.repository = repository;
     this.createNoteService = createNoteService;
   }
@@ -17,7 +20,7 @@ export class ImportNotesService {
     const uris = await DialogHelper.showOpenDialog({
       canSelectFiles: true,
       canSelectMany: true,
-      filters: { 'Notes': ['md', 'txt'] },
+      filters: { Notes: ['md', 'txt'] },
     });
 
     if (!uris || uris.length === 0) {

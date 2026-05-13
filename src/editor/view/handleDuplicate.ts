@@ -4,7 +4,7 @@ import { Note } from '../../dto/Note';
 
 export function createHandleDuplicate(
   duplicateService: DuplicateNoteService,
-  provider: NotesViewProvider
+  provider: NotesViewProvider,
 ) {
   return async (note: Note): Promise<void> => {
     await duplicateService.duplicate(note);

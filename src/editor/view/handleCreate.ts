@@ -3,7 +3,7 @@ import { NotesViewProvider } from '../../ui/NotesViewProvider';
 
 export function createHandleCreate(
   createService: CreateNoteService,
-  provider: NotesViewProvider
+  provider: NotesViewProvider,
 ) {
   return async (): Promise<void> => {
     await createService.create();

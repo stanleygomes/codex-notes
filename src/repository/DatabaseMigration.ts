@@ -57,19 +57,23 @@ export class DatabaseMigration {
 
       // Executa migrations pendentes
       const pendingMigrations = this.migrations.filter(
-        m => !executedMigrations.has(m.version)
+        (m) => !executedMigrations.has(m.version),
       );
 
       if (pendingMigrations.length > 0) {
-        console.log(`Running ${pendingMigrations.length} pending migration(s)...`);
-        
-        pendingMigrations.forEach(migration => {
-          console.log(`Running migration ${migration.version}: ${migration.name}`);
+        console.log(
+          `Running ${pendingMigrations.length} pending migration(s)...`,
+        );
+
+        pendingMigrations.forEach((migration) => {
+          console.log(
+            `Running migration ${migration.version}: ${migration.name}`,
+          );
           migration.up(database);
-          
+
           database.run(
             'INSERT INTO migrations (version, name, executed_at) VALUES (?, ?, ?)',
-            [migration.version, migration.name, Date.now()]
+            [migration.version, migration.name, Date.now()],
           );
         });
 
@@ -81,7 +85,7 @@ export class DatabaseMigration {
     } catch (error) {
       console.error('Database migration error:', error);
       vscode.window.showErrorMessage(
-        'Codex Notes: Failed to run database migrations. Please check the logs.'
+        'Codex Notes: Failed to run database migrations. Please check the logs.',
       );
       throw error;
     }

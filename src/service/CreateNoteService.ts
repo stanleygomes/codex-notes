@@ -23,7 +23,11 @@ export class CreateNoteService {
     const extension = NotesSettings.getFileExtension();
     const notesDir = NotesSettings.getNotesDirectory();
     const fileName = FileHelper.buildNoteFileName(title, extension);
-    const filePath = FileHelper.createFileWithContent(notesDir, fileName, content);
+    const filePath = FileHelper.createFileWithContent(
+      notesDir,
+      fileName,
+      content,
+    );
     const note = this.repository.addNote(title, filePath);
     await this.openNote(filePath);
     return note;

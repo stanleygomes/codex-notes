@@ -3,7 +3,10 @@ import * as path from 'path';
 import archiver from 'archiver';
 
 export class ZipHelper {
-  static createZipFromFiles(filePaths: string[], outputPath: string): Promise<void> {
+  static createZipFromFiles(
+    filePaths: string[],
+    outputPath: string,
+  ): Promise<void> {
     return new Promise((resolve, reject) => {
       const output = fs.createWriteStream(outputPath);
       const archive = archiver('zip', { zlib: { level: 9 } });

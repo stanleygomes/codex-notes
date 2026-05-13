@@ -99,9 +99,9 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           branch: release/v${{ steps.version.outputs.version }}
           base: master
-          title: "chore(release): v${{ steps.version.outputs.version }}"
-          commit-message: "chore(release): v${{ steps.version.outputs.version }}"
-          body: "Automated release preparation for version v${{ steps.version.outputs.version }}."
+          title: 'chore(release): v${{ steps.version.outputs.version }}'
+          commit-message: 'chore(release): v${{ steps.version.outputs.version }}'
+          body: 'Automated release preparation for version v${{ steps.version.outputs.version }}.'
 
       - name: Set release branch output
         id: release_ref

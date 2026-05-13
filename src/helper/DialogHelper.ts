@@ -1,7 +1,9 @@
 import * as vscode from 'vscode';
 
 export class DialogHelper {
-  static async showInputBox(options: vscode.InputBoxOptions): Promise<string | undefined> {
+  static async showInputBox(
+    options: vscode.InputBoxOptions,
+  ): Promise<string | undefined> {
     return vscode.window.showInputBox(options);
   }
 
@@ -25,11 +27,15 @@ export class DialogHelper {
     vscode.window.showInformationMessage(message);
   }
 
-  static async showOpenDialog(options: vscode.OpenDialogOptions): Promise<vscode.Uri[] | undefined> {
+  static async showOpenDialog(
+    options: vscode.OpenDialogOptions,
+  ): Promise<vscode.Uri[] | undefined> {
     return vscode.window.showOpenDialog(options);
   }
 
-  static async showSaveDialog(options: vscode.SaveDialogOptions): Promise<vscode.Uri | undefined> {
+  static async showSaveDialog(
+    options: vscode.SaveDialogOptions,
+  ): Promise<vscode.Uri | undefined> {
     return vscode.window.showSaveDialog(options);
   }
 }

@@ -35,7 +35,9 @@ export class NoteRepository {
 
   static getInstance(): NoteRepository {
     if (!NoteRepository.instance) {
-      throw new Error('NoteRepository not initialized. Call initialize() first.');
+      throw new Error(
+        'NoteRepository not initialized. Call initialize() first.',
+      );
     }
     return NoteRepository.instance;
   }

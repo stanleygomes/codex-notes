@@ -15,10 +15,11 @@ export class NoteFavoriteRepository extends BaseNoteRepository {
     if (!note) {
       return;
     }
-    this.db.run(
-      'UPDATE notes SET isFavorite = ?, updatedAt = ? WHERE id = ?',
-      [note.isFavorite ? 0 : 1, DateHelper.nowMs(), id]
-    );
+    this.db.run('UPDATE notes SET isFavorite = ?, updatedAt = ? WHERE id = ?', [
+      note.isFavorite ? 0 : 1,
+      DateHelper.nowMs(),
+      id,
+    ]);
     this.persist();
   }
 }

@@ -11,7 +11,11 @@ export class SearchHelper {
   private static readonly SCORE_CONTENT_CONTAINS_QUERY = 30;
   private static readonly SCORE_CONTENT_TERM_MATCH = 5;
 
-  static search(notes: Note[], query: string, contentMap: Map<string, string> = new Map()): Note[] {
+  static search(
+    notes: Note[],
+    query: string,
+    contentMap: Map<string, string> = new Map(),
+  ): Note[] {
     if (!query.trim()) {
       return notes;
     }
@@ -22,7 +26,12 @@ export class SearchHelper {
     return notes
       .map((note) => {
         const content = contentMap.get(note.id) ?? '';
-        const score = SearchHelper.calculateScore(note, searchQuery, searchTerms, content);
+        const score = SearchHelper.calculateScore(
+          note,
+          searchQuery,
+          searchTerms,
+          content,
+        );
         return { note, score };
       })
       .filter((entry) => entry.score > 0)
@@ -47,7 +56,10 @@ export class SearchHelper {
     );
   }
 
-  private static scoreForFullQueryMatch(title: string, fullQuery: string): number {
+  private static scoreForFullQueryMatch(
+    title: string,
+    fullQuery: string,
+  ): number {
     let score = 0;
     if (title.includes(fullQuery)) {
       score += SearchHelper.SCORE_TITLE_CONTAINS_QUERY;
@@ -74,7 +86,10 @@ export class SearchHelper {
     return score;
   }
 
-  private static scoreForWordMatches(titleWords: string[], terms: string[]): number {
+  private static scoreForWordMatches(
+    titleWords: string[],
+    terms: string[],
+  ): number {
     let score = 0;
     for (const term of terms) {
       for (const word of titleWords) {
@@ -89,7 +104,11 @@ export class SearchHelper {
     return score;
   }
 
-  private static scoreForContentMatches(content: string, fullQuery: string, terms: string[]): number {
+  private static scoreForContentMatches(
+    content: string,
+    fullQuery: string,
+    terms: string[],
+  ): number {
     if (!content.trim()) {
       return 0;
     }

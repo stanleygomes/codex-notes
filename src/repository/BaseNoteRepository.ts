@@ -4,7 +4,9 @@ import { NoteColorEnum } from '../enum/NoteColorEnum';
 import { DatabaseConnection } from './DatabaseConnection';
 
 export abstract class BaseNoteRepository {
-  private static readonly validColors = new Set<string>(Object.values(NoteColorEnum));
+  private static readonly validColors = new Set<string>(
+    Object.values(NoteColorEnum),
+  );
 
   protected get db(): SqlJsDatabase {
     return DatabaseConnection.getInstance().getDatabase();

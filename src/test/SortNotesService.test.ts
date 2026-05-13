@@ -4,7 +4,12 @@ import { SortTypeEnum } from '../enum/SortTypeEnum';
 import { Note } from '../dto/Note';
 import { NoteColorEnum } from '../enum/NoteColorEnum';
 
-function makeNote(id: string, title: string, updatedAt: number, isFavorite: boolean = false): Note {
+function makeNote(
+  id: string,
+  title: string,
+  updatedAt: number,
+  isFavorite: boolean = false,
+): Note {
   return {
     id,
     title,

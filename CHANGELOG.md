@@ -11,11 +11,9 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 - docs: screenshot for plugin vscode
 - docs: screenshots of plugins in readme
 
-
 ## [2.2.3] - 2026-03-13
 
 - chore: release 2.2.3
-
 
 ## [2.2.0] - 2026-03-13
 
@@ -43,6 +41,5 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 - chore: remove build artifacts from git tracking (out/ directory)
 - feat: implement VS Code Codex Notes extension with full note management
 - feat: starter for vscode extension
-
 
 - Initial release

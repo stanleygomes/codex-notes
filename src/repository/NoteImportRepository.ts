@@ -17,7 +17,15 @@ export class NoteImportRepository extends BaseNoteRepository {
     }
     this.db.run(
       'INSERT INTO notes (id, title, filePath, createdAt, updatedAt, isFavorite, color) VALUES (?, ?, ?, ?, ?, ?, ?)',
-      [note.id, note.title, note.filePath, note.createdAt, note.updatedAt, note.isFavorite ? 1 : 0, note.color]
+      [
+        note.id,
+        note.title,
+        note.filePath,
+        note.createdAt,
+        note.updatedAt,
+        note.isFavorite ? 1 : 0,
+        note.color,
+      ],
     );
     this.persist();
   }

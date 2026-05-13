@@ -4,7 +4,7 @@ import { Note } from '../../dto/Note';
 
 export function createHandleDelete(
   deleteService: DeleteNoteService,
-  provider: NotesViewProvider
+  provider: NotesViewProvider,
 ) {
   return async (note: Note): Promise<void> => {
     const deleted = await deleteService.confirmAndDelete([note]);

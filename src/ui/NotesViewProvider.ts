@@ -1,15 +1,15 @@
-import * as vscode from "vscode";
-import { Note } from "../dto/Note";
-import { NoteColorEnum, NOTE_COLOR_HEX } from "../enum/NoteColorEnum";
-import { SortTypeEnum } from "../enum/SortTypeEnum";
-import { DateFilterEnum } from "../enum/DateFilterEnum";
-import { NoteRepository } from "../repository/NoteRepository";
-import { SearchNoteService } from "../service/SearchNoteService";
-import { SortNotesService } from "../service/SortNotesService";
-import { FilterNotesService } from "../service/FilterNotesService";
-import { DateHelper } from "../helper/DateHelper";
-import { FileHelper } from "../helper/FileHelper";
-import { WebviewHelper } from "../helper/WebviewHelper";
+import * as vscode from 'vscode';
+import { Note } from '../dto/Note';
+import { NOTE_COLOR_HEX } from '../enum/NoteColorEnum';
+import { SortTypeEnum } from '../enum/SortTypeEnum';
+import { DateFilterEnum } from '../enum/DateFilterEnum';
+import { NoteRepository } from '../repository/NoteRepository';
+import { SearchNoteService } from '../service/SearchNoteService';
+import { SortNotesService } from '../service/SortNotesService';
+import { FilterNotesService } from '../service/FilterNotesService';
+import { DateHelper } from '../helper/DateHelper';
+import { FileHelper } from '../helper/FileHelper';
+import { WebviewHelper } from '../helper/WebviewHelper';
 
 interface WebviewMessage {
   command: string;
@@ -21,10 +21,10 @@ interface WebviewMessage {
 }
 
 export class NotesViewProvider implements vscode.WebviewViewProvider {
-  public static readonly viewType = "codexNotes.notesView";
+  public static readonly viewType = 'codexNotes.notesView';
 
   private view?: vscode.WebviewView;
-  private currentQuery = "";
+  private currentQuery = '';
   private currentSort: SortTypeEnum = SortTypeEnum.DATE;
   private filterFavorites = false;
   private activeDateFilter?: DateFilterEnum;
@@ -84,7 +84,7 @@ export class NotesViewProvider implements vscode.WebviewViewProvider {
 
     const notes = this.getFilteredAndSortedNotes();
     this.view.webview.postMessage({
-      command: "updateNotes",
+      command: 'updateNotes',
       notes: this.serializeNotes(notes),
     });
   }
@@ -127,19 +127,19 @@ export class NotesViewProvider implements vscode.WebviewViewProvider {
   private getPreview(note: Note): string {
     const content = FileHelper.readText(note.filePath);
     const plainText = content
-      .replace(/```[\s\S]*?```/g, "")
-      .replace(/`[^`]*`/g, "")
-      .replace(/!\[.*?\]\(.*?\)/g, "")
-      .replace(/\[.*?\]\(.*?\)/g, "")
-      .replace(/#{1,6}\s+/g, "")
-      .replace(/(\*\*|__)(.*?)\1/g, "$2")
-      .replace(/(\*|_)(.*?)\1/g, "$2")
-      .replace(/~~(.*?)~~/g, "$1")
-      .replace(/^[-*+]\s+/gm, "")
-      .replace(/^\d+\.\s+/gm, "")
-      .replace(/^>\s+/gm, "")
-      .replace(/[-_*]{3,}/g, "")
-      .replace(/\s+/g, " ")
+      .replace(/```[\s\S]*?```/g, '')
+      .replace(/`[^`]*`/g, '')
+      .replace(/!\[.*?\]\(.*?\)/g, '')
+      .replace(/\[.*?\]\(.*?\)/g, '')
+      .replace(/#{1,6}\s+/g, '')
+      .replace(/(\*\*|__)(.*?)\1/g, '$2')
+      .replace(/(\*|_)(.*?)\1/g, '$2')
+      .replace(/~~(.*?)~~/g, '$1')
+      .replace(/^[-*+]\s+/gm, '')
+      .replace(/^\d+\.\s+/gm, '')
+      .replace(/^>\s+/gm, '')
+      .replace(/[-_*]{3,}/g, '')
+      .replace(/\s+/g, ' ')
       .trim();
     return plainText.slice(0, 80);
   }
@@ -150,65 +150,65 @@ export class NotesViewProvider implements vscode.WebviewViewProvider {
       : undefined;
 
     switch (message.command) {
-      case "openNote":
+      case 'openNote':
         if (note) {
           this.onOpenNote(note);
         }
         break;
-      case "createNote":
+      case 'createNote':
         this.onCreateNote();
         break;
-      case "deleteNote":
+      case 'deleteNote':
         if (note) {
           this.onDeleteNote(note);
         }
         break;
-      case "renameNote":
+      case 'renameNote':
         if (note) {
           this.onRenameNote(note);
         }
         break;
-      case "duplicateNote":
+      case 'duplicateNote':
         if (note) {
           this.onDuplicateNote(note);
         }
         break;
-      case "toggleFavorite":
+      case 'toggleFavorite':
         if (note) {
           this.onToggleFavorite(note);
         }
         break;
-      case "changeColor":
+      case 'changeColor':
         if (note) {
           this.onChangeColor(note);
         }
         break;
-      case "exportNotes":
+      case 'exportNotes':
         this.onExportNotes();
         break;
-      case "importNotes":
+      case 'importNotes':
         this.onImportNotes();
         break;
-      case "openLocation":
+      case 'openLocation':
         if (note) {
           this.onOpenLocation(note);
         }
         break;
-      case "search":
-        this.currentQuery = message.query ?? "";
+      case 'search':
+        this.currentQuery = message.query ?? '';
         this.refresh();
         break;
-      case "sort":
+      case 'sort':
         if (message.sortType) {
           this.currentSort = message.sortType;
         }
         this.refresh();
         break;
-      case "filterFavorites":
+      case 'filterFavorites':
         this.filterFavorites = message.filterFavorites ?? false;
         this.refresh();
         break;
-      case "filterDate":
+      case 'filterDate':
         this.activeDateFilter = message.dateFilter;
         this.refresh();
         break;
