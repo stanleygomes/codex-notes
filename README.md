@@ -88,8 +88,6 @@
     - Check the `Debug Console` in the main VS Code window for logs and errors.
     - Set breakpoints directly in the TypeScript files.
 
-```
-
 **Available Commands**
 
 | Command                | Description                                    |
@@ -160,8 +158,3 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 🔗 Links
 
 - [Issue Tracker](https://github.com/stanleygomes/codex-notes/issues)
-
----
-
-Made with 🔥 by Lumen HQ
-```
