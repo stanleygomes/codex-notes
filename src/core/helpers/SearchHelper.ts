@@ -1,4 +1,4 @@
-import { Note } from '../dto/Note';
+import { Note } from '../dtos/Note';
 
 export class SearchHelper {
   private static readonly SCORE_TITLE_EXACT_MATCH = 200;

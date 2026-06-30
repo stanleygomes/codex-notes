@@ -1,7 +1,7 @@
-import { Note } from '../dto/Note';
-import { NoteRepository } from '../repository/NoteRepository';
+import { Note } from '../dtos/Note';
+import { NoteRepository } from '../repositories/NoteRepository';
 import { CreateNoteService } from './CreateNoteService';
-import { FileHelper } from '../helper/FileHelper';
+import { FileHelper } from '../helpers/FileHelper';
 
 export class DuplicateNoteService {
   private readonly repository: NoteRepository;

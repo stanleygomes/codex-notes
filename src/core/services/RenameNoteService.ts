@@ -1,9 +1,9 @@
-import { Note } from '../dto/Note';
-import { NoteRepository } from '../repository/NoteRepository';
-import { FileHelper } from '../helper/FileHelper';
+import { Note } from '../dtos/Note';
+import { NoteRepository } from '../repositories/NoteRepository';
+import { FileHelper } from '../helpers/FileHelper';
 import { UserInteraction } from '../../infra/editor/UserInteraction';
 import { NotesSettings } from '../../infra/editor/settings/NotesSettings';
-import { DateHelper } from '../helper/DateHelper';
+import { DateHelper } from '../helpers/DateHelper';
 
 export class RenameNoteService {
   private readonly repository: NoteRepository;

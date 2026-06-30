@@ -1,6 +1,6 @@
 import { SearchNoteService } from './SearchNoteService';
-import { NoteRepository } from '../repository/NoteRepository';
-import { Note } from '../dto/Note';
+import { NoteRepository } from '../repositories/NoteRepository';
+import { Note } from '../dtos/Note';
 import { UserInteraction } from '../../infra/editor/UserInteraction';
 
 export class QuickSearchService {

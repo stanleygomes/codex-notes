@@ -1,4 +1,4 @@
-import { Note } from '../dto/Note';
+import { Note } from '../dtos/Note';
 import { UserInteraction } from '../../infra/editor/UserInteraction';
 
 export class OpenNoteLocationService {

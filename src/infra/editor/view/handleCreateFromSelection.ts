@@ -1,10 +1,10 @@
 import * as vscode from 'vscode';
-import { CreateNoteService } from '../../../core/service/CreateNoteService';
-import { NotesViewProvider } from '../../../ui/NotesViewProvider';
+import { CreateNoteService } from '../../../core/services/CreateNoteService';
+import { ViewProvider } from '../../view/ViewProvider';
 
 export function createHandleCreateFromSelection(
   createService: CreateNoteService,
-  provider: NotesViewProvider,
+  provider: ViewProvider,
 ) {
   return async (): Promise<void> => {
     const editor = vscode.window.activeTextEditor;

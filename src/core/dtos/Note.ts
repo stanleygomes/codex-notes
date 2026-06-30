@@ -1,4 +1,4 @@
-import { NoteColorEnum } from '../enum/NoteColorEnum';
+import { NoteColorEnum } from '../enums/NoteColorEnum';
 
 export interface Note {
   id: string;

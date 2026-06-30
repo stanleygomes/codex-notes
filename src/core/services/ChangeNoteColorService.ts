@@ -1,8 +1,8 @@
-import { Note } from '../dto/Note';
-import { NoteColorEnum } from '../enum/NoteColorEnum';
-import { NoteRepository } from '../repository/NoteRepository';
+import { Note } from '../dtos/Note';
+import { NoteColorEnum } from '../enums/NoteColorEnum';
+import { NoteRepository } from '../repositories/NoteRepository';
 import { UserInteraction } from '../../infra/editor/UserInteraction';
-import { DateHelper } from '../helper/DateHelper';
+import { DateHelper } from '../helpers/DateHelper';
 
 interface ColorOption {
   label: string;

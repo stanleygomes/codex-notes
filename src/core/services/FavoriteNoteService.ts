@@ -1,6 +1,6 @@
-import { Note } from '../dto/Note';
-import { NoteRepository } from '../repository/NoteRepository';
-import { DateHelper } from '../helper/DateHelper';
+import { Note } from '../dtos/Note';
+import { NoteRepository } from '../repositories/NoteRepository';
+import { DateHelper } from '../helpers/DateHelper';
 
 export class FavoriteNoteService {
   private readonly repository: NoteRepository;

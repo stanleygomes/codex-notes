@@ -1,7 +1,7 @@
-import { Note } from '../dto/Note';
-import { NoteRepository } from '../repository/NoteRepository';
-import { FileHelper } from '../helper/FileHelper';
-import { SearchHelper } from '../helper/SearchHelper';
+import { Note } from '../dtos/Note';
+import { NoteRepository } from '../repositories/NoteRepository';
+import { FileHelper } from '../helpers/FileHelper';
+import { SearchHelper } from '../helpers/SearchHelper';
 
 export class SearchNoteService {
   private readonly repository: NoteRepository;

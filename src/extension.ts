@@ -1,9 +1,9 @@
 import * as vscode from 'vscode';
-import { NoteRepository } from './core/repository/NoteRepository';
+import { NoteRepository } from './core/repositories/NoteRepository';
 import { Container } from './container';
-import { NotesViewProvider } from './ui/NotesViewProvider';
+import { ViewProvider } from './infra/view/ViewProvider';
 import { registerCommands } from './commands';
-import { Note } from './core/dto/Note';
+import { Note } from './core/dtos/Note';
 import {
   openNote,
   createHandleCreate,
@@ -24,7 +24,7 @@ export async function activate(
 
   console.log('Services initialized successfully');
 
-  let provider: NotesViewProvider;
+  let provider: ViewProvider;
 
   const handleCreate = () =>
     createHandleCreate(container.createService, provider)();
@@ -39,7 +39,7 @@ export async function activate(
 
   console.log('Handlers created successfully');
 
-  provider = new NotesViewProvider(
+  provider = new ViewProvider(
     context.extensionUri,
     container.repository,
     container.searchService,
@@ -59,10 +59,7 @@ export async function activate(
   );
 
   context.subscriptions.push(
-    vscode.window.registerWebviewViewProvider(
-      NotesViewProvider.viewType,
-      provider,
-    ),
+    vscode.window.registerWebviewViewProvider(ViewProvider.viewType, provider),
   );
 
   registerCommands(context, container, provider, handleCreate);

@@ -1,7 +1,7 @@
-import { Note } from '../core/dto/Note';
-import { NOTE_COLOR_HEX } from '../core/enum/NoteColorEnum';
-import { DateHelper } from '../core/helper/DateHelper';
-import { FileHelper } from '../core/helper/FileHelper';
+import { Note } from '../dtos/Note';
+import { NOTE_COLOR_HEX } from '../enums/NoteColorEnum';
+import { DateHelper } from '../helpers/DateHelper';
+import { FileHelper } from '../helpers/FileHelper';
 
 export class NoteMapper {
   /**

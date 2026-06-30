@@ -1,8 +1,8 @@
 import * as vscode from 'vscode';
-import { TemplateHelper } from './TemplateHelper';
+import { TemplateHelper } from '../../core/helpers/TemplateHelper';
 
-export class WebviewHelper {
-  public static getHtml(
+export class HtmlTemplateBuilder {
+  public static build(
     webview: vscode.Webview,
     extensionUri: vscode.Uri,
     templateName: string = 'index',
@@ -10,18 +10,17 @@ export class WebviewHelper {
   ): string {
     const nonce = this.generateNonce();
 
-    // Load CSS first
     const style = TemplateHelper.render(extensionUri, [
-      'resources',
-      'templates',
+      'src',
+      'infra',
+      'view',
       'style',
       'main.css',
     ]);
 
-    // Render HTML with nonce and the loaded CSS
     return TemplateHelper.render(
       extensionUri,
-      ['resources', 'templates', 'html', `${templateName}.html`],
+      ['src', 'infra', 'view', 'html', `${templateName}.html`],
       {
         nonce: nonce,
         style: style,

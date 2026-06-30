@@ -1,9 +1,9 @@
-import { Note } from '../dto/Note';
-import { NoteRepository } from '../repository/NoteRepository';
-import { FileHelper } from '../helper/FileHelper';
+import { Note } from '../dtos/Note';
+import { NoteRepository } from '../repositories/NoteRepository';
+import { FileHelper } from '../helpers/FileHelper';
 import { NotesSettings } from '../../infra/editor/settings/NotesSettings';
-import { NoteColorEnum } from '../enum/NoteColorEnum';
-import { DateHelper } from '../helper/DateHelper';
+import { NoteColorEnum } from '../enums/NoteColorEnum';
+import { DateHelper } from '../helpers/DateHelper';
 import { UserInteraction } from '../../infra/editor/UserInteraction';
 
 export class CreateNoteService {

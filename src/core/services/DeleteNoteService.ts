@@ -1,6 +1,6 @@
-import { Note } from '../dto/Note';
-import { NoteRepository } from '../repository/NoteRepository';
-import { FileHelper } from '../helper/FileHelper';
+import { Note } from '../dtos/Note';
+import { NoteRepository } from '../repositories/NoteRepository';
+import { FileHelper } from '../helpers/FileHelper';
 import { UserInteraction } from '../../infra/editor/UserInteraction';
 
 export class DeleteNoteService {

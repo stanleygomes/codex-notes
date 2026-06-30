@@ -1,10 +1,10 @@
-import { DuplicateNoteService } from '../../../core/service/DuplicateNoteService';
-import { NotesViewProvider } from '../../../ui/NotesViewProvider';
-import { Note } from '../../../core/dto/Note';
+import { DuplicateNoteService } from '../../../core/services/DuplicateNoteService';
+import { ViewProvider } from '../../view/ViewProvider';
+import { Note } from '../../../core/dtos/Note';
 
 export function createHandleDuplicate(
   duplicateService: DuplicateNoteService,
-  provider: NotesViewProvider,
+  provider: ViewProvider,
 ) {
   return async (note: Note): Promise<void> => {
     await duplicateService.duplicate(note);

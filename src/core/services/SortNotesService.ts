@@ -1,5 +1,5 @@
-import { Note } from '../dto/Note';
-import { SortTypeEnum } from '../enum/SortTypeEnum';
+import { Note } from '../dtos/Note';
+import { SortTypeEnum } from '../enums/SortTypeEnum';
 
 export class SortNotesService {
   sort(notes: Note[], sortType: SortTypeEnum): Note[] {

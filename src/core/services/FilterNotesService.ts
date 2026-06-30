@@ -1,6 +1,6 @@
-import { Note } from '../dto/Note';
-import { DateFilterEnum } from '../enum/DateFilterEnum';
-import { DateHelper } from '../helper/DateHelper';
+import { Note } from '../dtos/Note';
+import { DateFilterEnum } from '../enums/DateFilterEnum';
+import { DateHelper } from '../helpers/DateHelper';
 
 export class FilterNotesService {
   filterByFavorite(notes: Note[]): Note[] {

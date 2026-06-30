@@ -1,8 +1,8 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import { Note } from '../dto/Note';
-import { FileHelper } from '../helper/FileHelper';
-import { NotesJsonMetadata } from '../dto/NotesJsonMetadata';
+import { Note } from '../dtos/Note';
+import { FileHelper } from '../helpers/FileHelper';
+import { NotesJsonMetadata } from '../dtos/NotesJsonMetadata';
 
 export class NoteRepository {
   private static instance: NoteRepository;

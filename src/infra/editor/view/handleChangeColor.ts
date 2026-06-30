@@ -1,10 +1,10 @@
-import { ChangeNoteColorService } from '../../../core/service/ChangeNoteColorService';
-import { NotesViewProvider } from '../../../ui/NotesViewProvider';
-import { Note } from '../../../core/dto/Note';
+import { ChangeNoteColorService } from '../../../core/services/ChangeNoteColorService';
+import { ViewProvider } from '../../view/ViewProvider';
+import { Note } from '../../../core/dtos/Note';
 
 export function createHandleChangeColor(
   colorService: ChangeNoteColorService,
-  provider: NotesViewProvider,
+  provider: ViewProvider,
 ) {
   return async (note: Note): Promise<void> => {
     await colorService.changeColor(note);
