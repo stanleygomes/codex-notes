@@ -14,9 +14,11 @@ import { FilterNotesService } from './core/service/FilterNotesService';
 import { OpenNoteLocationService } from './core/service/OpenNoteLocationService';
 import { QuickSearchService } from './core/service/QuickSearchService';
 import { openNote } from './infra/editor/view';
+import { UserInteraction } from './infra/editor/UserInteraction';
 
 export class Container {
   public readonly repository: NoteRepository;
+  public readonly userInteraction: UserInteraction;
   public readonly createService: CreateNoteService;
   public readonly deleteService: DeleteNoteService;
   public readonly renameService: RenameNoteService;
@@ -33,18 +35,35 @@ export class Container {
 
   constructor(context: vscode.ExtensionContext, repository: NoteRepository) {
     this.repository = repository;
+    this.userInteraction = new UserInteraction();
     this.createService = new CreateNoteService(repository);
-    this.deleteService = new DeleteNoteService(repository);
-    this.renameService = new RenameNoteService(repository);
+    this.deleteService = new DeleteNoteService(
+      repository,
+      this.userInteraction,
+    );
+    this.renameService = new RenameNoteService(
+      repository,
+      this.userInteraction,
+    );
     this.searchService = new SearchNoteService(repository);
     this.duplicateService = new DuplicateNoteService(
       repository,
       this.createService,
     );
-    this.exportService = new ExportNotesService(repository);
-    this.importService = new ImportNotesService(repository, this.createService);
+    this.exportService = new ExportNotesService(
+      repository,
+      this.userInteraction,
+    );
+    this.importService = new ImportNotesService(
+      repository,
+      this.createService,
+      this.userInteraction,
+    );
     this.favoriteService = new FavoriteNoteService(repository);
-    this.colorService = new ChangeNoteColorService(repository);
+    this.colorService = new ChangeNoteColorService(
+      repository,
+      this.userInteraction,
+    );
     this.sortService = new SortNotesService();
     this.filterService = new FilterNotesService();
     this.locationService = new OpenNoteLocationService();

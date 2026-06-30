@@ -1,19 +1,21 @@
 import { Note } from '../dto/Note';
 import { NoteRepository } from '../repository/NoteRepository';
 import { FileHelper } from '../helper/FileHelper';
-import { DialogHelper } from '../helper/DialogHelper';
+import { UserInteraction } from '../../infra/editor/UserInteraction';
 
 export class DeleteNoteService {
   private readonly repository: NoteRepository;
+  private readonly userInteraction: UserInteraction;
 
-  constructor(repository: NoteRepository) {
+  constructor(repository: NoteRepository, userInteraction: UserInteraction) {
     this.repository = repository;
+    this.userInteraction = userInteraction;
   }
 
   async confirmAndDelete(notes: Note[]): Promise<boolean> {
     const names = notes.slice(0, 5).map((n) => `"${n.title}"`);
     const extra = notes.length > 5 ? ` and ${notes.length - 5} more` : '';
-    const confirmed = await DialogHelper.showConfirmation(
+    const confirmed = await this.userInteraction.showConfirmation(
       `Delete ${names.join(', ')}${extra}? This action cannot be undone.`,
     );
 

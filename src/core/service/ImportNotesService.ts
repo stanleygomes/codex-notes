@@ -2,22 +2,25 @@ import * as path from 'path';
 import { NoteRepository } from '../repository/NoteRepository';
 import { CreateNoteService } from './CreateNoteService';
 import { FileHelper } from '../helper/FileHelper';
-import { DialogHelper } from '../helper/DialogHelper';
+import { UserInteraction } from '../../infra/editor/UserInteraction';
 
 export class ImportNotesService {
   private readonly repository: NoteRepository;
   private readonly createNoteService: CreateNoteService;
+  private readonly userInteraction: UserInteraction;
 
   constructor(
     repository: NoteRepository,
     createNoteService: CreateNoteService,
+    userInteraction: UserInteraction,
   ) {
     this.repository = repository;
     this.createNoteService = createNoteService;
+    this.userInteraction = userInteraction;
   }
 
   async import(): Promise<void> {
-    const uris = await DialogHelper.showOpenDialog({
+    const uris = await this.userInteraction.showOpenDialog({
       canSelectFiles: true,
       canSelectMany: true,
       filters: { Notes: ['md', 'txt'] },
@@ -36,6 +39,6 @@ export class ImportNotesService {
       imported++;
     }
 
-    DialogHelper.showInfo(`Imported ${imported} note(s) successfully.`);
+    this.userInteraction.showInfo(`Imported ${imported} note(s) successfully.`);
   }
 }

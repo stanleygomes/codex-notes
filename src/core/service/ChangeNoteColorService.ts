@@ -1,7 +1,7 @@
 import { Note } from '../dto/Note';
 import { NoteColorEnum } from '../enum/NoteColorEnum';
 import { NoteRepository } from '../repository/NoteRepository';
-import { DialogHelper } from '../helper/DialogHelper';
+import { UserInteraction } from '../../infra/editor/UserInteraction';
 
 interface ColorOption {
   label: string;
@@ -10,9 +10,11 @@ interface ColorOption {
 
 export class ChangeNoteColorService {
   private readonly repository: NoteRepository;
+  private readonly userInteraction: UserInteraction;
 
-  constructor(repository: NoteRepository) {
+  constructor(repository: NoteRepository, userInteraction: UserInteraction) {
     this.repository = repository;
+    this.userInteraction = userInteraction;
   }
 
   async changeColor(note: Note): Promise<void> {
@@ -27,7 +29,7 @@ export class ChangeNoteColorService {
       { label: 'Purple', value: NoteColorEnum.PURPLE },
     ];
 
-    const selected = await DialogHelper.showQuickPick(
+    const selected = await this.userInteraction.showQuickPick(
       options.map((o) => ({
         label: o.label,
         description: o.value,

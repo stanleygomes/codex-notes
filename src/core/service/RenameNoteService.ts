@@ -3,18 +3,20 @@ import * as path from 'path';
 import { Note } from '../dto/Note';
 import { NoteRepository } from '../repository/NoteRepository';
 import { FileHelper } from '../helper/FileHelper';
-import { DialogHelper } from '../helper/DialogHelper';
+import { UserInteraction } from '../../infra/editor/UserInteraction';
 import { NotesSettings } from '../../infra/editor/settings/NotesSettings';
 
 export class RenameNoteService {
   private readonly repository: NoteRepository;
+  private readonly userInteraction: UserInteraction;
 
-  constructor(repository: NoteRepository) {
+  constructor(repository: NoteRepository, userInteraction: UserInteraction) {
     this.repository = repository;
+    this.userInteraction = userInteraction;
   }
 
   async rename(note: Note): Promise<Note | undefined> {
-    const newTitle = await DialogHelper.showInputBox({
+    const newTitle = await this.userInteraction.showInputBox({
       prompt: 'Enter new note title',
       value: note.title,
       validateInput: (value) => {
@@ -35,7 +37,7 @@ export class RenameNoteService {
     const newFileName = FileHelper.buildNoteFileName(title, extension);
 
     if (FileHelper.fileExists(dir, newFileName)) {
-      DialogHelper.showError(
+      this.userInteraction.showError(
         `A note with the filename "${newFileName}" already exists.`,
       );
       return undefined;

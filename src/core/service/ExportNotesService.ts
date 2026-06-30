@@ -2,18 +2,20 @@ import * as path from 'path';
 import { Note } from '../dto/Note';
 import { NoteRepository } from '../repository/NoteRepository';
 import { FileHelper } from '../helper/FileHelper';
-import { DialogHelper } from '../helper/DialogHelper';
+import { UserInteraction } from '../../infra/editor/UserInteraction';
 import { ZipHelper } from '../helper/ZipHelper';
 
 export class ExportNotesService {
   private readonly repository: NoteRepository;
+  private readonly userInteraction: UserInteraction;
 
-  constructor(repository: NoteRepository) {
+  constructor(repository: NoteRepository, userInteraction: UserInteraction) {
     this.repository = repository;
+    this.userInteraction = userInteraction;
   }
 
   async exportAll(): Promise<void> {
-    const saveUri = await DialogHelper.showSaveDialog({
+    const saveUri = await this.userInteraction.showSaveDialog({
       filters: { 'ZIP Archive': ['zip'] },
       defaultUri: undefined,
     });
@@ -30,7 +32,7 @@ export class ExportNotesService {
       : `${saveUri.fsPath}.zip`;
 
     await ZipHelper.createZipFromFiles(filePaths, outputPath);
-    DialogHelper.showInfo(
+    this.userInteraction.showInfo(
       `Exported ${filePaths.length} notes to ${path.basename(outputPath)}`,
     );
   }
