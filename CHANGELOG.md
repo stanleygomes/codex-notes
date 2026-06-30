@@ -6,6 +6,33 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
+## [2.5.0] - 2026-06-30
+
+- chore: update package-lock.json dependencies
+- ci: add lint, prettier, and audit jobs to the build pipeline and update build dependencies
+- fix: update style render path to point to style directory instead of css
+- feat: add command to open notes.json and implement migration of existing note files into notes.json upon initialization
+- refactor: modularize view templates and separate frontend logic into independent script files
+- refactor: replace NotesViewProvider with a modular view architecture and standardize path imports.
+- refactor: reorganize project structure by relocating helpers, services, and DTOs into standardized directories
+- refactor: abstract VS Code editor interactions into UserInteraction service to decouple core services from the framework
+- refactor: migrate note storage from SQLite database to a local JSON file
+- feat: implement infrastructure layer for workspace theme management and persistent state storage
+- refactor: remove backup and import/export functionality and associated dependencies
+- refactor: remove dependency on vscode configuration for note settings
+- refactor: replace static DialogHelper with injectable UserInteraction service
+- chore: remove zod dependency from package.json
+- refactor: replace date-fns with Intl.RelativeTimeFormat in DateHelper to remove external dependency
+- refactor: implement dependency injection container and modularize command registration
+- chore: moving to folders infra and core
+- chore: remove landing page documentation and configuration files
+- refactor: remove test suite, clean up project configuration, and format HTML templates
+- chore: remove the landpage directory and related deployment workflow
+- docs: update readme
+- Please provide the specific file changes or a description of the modifications you have made so I can generate the commit message for you.
+- Merge pull request #107 from stanleygomes/release/v2.4.0
+
+
 ## [2.4.0] - 2026-05-13
 
 - feat: implement QuickSearchService to enable note searching via command and quick access prefix
