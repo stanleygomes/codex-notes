@@ -23,7 +23,7 @@ export class HtmlTemplateBuilder {
 
     const js = (file: string) => render('js', `${file}.js`);
 
-    const style = render('css', 'main.css');
+    const style = render('style', 'main.css');
 
     const scriptContent = [
       js('utils'),
