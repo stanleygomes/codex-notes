@@ -10,23 +10,37 @@ export class HtmlTemplateBuilder {
   ): string {
     const nonce = this.generateNonce();
 
-    const style = TemplateHelper.render(extensionUri, [
-      'src',
-      'infra',
-      'view',
-      'style',
-      'main.css',
-    ]);
+    const render = (
+      folder: string,
+      file: string,
+      vars: Record<string, string> = {},
+    ) =>
+      TemplateHelper.render(
+        extensionUri,
+        ['src', 'infra', 'view', folder, file],
+        vars,
+      );
 
-    return TemplateHelper.render(
-      extensionUri,
-      ['src', 'infra', 'view', 'html', `${templateName}.html`],
-      {
-        nonce: nonce,
-        style: style,
-        ...extraVariables,
-      },
-    );
+    const js = (file: string) => render('js', `${file}.js`);
+
+    const style = render('css', 'main.css');
+
+    const scriptContent = [
+      js('utils'),
+      js('contextMenu'),
+      js('renderer'),
+      js('controller'),
+    ].join('\n');
+
+    return render('html', `${templateName}.html`, {
+      nonce: nonce,
+      style: style,
+      script: scriptContent,
+      toolbar: render('html', 'toolbar.html'),
+      filters: render('html', 'filters.html'),
+      notes: render('html', 'notes.html'),
+      ...extraVariables,
+    });
   }
 
   private static generateNonce(): string {
