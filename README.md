@@ -122,12 +122,6 @@ This project uses GitHub Actions for continuous integration and deployment. The 
   2. `publish_vscode` _(conditional)_ — packages and publishes to Visual Studio Marketplace and OpenVSX
   3. `create_release` _(conditional)_ — creates separate GitHub Releases per plugin and attaches built artifacts
 
-### Deploy Landpage Workflow (`deploy-landpage.yml`)
-
-- **Trigger**: Push to `master` affecting `landpage/**`, or manual dispatch
-- **Actions**:
-  - Builds and deploys the landing page to Vercel
-
 ## 📦 How to Release
 
 1. Go to **Actions → Release** in the GitHub repository.
