@@ -11,6 +11,7 @@ import { SortNotesService } from './core/services/SortNotesService';
 import { FilterNotesService } from './core/services/FilterNotesService';
 import { OpenNoteLocationService } from './core/services/OpenNoteLocationService';
 import { QuickSearchService } from './core/services/QuickSearchService';
+import { OpenNotesFileService } from './core/services/OpenNotesFileService';
 import { openNote } from './infra/editor/view';
 import { UserInteraction } from './infra/editor/UserInteraction';
 
@@ -28,6 +29,7 @@ export class Container {
   public readonly filterService: FilterNotesService;
   public readonly locationService: OpenNoteLocationService;
   public readonly quickSearchService: QuickSearchService;
+  public readonly openNotesFileService: OpenNotesFileService;
 
   constructor(context: vscode.ExtensionContext, repository: NoteRepository) {
     this.repository = repository;
@@ -61,6 +63,10 @@ export class Container {
       repository,
       this.searchService,
       openNote,
+      this.userInteraction,
+    );
+    this.openNotesFileService = new OpenNotesFileService(
+      repository,
       this.userInteraction,
     );
   }

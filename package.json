@@ -55,6 +55,12 @@
         "icon": "$(refresh)"
       },
       {
+        "command": "codexNotes.openNotesFile",
+        "title": "Open notes.json",
+        "category": "Codex Notes",
+        "icon": "$(file-code)"
+      },
+      {
         "command": "codexNotes.searchNotes",
         "title": "Search Notes",
         "category": "Codex Notes"
@@ -72,12 +78,17 @@
         {
           "command": "codexNotes.createNote",
           "when": "view == codexNotes.notesView",
-          "group": "navigation"
+          "group": "navigation@1"
+        },
+        {
+          "command": "codexNotes.openNotesFile",
+          "when": "view == codexNotes.notesView",
+          "group": "navigation@2"
         },
         {
           "command": "codexNotes.refreshNotes",
           "when": "view == codexNotes.notesView",
-          "group": "navigation"
+          "group": "navigation@3"
         }
       ]
     },

@@ -3,6 +3,8 @@ import * as path from 'path';
 import { Note } from '../dtos/Note';
 import { FileHelper } from '../helpers/FileHelper';
 import { NotesJsonMetadata } from '../dtos/NotesJsonMetadata';
+import { NotesSettings } from '../../infra/editor/settings/NotesSettings';
+import { NoteColorEnum } from '../enums/NoteColorEnum';
 
 export class NoteRepository {
   private static instance: NoteRepository;
@@ -38,6 +40,7 @@ export class NoteRepository {
 
     if (!fs.existsSync(this.notesJsonPath)) {
       this.notes = [];
+      this.runMigrationFromFiles();
       this.persist();
       return;
     }
@@ -52,6 +55,37 @@ export class NoteRepository {
         error,
       );
       this.notes = [];
+    }
+  }
+
+  private runMigrationFromFiles(): void {
+    const notesDir = FileHelper.getDefaultNotesDir();
+    const extension = NotesSettings.getFileExtension();
+    const filePaths = FileHelper.listFiles(notesDir, extension);
+
+    for (const filePath of filePaths) {
+      const exists = this.notes.some((n) => n.filePath === filePath);
+      if (!exists) {
+        try {
+          const stats = fs.statSync(filePath);
+          const fileName = path.basename(filePath);
+          const ext = path.extname(filePath);
+          const title = fileName.slice(0, -ext.length);
+
+          const note: Note = {
+            id: globalThis.crypto.randomUUID(),
+            title,
+            filePath,
+            createdAt: stats.birthtimeMs || stats.mtimeMs,
+            updatedAt: stats.mtimeMs,
+            isFavorite: false,
+            color: NoteColorEnum.NONE,
+          };
+          this.notes.push(note);
+        } catch (error) {
+          console.error(`Failed to migrate file ${filePath}`, error);
+        }
+      }
     }
   }
 
@@ -92,5 +126,9 @@ export class NoteRepository {
   delete(id: string): void {
     this.notes = this.notes.filter((note) => note.id !== id);
     this.persist();
+  }
+
+  getNotesJsonPath(): string {
+    return this.notesJsonPath;
   }
 }

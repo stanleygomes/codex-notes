@@ -17,6 +17,9 @@ export function registerCommands(
     vscode.commands.registerCommand('codexNotes.refreshNotes', () =>
       provider.refresh(),
     ),
+    vscode.commands.registerCommand('codexNotes.openNotesFile', () =>
+      container.openNotesFileService.open(),
+    ),
     vscode.commands.registerCommand('codexNotes.searchNotes', () =>
       container.quickSearchService.show(),
     ),
