@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import * as path from 'path';
 
 export class UserInteraction {
   public async showInputBox(
@@ -46,7 +47,8 @@ export class UserInteraction {
     return vscode.window.showSaveDialog(options);
   }
 
-  public async openTextDocument(uri: vscode.Uri): Promise<void> {
+  public async openTextDocument(filePath: string): Promise<void> {
+    const uri = vscode.Uri.file(filePath);
     const document = await vscode.workspace.openTextDocument(uri);
     await vscode.window.showTextDocument(document);
   }
@@ -61,5 +63,51 @@ export class UserInteraction {
       uri,
       forceNewWindow,
     );
+  }
+
+  public async revealFileInOS(filePath: string): Promise<void> {
+    const uri = vscode.Uri.file(filePath);
+    await vscode.commands.executeCommand('revealFileInOS', uri);
+  }
+
+  public async reopenNote(oldPath: string, newPath: string): Promise<void> {
+    const oldUri = vscode.Uri.file(oldPath);
+    for (const editor of vscode.window.visibleTextEditors) {
+      if (editor.document.uri.fsPath === oldUri.fsPath) {
+        await vscode.commands.executeCommand(
+          'workbench.action.closeActiveEditor',
+        );
+        break;
+      }
+    }
+    const ext = path.extname(newPath).toLowerCase();
+    if (ext === '.md' || ext === '.txt') {
+      const newUri = vscode.Uri.file(newPath);
+      const doc = await vscode.workspace.openTextDocument(newUri);
+      await vscode.window.showTextDocument(doc);
+    }
+  }
+
+  public showQuickSearch(
+    placeholder: string,
+    initialItems: vscode.QuickPickItem[],
+    onSearch: (value: string) => vscode.QuickPickItem[],
+    onAccept: (selectedItem: vscode.QuickPickItem) => void,
+  ): void {
+    const quickPick = vscode.window.createQuickPick();
+    quickPick.placeholder = placeholder;
+    quickPick.items = initialItems;
+    quickPick.onDidChangeValue((value) => {
+      quickPick.items = onSearch(value);
+    });
+    quickPick.onDidAccept(() => {
+      const selected = quickPick.selectedItems[0];
+      if (selected) {
+        onAccept(selected);
+      }
+      quickPick.hide();
+    });
+    quickPick.onDidHide(() => quickPick.dispose());
+    quickPick.show();
   }
 }

@@ -1,5 +1,3 @@
-import * as vscode from 'vscode';
-import * as path from 'path';
 import { Note } from '../dto/Note';
 import { NoteRepository } from '../repository/NoteRepository';
 import { FileHelper } from '../helper/FileHelper';
@@ -53,26 +51,8 @@ export class RenameNoteService {
     };
     this.repository.save(updatedNote);
 
-    await this.reopenNote(note.filePath, newFilePath);
+    await this.userInteraction.reopenNote(note.filePath, newFilePath);
 
     return updatedNote;
-  }
-
-  private async reopenNote(oldPath: string, newPath: string): Promise<void> {
-    const oldUri = vscode.Uri.file(oldPath);
-    for (const editor of vscode.window.visibleTextEditors) {
-      if (editor.document.uri.fsPath === oldUri.fsPath) {
-        await vscode.commands.executeCommand(
-          'workbench.action.closeActiveEditor',
-        );
-        break;
-      }
-    }
-    const newUri = vscode.Uri.file(newPath);
-    const ext = path.extname(newPath).toLowerCase();
-    if (ext === '.md' || ext === '.txt') {
-      const doc = await vscode.workspace.openTextDocument(newUri);
-      await vscode.window.showTextDocument(doc);
-    }
   }
 }

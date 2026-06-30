@@ -1,11 +1,14 @@
-import * as vscode from 'vscode';
 import { Note } from '../dto/Note';
+import { UserInteraction } from '../../infra/editor/UserInteraction';
 
 export class OpenNoteLocationService {
+  private readonly userInteraction: UserInteraction;
+
+  constructor(userInteraction: UserInteraction) {
+    this.userInteraction = userInteraction;
+  }
+
   openLocation(note: Note): void {
-    vscode.commands.executeCommand(
-      'revealFileInOS',
-      vscode.Uri.file(note.filePath),
-    );
+    this.userInteraction.revealFileInOS(note.filePath);
   }
 }

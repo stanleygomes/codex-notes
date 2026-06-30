@@ -32,7 +32,10 @@ export class Container {
   constructor(context: vscode.ExtensionContext, repository: NoteRepository) {
     this.repository = repository;
     this.userInteraction = new UserInteraction();
-    this.createService = new CreateNoteService(repository);
+    this.createService = new CreateNoteService(
+      repository,
+      this.userInteraction,
+    );
     this.deleteService = new DeleteNoteService(
       repository,
       this.userInteraction,
@@ -53,11 +56,12 @@ export class Container {
     );
     this.sortService = new SortNotesService();
     this.filterService = new FilterNotesService();
-    this.locationService = new OpenNoteLocationService();
+    this.locationService = new OpenNoteLocationService(this.userInteraction);
     this.quickSearchService = new QuickSearchService(
       repository,
       this.searchService,
       openNote,
+      this.userInteraction,
     );
   }
 }

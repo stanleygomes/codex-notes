@@ -1,35 +1,26 @@
-import * as vscode from 'vscode';
 import { SearchNoteService } from './SearchNoteService';
 import { NoteRepository } from '../repository/NoteRepository';
 import { Note } from '../dto/Note';
+import { UserInteraction } from '../../infra/editor/UserInteraction';
 
 export class QuickSearchService {
   constructor(
     private readonly repository: NoteRepository,
     private readonly searchService: SearchNoteService,
     private readonly onOpenNote: (note: Note) => void,
+    private readonly userInteraction: UserInteraction,
   ) {}
 
   async show(): Promise<void> {
-    const quickPick = vscode.window.createQuickPick();
-    quickPick.placeholder = 'Search Codex Notes...';
-    quickPick.items = this.getNoteItems(this.repository.findAll());
-
-    quickPick.onDidChangeValue((value) => {
-      const filteredNotes = this.searchService.search(value);
-      quickPick.items = this.getNoteItems(filteredNotes);
-    });
-
-    quickPick.onDidAccept(() => {
-      const selectedItem = quickPick.selectedItems[0] as NoteQuickPickItem;
-      if (selectedItem) {
-        this.onOpenNote(selectedItem.note);
-      }
-      quickPick.hide();
-    });
-
-    quickPick.onDidHide(() => quickPick.dispose());
-    quickPick.show();
+    this.userInteraction.showQuickSearch(
+      'Search Codex Notes...',
+      this.getNoteItems(this.repository.findAll()),
+      (value) => this.getNoteItems(this.searchService.search(value)),
+      (selectedItem) => {
+        const item = selectedItem as NoteQuickPickItem;
+        this.onOpenNote(item.note);
+      },
+    );
   }
 
   private getNoteItems(notes: Note[]): NoteQuickPickItem[] {
@@ -41,6 +32,8 @@ export class QuickSearchService {
   }
 }
 
-interface NoteQuickPickItem extends vscode.QuickPickItem {
+interface NoteQuickPickItem {
+  label: string;
+  description: string;
   note: Note;
 }

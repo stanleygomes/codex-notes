@@ -1,16 +1,18 @@
-import * as vscode from 'vscode';
 import { Note } from '../dto/Note';
 import { NoteRepository } from '../repository/NoteRepository';
 import { FileHelper } from '../helper/FileHelper';
 import { NotesSettings } from '../../infra/editor/settings/NotesSettings';
 import { NoteColorEnum } from '../enum/NoteColorEnum';
 import { DateHelper } from '../helper/DateHelper';
+import { UserInteraction } from '../../infra/editor/UserInteraction';
 
 export class CreateNoteService {
   private readonly repository: NoteRepository;
+  private readonly userInteraction: UserInteraction;
 
-  constructor(repository: NoteRepository) {
+  constructor(repository: NoteRepository, userInteraction: UserInteraction) {
     this.repository = repository;
+    this.userInteraction = userInteraction;
   }
 
   async create(content?: string): Promise<Note | undefined> {
@@ -41,7 +43,7 @@ export class CreateNoteService {
       color: NoteColorEnum.NONE,
     };
     this.repository.save(note);
-    await this.openNote(filePath);
+    await this.userInteraction.openTextDocument(filePath);
     return note;
   }
 
@@ -54,11 +56,5 @@ export class CreateNoteService {
       index++;
     }
     return title;
-  }
-
-  private async openNote(filePath: string): Promise<void> {
-    const uri = vscode.Uri.file(filePath);
-    const doc = await vscode.workspace.openTextDocument(uri);
-    await vscode.window.showTextDocument(doc);
   }
 }
