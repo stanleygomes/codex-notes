@@ -2,6 +2,7 @@ import { Note } from '../dto/Note';
 import { NoteColorEnum } from '../enum/NoteColorEnum';
 import { NoteRepository } from '../repository/NoteRepository';
 import { UserInteraction } from '../../infra/editor/UserInteraction';
+import { DateHelper } from '../helper/DateHelper';
 
 interface ColorOption {
   label: string;
@@ -42,6 +43,11 @@ export class ChangeNoteColorService {
       return;
     }
 
-    this.repository.changeColor(note.id, selected.value);
+    const updatedNote: Note = {
+      ...note,
+      color: selected.value,
+      updatedAt: DateHelper.nowMs(),
+    };
+    this.repository.save(updatedNote);
   }
 }

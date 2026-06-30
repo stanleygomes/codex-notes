@@ -22,7 +22,7 @@ export class DuplicateNoteService {
   }
 
   private generateDuplicateTitle(originalTitle: string): string {
-    const existing = this.repository.getAllNotes().map((n) => n.title);
+    const existing = this.repository.findAll().map((n) => n.title);
     let index = 1;
     let title = `${originalTitle} (${index})`;
     while (existing.includes(title)) {

@@ -5,6 +5,7 @@ import { NoteRepository } from '../repository/NoteRepository';
 import { FileHelper } from '../helper/FileHelper';
 import { UserInteraction } from '../../infra/editor/UserInteraction';
 import { NotesSettings } from '../../infra/editor/settings/NotesSettings';
+import { DateHelper } from '../helper/DateHelper';
 
 export class RenameNoteService {
   private readonly repository: NoteRepository;
@@ -44,11 +45,17 @@ export class RenameNoteService {
     }
 
     const newFilePath = FileHelper.renameFile(note.filePath, newFileName);
-    this.repository.updateNote(note.id, title, newFilePath);
+    const updatedNote: Note = {
+      ...note,
+      title,
+      filePath: newFilePath,
+      updatedAt: DateHelper.nowMs(),
+    };
+    this.repository.save(updatedNote);
 
     await this.reopenNote(note.filePath, newFilePath);
 
-    return { ...note, title, filePath: newFilePath };
+    return updatedNote;
   }
 
   private async reopenNote(oldPath: string, newPath: string): Promise<void> {

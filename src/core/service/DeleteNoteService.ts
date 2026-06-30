@@ -25,7 +25,7 @@ export class DeleteNoteService {
 
     for (const note of notes) {
       FileHelper.deleteFile(note.filePath);
-      this.repository.removeNote(note.id);
+      this.repository.delete(note.id);
     }
 
     return true;

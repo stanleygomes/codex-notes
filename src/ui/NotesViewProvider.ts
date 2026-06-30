@@ -84,7 +84,7 @@ export class NotesViewProvider implements vscode.WebviewViewProvider {
     if (this.currentQuery.trim()) {
       notes = this.searchService.search(this.currentQuery);
     } else {
-      notes = this.repository.getAllNotes();
+      notes = this.repository.findAll();
     }
 
     if (this.filterFavorites) {
@@ -103,7 +103,7 @@ export class NotesViewProvider implements vscode.WebviewViewProvider {
 
   private handleMessage(message: WebviewMessage): void {
     const note = message.noteId
-      ? this.repository.getNoteById(message.noteId)
+      ? this.repository.findOne(message.noteId)
       : undefined;
 
     switch (message.command) {

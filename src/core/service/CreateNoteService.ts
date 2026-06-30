@@ -3,6 +3,8 @@ import { Note } from '../dto/Note';
 import { NoteRepository } from '../repository/NoteRepository';
 import { FileHelper } from '../helper/FileHelper';
 import { NotesSettings } from '../../infra/editor/settings/NotesSettings';
+import { NoteColorEnum } from '../enum/NoteColorEnum';
+import { DateHelper } from '../helper/DateHelper';
 
 export class CreateNoteService {
   private readonly repository: NoteRepository;
@@ -28,13 +30,23 @@ export class CreateNoteService {
       fileName,
       content,
     );
-    const note = this.repository.addNote(title, filePath);
+    const now = DateHelper.nowMs();
+    const note: Note = {
+      id: globalThis.crypto.randomUUID(),
+      title,
+      filePath,
+      createdAt: now,
+      updatedAt: now,
+      isFavorite: false,
+      color: NoteColorEnum.NONE,
+    };
+    this.repository.save(note);
     await this.openNote(filePath);
     return note;
   }
 
   private async generateUniqueTitle(): Promise<string | undefined> {
-    const existing = this.repository.getAllNotes().map((n) => n.title);
+    const existing = this.repository.findAll().map((n) => n.title);
     let index = 1;
     let title = 'Untitled';
     while (existing.includes(title)) {

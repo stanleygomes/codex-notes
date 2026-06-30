@@ -1,34 +1,24 @@
+import * as fs from 'fs';
+import * as path from 'path';
 import { Note } from '../dto/Note';
-import { NoteColorEnum } from '../enum/NoteColorEnum';
-import { NoteQueryRepository } from './NoteQueryRepository';
-import { NoteWriteRepository } from './NoteWriteRepository';
-import { NoteFavoriteRepository } from './NoteFavoriteRepository';
-import { NoteColorRepository } from './NoteColorRepository';
-import { NoteImportRepository } from './NoteImportRepository';
-import { DatabaseConnection } from './DatabaseConnection';
-import { DatabaseMigration } from './DatabaseMigration';
+import { FileHelper } from '../helper/FileHelper';
+import { NotesJsonMetadata } from '../dto/NotesJsonMetadata';
 
 export class NoteRepository {
   private static instance: NoteRepository;
-  private queryRepository: NoteQueryRepository;
-  private writeRepository: NoteWriteRepository;
-  private favoriteRepository: NoteFavoriteRepository;
-  private colorRepository: NoteColorRepository;
-  private importRepository: NoteImportRepository;
+  private notes: Note[] = [];
+  private readonly notesJsonPath: string;
 
   private constructor() {
-    this.queryRepository = new NoteQueryRepository();
-    this.writeRepository = new NoteWriteRepository();
-    this.favoriteRepository = new NoteFavoriteRepository();
-    this.colorRepository = new NoteColorRepository();
-    this.importRepository = new NoteImportRepository();
+    const notesDir = FileHelper.getDefaultNotesDir();
+    this.notesJsonPath = path.join(notesDir, 'notes.json');
   }
 
   static async initialize(): Promise<NoteRepository> {
     if (!NoteRepository.instance) {
-      await DatabaseConnection.initialize();
-      DatabaseMigration.run();
-      NoteRepository.instance = new NoteRepository();
+      const repository = new NoteRepository();
+      await repository.load();
+      NoteRepository.instance = repository;
     }
     return NoteRepository.instance;
   }
@@ -42,35 +32,65 @@ export class NoteRepository {
     return NoteRepository.instance;
   }
 
-  addNote(title: string, filePath: string): Note {
-    return this.writeRepository.addNote(title, filePath);
+  private async load(): Promise<void> {
+    const notesDir = FileHelper.getDefaultNotesDir();
+    FileHelper.ensureDirectoryExists(notesDir);
+
+    if (!fs.existsSync(this.notesJsonPath)) {
+      this.notes = [];
+      this.persist();
+      return;
+    }
+
+    try {
+      const dataStr = fs.readFileSync(this.notesJsonPath, 'utf8');
+      const data = JSON.parse(dataStr) as NotesJsonMetadata;
+      this.notes = data.notes || [];
+    } catch (error) {
+      console.error(
+        'Error loading notes.json, initializing empty storage',
+        error,
+      );
+      this.notes = [];
+    }
   }
 
-  updateNote(id: string, title?: string, filePath?: string): void {
-    this.writeRepository.updateNote(id, title, filePath);
+  private persist(): void {
+    const data: NotesJsonMetadata = {
+      description: `Codex Notes Metadata file. You can copy this file and your notes to another machine. Your notes are stored in the same folder: ${FileHelper.getDefaultNotesDir()}`,
+      notes: this.notes,
+    };
+    try {
+      fs.writeFileSync(
+        this.notesJsonPath,
+        JSON.stringify(data, null, 2),
+        'utf8',
+      );
+    } catch (error) {
+      console.error('Error persisting notes.json', error);
+    }
   }
 
-  toggleFavorite(id: string): void {
-    this.favoriteRepository.toggleFavorite(id);
+  findAll(): Note[] {
+    return this.notes;
   }
 
-  changeColor(id: string, color: NoteColorEnum): void {
-    this.colorRepository.changeColor(id, color);
+  findOne(id: string): Note | undefined {
+    return this.notes.find((note) => note.id === id);
   }
 
-  removeNote(id: string): void {
-    this.writeRepository.removeNote(id);
+  save(note: Note): void {
+    const index = this.notes.findIndex((n) => n.id === note.id);
+    if (index >= 0) {
+      this.notes[index] = note;
+    } else {
+      this.notes.push(note);
+    }
+    this.persist();
   }
 
-  getAllNotes(): Note[] {
-    return this.queryRepository.getAllNotes();
-  }
-
-  getNoteById(id: string): Note | undefined {
-    return this.queryRepository.getNoteById(id);
-  }
-
-  importNote(note: Note): void {
-    this.importRepository.importNote(note);
+  delete(id: string): void {
+    this.notes = this.notes.filter((note) => note.id !== id);
+    this.persist();
   }
 }

@@ -13,7 +13,7 @@ export class QuickSearchService {
   async show(): Promise<void> {
     const quickPick = vscode.window.createQuickPick();
     quickPick.placeholder = 'Search Codex Notes...';
-    quickPick.items = this.getNoteItems(this.repository.getAllNotes());
+    quickPick.items = this.getNoteItems(this.repository.findAll());
 
     quickPick.onDidChangeValue((value) => {
       const filteredNotes = this.searchService.search(value);

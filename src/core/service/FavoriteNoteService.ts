@@ -1,5 +1,6 @@
 import { Note } from '../dto/Note';
 import { NoteRepository } from '../repository/NoteRepository';
+import { DateHelper } from '../helper/DateHelper';
 
 export class FavoriteNoteService {
   private readonly repository: NoteRepository;
@@ -9,6 +10,11 @@ export class FavoriteNoteService {
   }
 
   toggleFavorite(note: Note): void {
-    this.repository.toggleFavorite(note.id);
+    const updatedNote: Note = {
+      ...note,
+      isFavorite: !note.isFavorite,
+      updatedAt: DateHelper.nowMs(),
+    };
+    this.repository.save(updatedNote);
   }
 }

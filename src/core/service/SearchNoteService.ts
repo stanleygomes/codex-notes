@@ -11,7 +11,7 @@ export class SearchNoteService {
   }
 
   search(query: string): Note[] {
-    const allNotes = this.repository.getAllNotes();
+    const allNotes = this.repository.findAll();
     const contentMap = this.buildContentMap(allNotes);
     return SearchHelper.search(allNotes, query, contentMap);
   }
