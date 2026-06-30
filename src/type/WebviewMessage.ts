@@ -1,5 +1,5 @@
-import { SortTypeEnum } from '../enum/SortTypeEnum';
-import { DateFilterEnum } from '../enum/DateFilterEnum';
+import { SortTypeEnum } from '../core/enum/SortTypeEnum';
+import { DateFilterEnum } from '../core/enum/DateFilterEnum';
 
 export interface WebviewMessage {
   command: string;

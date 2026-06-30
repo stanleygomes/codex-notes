@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import { Note } from '../dto/Note';
 import { NoteRepository } from '../repository/NoteRepository';
 import { FileHelper } from '../helper/FileHelper';
-import { NotesSettings } from '../editor/settings/NotesSettings';
+import { NotesSettings } from '../../infra/editor/settings/NotesSettings';
 
 export class CreateNoteService {
   private readonly repository: NoteRepository;

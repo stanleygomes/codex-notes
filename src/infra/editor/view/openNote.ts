@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { Note } from '../../dto/Note';
+import { Note } from '../../../core/dto/Note';
 
 export async function openNote(note: Note): Promise<void> {
   const uri = vscode.Uri.file(note.filePath);

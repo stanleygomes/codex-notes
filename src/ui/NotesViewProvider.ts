@@ -1,13 +1,13 @@
 import * as vscode from 'vscode';
-import { Note } from '../dto/Note';
-import { NOTE_COLOR_HEX } from '../enum/NoteColorEnum';
-import { SortTypeEnum } from '../enum/SortTypeEnum';
-import { DateFilterEnum } from '../enum/DateFilterEnum';
-import { NoteRepository } from '../repository/NoteRepository';
-import { SearchNoteService } from '../service/SearchNoteService';
-import { SortNotesService } from '../service/SortNotesService';
-import { FilterNotesService } from '../service/FilterNotesService';
-import { WebviewHelper } from '../helper/WebviewHelper';
+import { Note } from '../core/dto/Note';
+import { NOTE_COLOR_HEX } from '../core/enum/NoteColorEnum';
+import { SortTypeEnum } from '../core/enum/SortTypeEnum';
+import { DateFilterEnum } from '../core/enum/DateFilterEnum';
+import { NoteRepository } from '../core/repository/NoteRepository';
+import { SearchNoteService } from '../core/service/SearchNoteService';
+import { SortNotesService } from '../core/service/SortNotesService';
+import { FilterNotesService } from '../core/service/FilterNotesService';
+import { WebviewHelper } from '../core/helper/WebviewHelper';
 import { NoteMapper } from '../mapper/NoteMapper';
 import { WebviewMessage } from '../type/WebviewMessage';
 

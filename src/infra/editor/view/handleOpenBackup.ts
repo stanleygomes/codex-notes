@@ -1,8 +1,8 @@
 import * as vscode from 'vscode';
-import { WebviewHelper } from '../../helper/WebviewHelper';
-import { FileHelper } from '../../helper/FileHelper';
-import { ImportNotesService } from '../../service/ImportNotesService';
-import { ExportNotesService } from '../../service/ExportNotesService';
+import { WebviewHelper } from '../../../core/helper/WebviewHelper';
+import { FileHelper } from '../../../core/helper/FileHelper';
+import { ImportNotesService } from '../../../core/service/ImportNotesService';
+import { ExportNotesService } from '../../../core/service/ExportNotesService';
 
 export function createHandleOpenBackup(
   extensionUri: vscode.Uri,

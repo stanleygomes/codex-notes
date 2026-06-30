@@ -1,6 +1,6 @@
-import { DuplicateNoteService } from '../../service/DuplicateNoteService';
-import { NotesViewProvider } from '../../ui/NotesViewProvider';
-import { Note } from '../../dto/Note';
+import { DuplicateNoteService } from '../../../core/service/DuplicateNoteService';
+import { NotesViewProvider } from '../../../ui/NotesViewProvider';
+import { Note } from '../../../core/dto/Note';
 
 export function createHandleDuplicate(
   duplicateService: DuplicateNoteService,

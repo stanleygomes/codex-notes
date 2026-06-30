@@ -1,20 +1,9 @@
 import * as vscode from 'vscode';
-import { NoteRepository } from './repository/NoteRepository';
-import { CreateNoteService } from './service/CreateNoteService';
-import { DeleteNoteService } from './service/DeleteNoteService';
-import { RenameNoteService } from './service/RenameNoteService';
-import { SearchNoteService } from './service/SearchNoteService';
-import { DuplicateNoteService } from './service/DuplicateNoteService';
-import { ExportNotesService } from './service/ExportNotesService';
-import { ImportNotesService } from './service/ImportNotesService';
-import { FavoriteNoteService } from './service/FavoriteNoteService';
-import { ChangeNoteColorService } from './service/ChangeNoteColorService';
-import { SortNotesService } from './service/SortNotesService';
-import { FilterNotesService } from './service/FilterNotesService';
-import { OpenNoteLocationService } from './service/OpenNoteLocationService';
-import { QuickSearchService } from './service/QuickSearchService';
+import { NoteRepository } from './core/repository/NoteRepository';
+import { Container } from './container';
 import { NotesViewProvider } from './ui/NotesViewProvider';
-import { Note } from './dto/Note';
+import { registerCommands } from './commands';
+import { Note } from './core/dto/Note';
 import {
   openNote,
   createHandleCreate,
@@ -23,9 +12,8 @@ import {
   createHandleDuplicate,
   createHandleChangeColor,
   createHandleImport,
-  createHandleCreateFromSelection,
   createHandleOpenBackup,
-} from './editor/view';
+} from './infra/editor/view';
 
 export async function activate(
   context: vscode.ExtensionContext,
@@ -34,42 +22,28 @@ export async function activate(
   const repository = await NoteRepository.initialize();
 
   console.log('Codex Notes extension activated successfully');
-  const createService = new CreateNoteService(repository);
-  const deleteService = new DeleteNoteService(repository);
-  const renameService = new RenameNoteService(repository);
-  const searchService = new SearchNoteService(repository);
-  const duplicateService = new DuplicateNoteService(repository, createService);
-  const exportService = new ExportNotesService(repository);
-  const importService = new ImportNotesService(repository, createService);
-  const favoriteService = new FavoriteNoteService(repository);
-  const colorService = new ChangeNoteColorService(repository);
-  const sortService = new SortNotesService();
-  const filterService = new FilterNotesService();
-  const locationService = new OpenNoteLocationService();
-  const quickSearchService = new QuickSearchService(
-    repository,
-    searchService,
-    openNote,
-  );
+  const container = new Container(context, repository);
 
   console.log('Services initialized successfully');
 
   let provider: NotesViewProvider;
 
-  const handleCreate = () => createHandleCreate(createService, provider)();
+  const handleCreate = () =>
+    createHandleCreate(container.createService, provider)();
   const handleDelete = (note: Note) =>
-    createHandleDelete(deleteService, provider)(note);
+    createHandleDelete(container.deleteService, provider)(note);
   const handleRename = (note: Note) =>
-    createHandleRename(renameService, provider)(note);
+    createHandleRename(container.renameService, provider)(note);
   const handleDuplicate = (note: Note) =>
-    createHandleDuplicate(duplicateService, provider)(note);
+    createHandleDuplicate(container.duplicateService, provider)(note);
   const handleChangeColor = (note: Note) =>
-    createHandleChangeColor(colorService, provider)(note);
-  const handleImport = () => createHandleImport(importService, provider)();
+    createHandleChangeColor(container.colorService, provider)(note);
+  const handleImport = () =>
+    createHandleImport(container.importService, provider)();
   const handleOpenBackup = createHandleOpenBackup(
     context.extensionUri,
-    importService,
-    exportService,
+    container.importService,
+    container.exportService,
     () => provider.refresh(),
   );
 
@@ -77,23 +51,23 @@ export async function activate(
 
   provider = new NotesViewProvider(
     context.extensionUri,
-    repository,
-    searchService,
-    sortService,
-    filterService,
+    container.repository,
+    container.searchService,
+    container.sortService,
+    container.filterService,
     openNote,
     handleCreate,
     handleDelete,
     handleRename,
     handleDuplicate,
     (note) => {
-      favoriteService.toggleFavorite(note);
+      container.favoriteService.toggleFavorite(note);
       provider.refresh();
     },
     handleChangeColor,
-    () => exportService.exportAll(),
+    () => container.exportService.exportAll(),
     handleImport,
-    (note) => locationService.openLocation(note),
+    (note) => container.locationService.openLocation(note),
   );
 
   context.subscriptions.push(
@@ -103,22 +77,13 @@ export async function activate(
     ),
   );
 
-  context.subscriptions.push(
-    vscode.commands.registerCommand('codexNotes.createNote', handleCreate),
-    vscode.commands.registerCommand('codexNotes.createNoteFromSelection', () =>
-      createHandleCreateFromSelection(createService, provider)(),
-    ),
-    vscode.commands.registerCommand('codexNotes.refreshNotes', () =>
-      provider.refresh(),
-    ),
-    vscode.commands.registerCommand('codexNotes.exportNotes', () =>
-      exportService.exportAll(),
-    ),
-    vscode.commands.registerCommand('codexNotes.importNotes', handleImport),
-    vscode.commands.registerCommand('codexNotes.openBackup', handleOpenBackup),
-    vscode.commands.registerCommand('codexNotes.searchNotes', () =>
-      quickSearchService.show(),
-    ),
+  registerCommands(
+    context,
+    container,
+    provider,
+    handleCreate,
+    handleImport,
+    handleOpenBackup,
   );
 }
 

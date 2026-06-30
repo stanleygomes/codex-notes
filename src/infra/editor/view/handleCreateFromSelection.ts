@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
-import { CreateNoteService } from '../../service/CreateNoteService';
-import { NotesViewProvider } from '../../ui/NotesViewProvider';
+import { CreateNoteService } from '../../../core/service/CreateNoteService';
+import { NotesViewProvider } from '../../../ui/NotesViewProvider';
 
 export function createHandleCreateFromSelection(
   createService: CreateNoteService,

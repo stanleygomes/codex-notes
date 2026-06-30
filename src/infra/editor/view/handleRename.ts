@@ -1,6 +1,6 @@
-import { RenameNoteService } from '../../service/RenameNoteService';
-import { NotesViewProvider } from '../../ui/NotesViewProvider';
-import { Note } from '../../dto/Note';
+import { RenameNoteService } from '../../../core/service/RenameNoteService';
+import { NotesViewProvider } from '../../../ui/NotesViewProvider';
+import { Note } from '../../../core/dto/Note';
 
 export function createHandleRename(
   renameService: RenameNoteService,

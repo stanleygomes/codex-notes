@@ -1,6 +1,6 @@
-import { DeleteNoteService } from '../../service/DeleteNoteService';
-import { NotesViewProvider } from '../../ui/NotesViewProvider';
-import { Note } from '../../dto/Note';
+import { DeleteNoteService } from '../../../core/service/DeleteNoteService';
+import { NotesViewProvider } from '../../../ui/NotesViewProvider';
+import { Note } from '../../../core/dto/Note';
 
 export function createHandleDelete(
   deleteService: DeleteNoteService,

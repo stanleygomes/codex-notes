@@ -1,6 +1,6 @@
-import { ChangeNoteColorService } from '../../service/ChangeNoteColorService';
-import { NotesViewProvider } from '../../ui/NotesViewProvider';
-import { Note } from '../../dto/Note';
+import { ChangeNoteColorService } from '../../../core/service/ChangeNoteColorService';
+import { NotesViewProvider } from '../../../ui/NotesViewProvider';
+import { Note } from '../../../core/dto/Note';
 
 export function createHandleChangeColor(
   colorService: ChangeNoteColorService,

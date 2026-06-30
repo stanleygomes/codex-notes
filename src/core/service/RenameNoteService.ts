@@ -4,7 +4,7 @@ import { Note } from '../dto/Note';
 import { NoteRepository } from '../repository/NoteRepository';
 import { FileHelper } from '../helper/FileHelper';
 import { DialogHelper } from '../helper/DialogHelper';
-import { NotesSettings } from '../editor/settings/NotesSettings';
+import { NotesSettings } from '../../infra/editor/settings/NotesSettings';
 
 export class RenameNoteService {
   private readonly repository: NoteRepository;

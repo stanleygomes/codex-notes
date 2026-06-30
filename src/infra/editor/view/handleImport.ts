@@ -1,5 +1,5 @@
-import { ImportNotesService } from '../../service/ImportNotesService';
-import { NotesViewProvider } from '../../ui/NotesViewProvider';
+import { ImportNotesService } from '../../../core/service/ImportNotesService';
+import { NotesViewProvider } from '../../../ui/NotesViewProvider';
 
 export function createHandleImport(
   importService: ImportNotesService,
