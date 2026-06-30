@@ -11,8 +11,6 @@ import {
   createHandleRename,
   createHandleDuplicate,
   createHandleChangeColor,
-  createHandleImport,
-  createHandleOpenBackup,
 } from './infra/editor/view';
 
 export async function activate(
@@ -38,14 +36,6 @@ export async function activate(
     createHandleDuplicate(container.duplicateService, provider)(note);
   const handleChangeColor = (note: Note) =>
     createHandleChangeColor(container.colorService, provider)(note);
-  const handleImport = () =>
-    createHandleImport(container.importService, provider)();
-  const handleOpenBackup = createHandleOpenBackup(
-    context.extensionUri,
-    container.importService,
-    container.exportService,
-    () => provider.refresh(),
-  );
 
   console.log('Handlers created successfully');
 
@@ -65,8 +55,6 @@ export async function activate(
       provider.refresh();
     },
     handleChangeColor,
-    () => container.exportService.exportAll(),
-    handleImport,
     (note) => container.locationService.openLocation(note),
   );
 
@@ -77,14 +65,7 @@ export async function activate(
     ),
   );
 
-  registerCommands(
-    context,
-    container,
-    provider,
-    handleCreate,
-    handleImport,
-    handleOpenBackup,
-  );
+  registerCommands(context, container, provider, handleCreate);
 }
 
 export function deactivate(): void {}

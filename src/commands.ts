@@ -8,8 +8,6 @@ export function registerCommands(
   container: Container,
   provider: NotesViewProvider,
   handleCreate: () => void,
-  handleImport: () => void,
-  handleOpenBackup: () => void,
 ): void {
   context.subscriptions.push(
     vscode.commands.registerCommand('codexNotes.createNote', handleCreate),
@@ -19,11 +17,6 @@ export function registerCommands(
     vscode.commands.registerCommand('codexNotes.refreshNotes', () =>
       provider.refresh(),
     ),
-    vscode.commands.registerCommand('codexNotes.exportNotes', () =>
-      container.exportService.exportAll(),
-    ),
-    vscode.commands.registerCommand('codexNotes.importNotes', handleImport),
-    vscode.commands.registerCommand('codexNotes.openBackup', handleOpenBackup),
     vscode.commands.registerCommand('codexNotes.searchNotes', () =>
       container.quickSearchService.show(),
     ),

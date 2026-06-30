@@ -4,6 +4,4 @@ export { createHandleDelete } from './handleDelete';
 export { createHandleRename } from './handleRename';
 export { createHandleDuplicate } from './handleDuplicate';
 export { createHandleChangeColor } from './handleChangeColor';
-export { createHandleImport } from './handleImport';
 export { createHandleCreateFromSelection } from './handleCreateFromSelection';
-export { createHandleOpenBackup } from './handleOpenBackup';

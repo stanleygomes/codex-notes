@@ -55,22 +55,6 @@
         "icon": "$(refresh)"
       },
       {
-        "command": "codexNotes.exportNotes",
-        "title": "Export Notes",
-        "category": "Codex Notes"
-      },
-      {
-        "command": "codexNotes.importNotes",
-        "title": "Import Notes",
-        "category": "Codex Notes"
-      },
-      {
-        "command": "codexNotes.openBackup",
-        "title": "Backup & Sync",
-        "category": "Codex Notes",
-        "icon": "$(cloud-download)"
-      },
-      {
         "command": "codexNotes.searchNotes",
         "title": "Search Notes",
         "category": "Codex Notes"
@@ -92,11 +76,6 @@
         },
         {
           "command": "codexNotes.refreshNotes",
-          "when": "view == codexNotes.notesView",
-          "group": "navigation"
-        },
-        {
-          "command": "codexNotes.openBackup",
           "when": "view == codexNotes.notesView",
           "group": "navigation"
         }
@@ -127,11 +106,9 @@
     "format:fix": "prettier --write ."
   },
   "dependencies": {
-    "archiver": "^7.0.1",
     "sql.js": "^1.14.1"
   },
   "devDependencies": {
-    "@types/archiver": "^6.0.3",
     "@types/node": "22.x",
     "@types/vscode": "^1.85.0",
     "eslint": "^9.39.3",

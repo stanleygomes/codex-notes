@@ -33,8 +33,6 @@ export class NotesViewProvider implements vscode.WebviewViewProvider {
     private readonly onDuplicateNote: (note: Note) => void,
     private readonly onToggleFavorite: (note: Note) => void,
     private readonly onChangeColor: (note: Note) => void,
-    private readonly onExportNotes: () => void,
-    private readonly onImportNotes: () => void,
     private readonly onOpenLocation: (note: Note) => void,
   ) {}
 
@@ -141,12 +139,6 @@ export class NotesViewProvider implements vscode.WebviewViewProvider {
         if (note) {
           this.onChangeColor(note);
         }
-        break;
-      case 'exportNotes':
-        this.onExportNotes();
-        break;
-      case 'importNotes':
-        this.onImportNotes();
         break;
       case 'openLocation':
         if (note) {

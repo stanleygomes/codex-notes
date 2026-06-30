@@ -5,8 +5,6 @@ import { DeleteNoteService } from './core/service/DeleteNoteService';
 import { RenameNoteService } from './core/service/RenameNoteService';
 import { SearchNoteService } from './core/service/SearchNoteService';
 import { DuplicateNoteService } from './core/service/DuplicateNoteService';
-import { ExportNotesService } from './core/service/ExportNotesService';
-import { ImportNotesService } from './core/service/ImportNotesService';
 import { FavoriteNoteService } from './core/service/FavoriteNoteService';
 import { ChangeNoteColorService } from './core/service/ChangeNoteColorService';
 import { SortNotesService } from './core/service/SortNotesService';
@@ -24,8 +22,6 @@ export class Container {
   public readonly renameService: RenameNoteService;
   public readonly searchService: SearchNoteService;
   public readonly duplicateService: DuplicateNoteService;
-  public readonly exportService: ExportNotesService;
-  public readonly importService: ImportNotesService;
   public readonly favoriteService: FavoriteNoteService;
   public readonly colorService: ChangeNoteColorService;
   public readonly sortService: SortNotesService;
@@ -49,15 +45,6 @@ export class Container {
     this.duplicateService = new DuplicateNoteService(
       repository,
       this.createService,
-    );
-    this.exportService = new ExportNotesService(
-      repository,
-      this.userInteraction,
-    );
-    this.importService = new ImportNotesService(
-      repository,
-      this.createService,
-      this.userInteraction,
     );
     this.favoriteService = new FavoriteNoteService(repository);
     this.colorService = new ChangeNoteColorService(
