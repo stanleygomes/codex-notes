@@ -79,7 +79,8 @@ body {
   font-size: 11px;
   padding: 2px 8px;
   border-radius: 12px;
-  border: 1px solid var(--vscode-button-secondary-border, var(--vscode-widget-border));
+  border: 1px solid
+    var(--vscode-button-secondary-border, var(--vscode-widget-border));
   background: var(--vscode-button-secondary-background, transparent);
   color: var(--vscode-foreground);
   cursor: pointer;

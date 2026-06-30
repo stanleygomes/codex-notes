@@ -74,7 +74,10 @@
       const dateFilter = document.getElementById('dateFilter');
 
       dateFilter.addEventListener('change', () => {
-        vscode.postMessage({ command: 'filterDate', dateFilter: dateFilter.value || null });
+        vscode.postMessage({
+          command: 'filterDate',
+          dateFilter: dateFilter.value || null,
+        });
       });
 
       document.addEventListener('click', (e) => {

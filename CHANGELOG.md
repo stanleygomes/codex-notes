@@ -20,7 +20,6 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 - refactor: streamline build configuration, update dependencies, and clean up UI elements
 - docs: remove installation section from README table of contents
 
-
 ## [2.2.4] - 2026-03-14
 
 - docs: screenshot for plugin vscode

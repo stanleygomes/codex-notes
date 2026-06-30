@@ -133,17 +133,13 @@
     ]
   },
   "scripts": {
-    "compile-tests": "tsc -p . --outDir out",
-    "watch-tests": "tsc -p . -w --outDir out",
-    "pretest": "npm run compile-tests && npm run compile && npm run lint",
     "vscode:prepublish": "npm run compile",
     "compile": "tsc -p ./ && npm run copy-wasm",
     "copy-wasm": "mkdir -p out/repository && cp node_modules/sql.js/dist/sql-wasm.wasm out/repository/sql-wasm.wasm",
     "watch": "tsc -watch -p ./",
     "lint": "eslint src",
     "format:check": "prettier --check .",
-    "format:fix": "prettier --write .",
-    "test": "vscode-test"
+    "format:fix": "prettier --write ."
   },
   "dependencies": {
     "archiver": "^7.0.1",
@@ -153,12 +149,8 @@
   },
   "devDependencies": {
     "@types/archiver": "^6.0.3",
-    "@types/jest": "^30.0.0",
-    "@types/mocha": "^10.0.10",
     "@types/node": "22.x",
     "@types/vscode": "^1.85.0",
-    "@vscode/test-cli": "^0.0.11",
-    "@vscode/test-electron": "^2.5.2",
     "eslint": "^9.39.3",
     "prettier": "^3.8.3",
     "ts-loader": "^9.5.4",
