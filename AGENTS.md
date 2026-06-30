@@ -13,7 +13,29 @@
 
 ```
 src/
-├── extension.ts           # Main extension entry point
+├── extension.ts                    # Main extension entry point
+├── commands.ts                     # VS Code command registrations
+├── container.ts                    # Dependency injection container
+├── core/
+│   ├── dtos/                       # Data transfer objects (Note, WebviewMessage, etc.)
+│   ├── enums/                      # Enums (NoteColor, SortType, DateFilter)
+│   ├── helpers/                    # Pure utility helpers (Date, File, Search, etc.)
+│   ├── mappers/                    # Entity-to-view model mappers
+│   ├── repositories/               # JSON file persistence (NoteRepository)
+│   └── services/                   # Business logic services
+└── infra/
+    ├── editor/
+    │   ├── UserInteraction.ts      # VS Code API wrapper (dialogs, quick pick, etc.)
+    │   ├── settings/               # Extension settings helpers
+    │   └── view/                   # Editor action handlers (create, delete, rename, etc.)
+    └── view/
+        ├── HtmlTemplateBuilder.ts  # Compiles HTML templates and injects CSS/JS
+        ├── ViewMessageHandler.ts   # Routes webview messages to service callbacks
+        ├── ViewProvider.ts         # VS Code WebviewViewProvider implementation
+        ├── ViewState.ts            # Sidebar filter and sort state management
+        ├── html/                   # Modular HTML templates (toolbar, filters, notes)
+        ├── js/                     # Webview JavaScript (controller, renderer, etc.)
+        └── style/                  # Webview CSS stylesheet
 ```
 
 ### VS Code Extension Architecture
