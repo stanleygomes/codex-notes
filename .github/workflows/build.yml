@@ -22,10 +22,64 @@ jobs:
       - name: Validate Conventional Commits
         uses: wagoid/commitlint-github-action@v5
 
-  # Build and validate extension
+  # Run ESLint Check
+  lint:
+    name: Lint Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch Sources
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Run Lint Check
+        run: npm run lint
+
+  # Run Prettier Formatting Check
+  prettier:
+    name: Prettier Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch Sources
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Run Prettier Check
+        run: npm run format:check
+
+  # Run Dependency Audit Check
+  audit:
+    name: Audit Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch Sources
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+
+      - name: Run Audit Check
+        run: npm audit
+
+  # Build and package extension
   buildExtension:
     name: Build Extension
-    needs: [validateCommits]
+    needs: [validateCommits, lint, prettier, audit]
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -43,9 +97,6 @@ jobs:
 
       - name: Compile Extension
         run: npm run compile
-
-      # - name: Test
-      #   run: npm test
 
       - name: Package VSIX
         run: npx @vscode/vsce package --no-yarn --out codex-notes.vsix
