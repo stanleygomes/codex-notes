@@ -109,21 +109,6 @@
         "mac": "cmd+alt+n"
       }
     ],
-    "configuration": {
-      "title": "Codex Notes",
-      "properties": {
-        "codexNotes.fileExtension": {
-          "type": "string",
-          "default": "md",
-          "description": "Default file extension for new notes"
-        },
-        "codexNotes.openFolderEnabled": {
-          "type": "boolean",
-          "default": true,
-          "description": "Enable opening note file location in file explorer"
-        }
-      }
-    },
     "quickAccess": [
       {
         "prefix": "n",
