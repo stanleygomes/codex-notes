@@ -2,6 +2,9 @@
 .vscode-test/**
 out/test/**
 src/**
+!src/infra/view/html/**
+!src/infra/view/js/**
+!src/infra/view/style/**
 .gitignore
 .yarnrc
 webpack.config.js
