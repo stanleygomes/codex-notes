@@ -109,3 +109,6 @@ Desktop.ini
 
 # extension specific files
 codex-notes.vsix
+
+# VS Code test downloads
+.vscode-test/
