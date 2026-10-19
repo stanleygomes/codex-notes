@@ -6,6 +6,26 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
+## [2.5.2] - 2026-10-19
+
+- Merge pull request #114 from stanleygomes/refactor/remove-unused-helpers
+- Merge pull request #113 from stanleygomes/fix/quick-search-home-path
+- refactor(core): drop unused os and string helpers
+- Merge pull request #112 from stanleygomes/test/add-unit-and-e2e-tests
+- fix(search): show home-relative paths safely
+- docs: document unit and e2e test setup
+- ci: run unit and e2e tests before build
+- test: add e2e tests in vscode extension host
+- test: add unit tests for core and infra
+- build: add vitest and vscode test tooling
+- refactor(extension): return container from activate
+- Merge pull request #110 from stanleygomes/fix/context-menu-viewport-overflow
+- fix(view): keep context menu inside viewport
+- Merge pull request #109 from stanleygomes/release/v2.5.1
+- Merge pull request #111 from stanleygomes/fix/security-audit
+- fix(deps): resolve npm audit vulnerabilities
+
+
 ## [2.5.1] - 2026-07-01
 
 - chore: exclude CHANGELOG.md from prettier formatting
