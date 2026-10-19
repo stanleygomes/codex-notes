@@ -6,6 +6,14 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
+## [2.5.1] - 2026-07-01
+
+- chore: exclude CHANGELOG.md from prettier formatting
+- chore: exclude specific view source directories from .vscodeignore via negative patterns
+- Merge pull request #108 from stanleygomes/release/v2.5.0
+- docs: update AGENTS.md to reflect project directory restructuring
+
+
 ## [2.5.0] - 2026-06-30
 
 - chore: update package-lock.json dependencies
