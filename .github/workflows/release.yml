@@ -10,7 +10,7 @@ concurrency:
 jobs:
   prepare_release:
     name: Prepare Release
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     permissions:
       contents: write
       pull-requests: write
@@ -124,7 +124,7 @@ jobs:
   publish:
     name: Publish Extension
     needs: prepare_release
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     environment: production
     permissions:
       contents: read
@@ -173,7 +173,7 @@ jobs:
       always() &&
       needs.prepare_release.result == 'success' &&
       needs.publish.result == 'success'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     permissions:
       contents: write
     steps:
