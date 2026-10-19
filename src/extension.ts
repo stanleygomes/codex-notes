@@ -15,7 +15,7 @@ import {
 
 export async function activate(
   context: vscode.ExtensionContext,
-): Promise<void> {
+): Promise<Container> {
   console.log('Activating Codex Notes extension...');
   const repository = await NoteRepository.initialize();
 
@@ -63,6 +63,8 @@ export async function activate(
   );
 
   registerCommands(context, container, provider, handleCreate);
+
+  return container;
 }
 
 export function deactivate(): void {}
