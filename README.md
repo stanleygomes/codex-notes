@@ -90,17 +90,28 @@
 
 **Available Commands**
 
-| Command                | Description                                    |
-| ---------------------- | ---------------------------------------------- |
-| `npm install`          | Installs dependencies                          |
-| `npm run build`        | Compiles the extension                         |
-| `npm run lint`         | Runs ESLint checks                             |
-| `npm run test`         | Runs extension tests                           |
-| `npm run package`      | Packages the extension for distribution        |
-| `npm run publish`      | Publishes the extension to VS Code Marketplace |
-| `npm run ovsx:publish` | Publishes to OpenVSX Registry                  |
+| Command                      | Description                                           |
+| ---------------------------- | ----------------------------------------------------- |
+| `npm install`                | Installs dependencies                                 |
+| `npm run compile`            | Compiles the extension                                |
+| `npm run typecheck`          | Type-checks sources and tests                         |
+| `npm run lint`               | Runs ESLint checks                                    |
+| `npm run format:check`       | Checks formatting with Prettier                       |
+| `npm run test`               | Runs unit tests then e2e tests                        |
+| `npm run test:unit`          | Runs Vitest unit tests                                |
+| `npm run test:unit:coverage` | Runs unit tests and writes `coverage/unit`            |
+| `npm run test:e2e`           | Compiles and runs Mocha e2e tests in a VS Code window |
 
-Coverage reports are generated in `coverage/` and use the `nyc` tool.
+### Testing
+
+- **Unit tests** (`src/**/*.test.ts`) run on Vitest with a mocked `vscode`
+  module (`src/test/unit/mocks/vscode.ts`). Each test gets a temporary `HOME`,
+  so notes are written to a throwaway `~/.codex-notes`. Coverage must stay
+  above 95% lines/functions and 90% branches.
+- **E2E tests** (`src/test/e2e/**`) run inside a real VS Code Extension Host
+  via `@vscode/test-cli`. `HOME` points to a temporary sandbox and the suite
+  refuses to run if the notes folder resolves outside of it. On Linux without
+  a display, use `xvfb-run -a npm run test:e2e`.
 
 ## 🚀 CI/CD
 

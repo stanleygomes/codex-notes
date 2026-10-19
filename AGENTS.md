@@ -45,8 +45,15 @@ src/
 1. Make code changes following the coding rules
 2. Run `npm run format` to ensure code style
 3. Run `npm run lint` to validate code style
-4. Run `npm run package` to build the extension
+4. Run `npm run test:unit` and `npm run test:e2e`
 5. Test in Extension Development Host
+
+### Tests
+
+- Unit tests live next to the code as `*.test.ts` (Vitest). Use the helpers in
+  `src/test/unit/fakes.ts` and the `vscode` mock in `src/test/unit/mocks/`.
+- E2E tests live in `src/test/e2e/` (Mocha `suite`/`test` in a VS Code host).
+- Never touch the real `~/.codex-notes`: both suites run with a sandboxed `HOME`.
 
 ## Code Rules
 
