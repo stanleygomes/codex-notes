@@ -57,4 +57,18 @@ describe('QuickSearchService', () => {
 
     expect(onOpenNote).toHaveBeenCalledWith(notes[1]);
   });
+
+  it('keeps absolute paths when HOME is not set', async () => {
+    const { onSearch, notes } = await setup();
+    vi.stubEnv('HOME', '');
+
+    expect(onSearch('')[0].description).toBe(notes[0].filePath);
+  });
+
+  it('keeps paths that only share a prefix with HOME', async () => {
+    const { onSearch, notes } = await setup();
+    vi.stubEnv('HOME', `${process.env.HOME}/.codex`);
+
+    expect(onSearch('')[0].description).toBe(notes[0].filePath);
+  });
 });

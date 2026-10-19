@@ -1,3 +1,5 @@
+import * as os from 'os';
+import * as path from 'path';
 import { SearchNoteService } from './SearchNoteService';
 import { NoteRepository } from '../repositories/NoteRepository';
 import { Note } from '../dtos/Note';
@@ -26,9 +28,17 @@ export class QuickSearchService {
   private getNoteItems(notes: Note[]): NoteQuickPickItem[] {
     return notes.map((note) => ({
       label: `$(markdown) ${note.title}`,
-      description: note.filePath.replace(process.env.HOME || '', '~'),
+      description: this.toDisplayPath(note.filePath),
       note: note,
     }));
+  }
+
+  private toDisplayPath(filePath: string): string {
+    const home = os.homedir();
+    const isInsideHome =
+      home !== '' &&
+      (filePath === home || filePath.startsWith(`${home}${path.sep}`));
+    return isInsideHome ? `~${filePath.slice(home.length)}` : filePath;
   }
 }
 
