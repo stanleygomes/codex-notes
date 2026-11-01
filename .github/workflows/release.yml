@@ -20,7 +20,7 @@ jobs:
       release_sha: ${{ steps.release_ref.outputs.release_sha }}
     steps:
       - name: Fetch Sources
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           ref: master
           fetch-depth: 0
@@ -130,7 +130,7 @@ jobs:
       contents: read
     steps:
       - name: Fetch Sources
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           ref: ${{ needs.prepare_release.outputs.release_branch }}
 
@@ -178,7 +178,7 @@ jobs:
       contents: write
     steps:
       - name: Fetch Sources
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           ref: ${{ needs.prepare_release.outputs.release_branch }}
           fetch-depth: 0
