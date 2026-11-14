@@ -18,3 +18,4 @@ coverage/**
 scripts/**
 **/tsconfig*.json
 vitest.config.mts
+jetbrains/**

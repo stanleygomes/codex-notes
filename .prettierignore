@@ -5,3 +5,4 @@ package-lock.json
 .vscode-test/
 CHANGELOG.md
 coverage/
+jetbrains/

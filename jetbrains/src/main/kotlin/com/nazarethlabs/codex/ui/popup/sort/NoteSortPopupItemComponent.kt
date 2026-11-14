@@ -1,0 +1,27 @@
+package com.nazarethlabs.codex.ui.popup.sort
+
+import com.intellij.util.ui.JBUI
+import com.nazarethlabs.codex.enum.SortTypeEnum
+import com.nazarethlabs.codex.helper.MessageHelper
+import com.nazarethlabs.codex.service.settings.NotesSettingsService
+import com.nazarethlabs.codex.state.NotesStateManager
+import javax.swing.JMenuItem
+
+class NoteSortPopupItemComponent {
+    fun createSortMenuItem(
+        messageKey: String,
+        sortType: SortTypeEnum,
+    ): JMenuItem {
+        val stateManager = NotesStateManager.getInstance()
+        val itemInset = JBUI.Borders.empty(5, 10, 5, 10)
+        val item = JMenuItem(MessageHelper.getMessage(messageKey))
+        item.border = itemInset
+
+        item.addActionListener {
+            stateManager.sortBy(sortType)
+            NotesSettingsService().setDefaultSortType(sortType)
+        }
+
+        return item
+    }
+}
